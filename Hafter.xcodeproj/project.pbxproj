@@ -13,6 +13,24 @@
 		BAA02ED527F22AD800FDD198 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BAA02ED327F22AD800FDD198 /* Main.storyboard */; };
 		BAA02ED727F22AD900FDD198 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BAA02ED627F22AD900FDD198 /* Assets.xcassets */; };
 		BAA02EDA27F22AD900FDD198 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BAA02ED827F22AD900FDD198 /* LaunchScreen.storyboard */; };
+		BAA02EE227F3781700FDD198 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02EE127F3781700FDD198 /* AppRouter.swift */; };
+		BAA02EE627F378B100FDD198 /* IntroductionBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02EE527F378B100FDD198 /* IntroductionBuilder.swift */; };
+		BAA02EE827F3790700FDD198 /* Introduction.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BAA02EE727F3790700FDD198 /* Introduction.storyboard */; };
+		BAA02EEC27F3795C00FDD198 /* BaseRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02EEB27F3795C00FDD198 /* BaseRouter.swift */; };
+		BAA02EEE27F3798300FDD198 /* IntroductionRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02EED27F3798300FDD198 /* IntroductionRouter.swift */; };
+		BAA02EF027F379B300FDD198 /* IntroductionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02EEF27F379B300FDD198 /* IntroductionViewModel.swift */; };
+		BAA02EF227F379F800FDD198 /* BaseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02EF127F379F800FDD198 /* BaseViewModel.swift */; };
+		BAA02EF427F37A2800FDD198 /* IntroductionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02EF327F37A2800FDD198 /* IntroductionViewController.swift */; };
+		BAA02EF627F37A5200FDD198 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02EF527F37A5200FDD198 /* BaseViewController.swift */; };
+		BAA02EF927F37BA700FDD198 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02EF827F37BA700FDD198 /* Settings.swift */; };
+		BAA02EFB27F37CF400FDD198 /* NavigationControllerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02EFA27F37CF400FDD198 /* NavigationControllerViewController.swift */; };
+		BAA02EFE27F37D3200FDD198 /* UIWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02EFD27F37D3200FDD198 /* UIWindow.swift */; };
+		BAA02F0127F37FEE00FDD198 /* HereafterBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02F0027F37FEE00FDD198 /* HereafterBuilder.swift */; };
+		BAA02F0327F3804000FDD198 /* HereafterRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02F0227F3804000FDD198 /* HereafterRouter.swift */; };
+		BAA02F0527F3807A00FDD198 /* HereafterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02F0427F3807A00FDD198 /* HereafterViewController.swift */; };
+		BAA02F0727F380AD00FDD198 /* HereafterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02F0627F380AD00FDD198 /* HereafterViewModel.swift */; };
+		BAA02F0927F381AA00FDD198 /* Hereafter.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BAA02F0827F381AA00FDD198 /* Hereafter.storyboard */; };
+		BAA02F0B27F4F01200FDD198 /* UIView+IBInspectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02F0A27F4F01200FDD198 /* UIView+IBInspectable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +42,24 @@
 		BAA02ED627F22AD900FDD198 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BAA02ED927F22AD900FDD198 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BAA02EDB27F22AD900FDD198 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BAA02EE127F3781700FDD198 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
+		BAA02EE527F378B100FDD198 /* IntroductionBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroductionBuilder.swift; sourceTree = "<group>"; };
+		BAA02EE727F3790700FDD198 /* Introduction.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Introduction.storyboard; sourceTree = "<group>"; };
+		BAA02EEB27F3795C00FDD198 /* BaseRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseRouter.swift; sourceTree = "<group>"; };
+		BAA02EED27F3798300FDD198 /* IntroductionRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroductionRouter.swift; sourceTree = "<group>"; };
+		BAA02EEF27F379B300FDD198 /* IntroductionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroductionViewModel.swift; sourceTree = "<group>"; };
+		BAA02EF127F379F800FDD198 /* BaseViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewModel.swift; sourceTree = "<group>"; };
+		BAA02EF327F37A2800FDD198 /* IntroductionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroductionViewController.swift; sourceTree = "<group>"; };
+		BAA02EF527F37A5200FDD198 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		BAA02EF827F37BA700FDD198 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		BAA02EFA27F37CF400FDD198 /* NavigationControllerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationControllerViewController.swift; sourceTree = "<group>"; };
+		BAA02EFD27F37D3200FDD198 /* UIWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIWindow.swift; sourceTree = "<group>"; };
+		BAA02F0027F37FEE00FDD198 /* HereafterBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HereafterBuilder.swift; sourceTree = "<group>"; };
+		BAA02F0227F3804000FDD198 /* HereafterRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HereafterRouter.swift; sourceTree = "<group>"; };
+		BAA02F0427F3807A00FDD198 /* HereafterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HereafterViewController.swift; sourceTree = "<group>"; };
+		BAA02F0627F380AD00FDD198 /* HereafterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HereafterViewModel.swift; sourceTree = "<group>"; };
+		BAA02F0827F381AA00FDD198 /* Hereafter.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Hereafter.storyboard; sourceTree = "<group>"; };
+		BAA02F0A27F4F01200FDD198 /* UIView+IBInspectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+IBInspectable.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +94,11 @@
 			children = (
 				BAA02ECD27F22AD800FDD198 /* AppDelegate.swift */,
 				BAA02ECF27F22AD800FDD198 /* SceneDelegate.swift */,
+				BAA02EFC27F37D2300FDD198 /* Extensions */,
+				BAA02EF727F37B8600FDD198 /* Settings */,
+				BAA02EE127F3781700FDD198 /* AppRouter.swift */,
+				BAA02EE927F3794300FDD198 /* UI */,
+				BAA02EE327F3788400FDD198 /* Modules */,
 				BAA02ED127F22AD800FDD198 /* ViewController.swift */,
 				BAA02ED327F22AD800FDD198 /* Main.storyboard */,
 				BAA02ED627F22AD900FDD198 /* Assets.xcassets */,
@@ -65,6 +106,75 @@
 				BAA02EDB27F22AD900FDD198 /* Info.plist */,
 			);
 			path = Hafter;
+			sourceTree = "<group>";
+		};
+		BAA02EE327F3788400FDD198 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				BAA02EFF27F37FBA00FDD198 /* Hereafter */,
+				BAA02EE427F3789300FDD198 /* Introduction */,
+			);
+			path = Modules;
+			sourceTree = "<group>";
+		};
+		BAA02EE427F3789300FDD198 /* Introduction */ = {
+			isa = PBXGroup;
+			children = (
+				BAA02EE527F378B100FDD198 /* IntroductionBuilder.swift */,
+				BAA02EED27F3798300FDD198 /* IntroductionRouter.swift */,
+				BAA02EEF27F379B300FDD198 /* IntroductionViewModel.swift */,
+				BAA02EF327F37A2800FDD198 /* IntroductionViewController.swift */,
+				BAA02EE727F3790700FDD198 /* Introduction.storyboard */,
+			);
+			path = Introduction;
+			sourceTree = "<group>";
+		};
+		BAA02EE927F3794300FDD198 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				BAA02EEA27F3794A00FDD198 /* Common */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		BAA02EEA27F3794A00FDD198 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				BAA02EEB27F3795C00FDD198 /* BaseRouter.swift */,
+				BAA02EF527F37A5200FDD198 /* BaseViewController.swift */,
+				BAA02EFA27F37CF400FDD198 /* NavigationControllerViewController.swift */,
+				BAA02EF127F379F800FDD198 /* BaseViewModel.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		BAA02EF727F37B8600FDD198 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				BAA02EF827F37BA700FDD198 /* Settings.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		BAA02EFC27F37D2300FDD198 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				BAA02EFD27F37D3200FDD198 /* UIWindow.swift */,
+				BAA02F0A27F4F01200FDD198 /* UIView+IBInspectable.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		BAA02EFF27F37FBA00FDD198 /* Hereafter */ = {
+			isa = PBXGroup;
+			children = (
+				BAA02F0027F37FEE00FDD198 /* HereafterBuilder.swift */,
+				BAA02F0227F3804000FDD198 /* HereafterRouter.swift */,
+				BAA02F0827F381AA00FDD198 /* Hereafter.storyboard */,
+				BAA02F0427F3807A00FDD198 /* HereafterViewController.swift */,
+				BAA02F0627F380AD00FDD198 /* HereafterViewModel.swift */,
+			);
+			path = Hereafter;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -125,6 +235,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BAA02F0927F381AA00FDD198 /* Hereafter.storyboard in Resources */,
+				BAA02EE827F3790700FDD198 /* Introduction.storyboard in Resources */,
 				BAA02EDA27F22AD900FDD198 /* LaunchScreen.storyboard in Resources */,
 				BAA02ED727F22AD900FDD198 /* Assets.xcassets in Resources */,
 				BAA02ED527F22AD800FDD198 /* Main.storyboard in Resources */,
@@ -138,6 +250,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BAA02EFB27F37CF400FDD198 /* NavigationControllerViewController.swift in Sources */,
+				BAA02F0B27F4F01200FDD198 /* UIView+IBInspectable.swift in Sources */,
+				BAA02EE627F378B100FDD198 /* IntroductionBuilder.swift in Sources */,
+				BAA02EEE27F3798300FDD198 /* IntroductionRouter.swift in Sources */,
+				BAA02EF627F37A5200FDD198 /* BaseViewController.swift in Sources */,
+				BAA02EEC27F3795C00FDD198 /* BaseRouter.swift in Sources */,
+				BAA02EE227F3781700FDD198 /* AppRouter.swift in Sources */,
+				BAA02EF027F379B300FDD198 /* IntroductionViewModel.swift in Sources */,
+				BAA02F0327F3804000FDD198 /* HereafterRouter.swift in Sources */,
+				BAA02F0527F3807A00FDD198 /* HereafterViewController.swift in Sources */,
+				BAA02EFE27F37D3200FDD198 /* UIWindow.swift in Sources */,
+				BAA02EF927F37BA700FDD198 /* Settings.swift in Sources */,
+				BAA02EF227F379F800FDD198 /* BaseViewModel.swift in Sources */,
+				BAA02EF427F37A2800FDD198 /* IntroductionViewController.swift in Sources */,
+				BAA02F0727F380AD00FDD198 /* HereafterViewModel.swift in Sources */,
+				BAA02F0127F37FEE00FDD198 /* HereafterBuilder.swift in Sources */,
 				BAA02ED227F22AD800FDD198 /* ViewController.swift in Sources */,
 				BAA02ECE27F22AD800FDD198 /* AppDelegate.swift in Sources */,
 				BAA02ED027F22AD800FDD198 /* SceneDelegate.swift in Sources */,
