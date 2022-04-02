@@ -8,11 +8,12 @@
 import Foundation
 
 protocol HereafterOutputProtocol: AnyObject {
-    
+    func add()
 }
 
 protocol HereafterRouterProtocol: RouterProtocol {
     func start()
+    func add()
 }
 
 final class HereafterRouter: BaseRouter {
@@ -23,5 +24,9 @@ extension HereafterRouter: HereafterRouterProtocol {
     
     func start() {
         
+    }
+    
+    func add() {
+        output?.add()
     }
 }

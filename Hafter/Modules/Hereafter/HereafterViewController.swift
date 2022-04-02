@@ -23,6 +23,8 @@ final class HereafterViewController: BaseViewController<HereafterViewModelProtoc
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupNavigationController()
+        
         let addTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(addAction))
         addView.addGestureRecognizer(addTapGestureRecognizer)
         let randomizeTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(randomizeAction))
@@ -50,11 +52,23 @@ final class HereafterViewController: BaseViewController<HereafterViewModelProtoc
     }
     
     @objc private func addAction() {
-        
+        viewModel?.add()
     }
     
     @objc private func randomizeAction() {
         
+    }
+    
+    @objc private func menuTapped() {
+        
+    }
+}
+
+private extension HereafterViewController {
+    
+    func setupNavigationController() {
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage.image(named: "menu"), style: .plain, target: self, action: #selector(menuTapped))
+        navigationItem.leftBarButtonItem?.tintColor = #colorLiteral(red: 0.1490196078, green: 0.1960784314, blue: 0.2196078431, alpha: 1)
     }
 }
 

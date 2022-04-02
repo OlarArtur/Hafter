@@ -63,4 +63,17 @@ extension AppRouter: IntroductionOutputProtocol {
 
 extension AppRouter: HereafterOutputProtocol {
     
+    func add() {
+        guard let addVC = AddBuilder.build(output: self) else {
+            return
+        }
+        rootViewController?.present(addVC, animated: true)
+    }
+}
+
+extension AppRouter: AddOutputProtocol {
+    
+    func added(movie: Movie, controller: UIViewController) {
+        controller.dismiss(animated: true)
+    }
 }

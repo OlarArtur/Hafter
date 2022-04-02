@@ -1,0 +1,16 @@
+//
+//  UITableView.swift
+//  Hafter
+//
+//  Created by Artur Olar on 02.04.2022.
+//
+
+import UIKit
+
+extension UITableView {
+    
+    func registerNibCell<T: UITableViewCell>(_ cell: T.Type) {
+        let nib = UINib(nibName: String(describing: cell), bundle: nil)
+        register(nib, forCellReuseIdentifier: String(describing: cell))
+    }
+}

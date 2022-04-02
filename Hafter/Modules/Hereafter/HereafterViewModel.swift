@@ -8,7 +8,7 @@
 import Foundation
 
 protocol HereafterViewModelProtocol {
-    
+    func add()
 }
 
 final class HereafterViewModel<Router: HereafterRouterProtocol>: BaseViewModel<Router> {
@@ -18,4 +18,7 @@ final class HereafterViewModel<Router: HereafterRouterProtocol>: BaseViewModel<R
 
 extension HereafterViewModel: HereafterViewModelProtocol {
     
+    func add() {
+        router?.add()
+    }
 }
