@@ -9,11 +9,11 @@ import Foundation
 import UIKit
 
 protocol AddOutputProtocol: AnyObject {
-    func added(movie: Movie, controller: UIViewController)
+    func added(movie: HereafterMovie, controller: UIViewController)
 }
 
 protocol AddRouterProtocol: RouterProtocol {
-    func add(movie: Movie, controller: UIViewController)
+    func add(movie: HereafterMovie, controller: UIViewController)
 }
 
 final class AddRouter: BaseRouter {
@@ -22,7 +22,7 @@ final class AddRouter: BaseRouter {
 
 extension AddRouter: AddRouterProtocol {
     
-    func add(movie: Movie, controller: UIViewController) {
+    func add(movie: HereafterMovie, controller: UIViewController) {
         output?.added(movie: movie, controller: controller)
     }
 }

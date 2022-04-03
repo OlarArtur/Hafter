@@ -56,6 +56,8 @@
 		BAC4283227F86C87004EAB08 /* AddTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BAC4283127F86C86004EAB08 /* AddTableViewCell.xib */; };
 		BAC4283427F87B5B004EAB08 /* AddTableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC4283327F87B5B004EAB08 /* AddTableViewDelegate.swift */; };
 		BAC4283627F898CC004EAB08 /* HereafterMovie.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC4283527F898CC004EAB08 /* HereafterMovie.swift */; };
+		BAC4283A27F8A5EB004EAB08 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = BAC4283827F8A5EB004EAB08 /* Model.xcdatamodeld */; };
+		BAC4283C27F8BAAF004EAB08 /* LocalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC4283B27F8BAAF004EAB08 /* LocalService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -110,6 +112,8 @@
 		BAC4283127F86C86004EAB08 /* AddTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddTableViewCell.xib; sourceTree = "<group>"; };
 		BAC4283327F87B5B004EAB08 /* AddTableViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTableViewDelegate.swift; sourceTree = "<group>"; };
 		BAC4283527F898CC004EAB08 /* HereafterMovie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HereafterMovie.swift; sourceTree = "<group>"; };
+		BAC4283927F8A5EB004EAB08 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		BAC4283B27F8BAAF004EAB08 /* LocalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -238,6 +242,7 @@
 		BAA02F0E27F5D03700FDD198 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				BAC4283727F8A59A004EAB08 /* CoreData */,
 				BAA02F3527F7361000FDD198 /* Responses */,
 				BAA02F3227F730C900FDD198 /* Parsers */,
 				BAA02F1127F5D05600FDD198 /* Services */,
@@ -271,6 +276,7 @@
 			isa = PBXGroup;
 			children = (
 				BAA02F1C27F7071500FDD198 /* TMDbService.swift */,
+				BAC4283B27F8BAAF004EAB08 /* LocalService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -314,6 +320,14 @@
 				BAA02F3627F7362900FDD198 /* MovieResponse.swift */,
 			);
 			path = Responses;
+			sourceTree = "<group>";
+		};
+		BAC4283727F8A59A004EAB08 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				BAC4283827F8A5EB004EAB08 /* Model.xcdatamodeld */,
+			);
+			path = CoreData;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -400,6 +414,8 @@
 				BAA02EF627F37A5200FDD198 /* BaseViewController.swift in Sources */,
 				BAA02F1F27F7075D00FDD198 /* TMDbSettings.swift in Sources */,
 				BAA02EEC27F3795C00FDD198 /* BaseRouter.swift in Sources */,
+				BAC4283C27F8BAAF004EAB08 /* LocalService.swift in Sources */,
+				BAC4283A27F8A5EB004EAB08 /* Model.xcdatamodeld in Sources */,
 				BAC4282C27F8627D004EAB08 /* AddTableViewDataSource.swift in Sources */,
 				BAA02EE227F3781700FDD198 /* AppRouter.swift in Sources */,
 				BAA02EF027F379B300FDD198 /* IntroductionViewModel.swift in Sources */,
@@ -650,6 +666,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		BAC4283827F8A5EB004EAB08 /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				BAC4283927F8A5EB004EAB08 /* Model.xcdatamodel */,
+			);
+			currentVersion = BAC4283927F8A5EB004EAB08 /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = BAA02EC227F22AD800FDD198 /* Project object */;
 }

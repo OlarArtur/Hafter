@@ -65,7 +65,8 @@ extension AddViewModel: AddViewModelProtocol {
     
     func add(controller: UIViewController) {
         let emptyMovie = Movie(title: currentTitle)
-        router?.add(movie: selectedMovie ?? emptyMovie, controller: controller)
+        let hereafterMovie = HereafterMovie(type: .foremost, movie: selectedMovie ?? emptyMovie)
+        router?.add(movie: hereafterMovie, controller: controller)
     }
     
     func clear() {

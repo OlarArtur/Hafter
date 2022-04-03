@@ -35,7 +35,6 @@ struct RequestConfig {
 }
 
 protocol NetworkDataProviderProtocol {
-    
     func doRequest(requestConfig: RequestConfig) -> AnyPublisher<Data?, NetworkErrors>
 }
 

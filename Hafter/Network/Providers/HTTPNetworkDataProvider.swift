@@ -101,6 +101,7 @@ final class HTTPNetworkDataProvider {
 }
 
 extension HTTPNetworkDataProvider: NetworkDataProviderProtocol {
+    
     func doRequest(requestConfig: RequestConfig) -> AnyPublisher<Data?, NetworkErrors> {
         guard let request = makeRequest(by: requestConfig) else {
             return Fail(error: .incorrectInputParams).eraseToAnyPublisher()

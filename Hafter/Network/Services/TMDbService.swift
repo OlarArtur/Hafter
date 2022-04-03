@@ -8,7 +8,6 @@
 import Combine
 
 protocol MediaServiceProtocol {
-    
     func search(query: String) -> AnyPublisher<MovieResponse?, ServiceError>
 }
 
@@ -26,7 +25,6 @@ final class TMDbService {
         self.localProvider = localProvider
         self.parser = parser
     }
-
 }
 
 extension TMDbService: MediaServiceProtocol {

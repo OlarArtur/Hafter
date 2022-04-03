@@ -21,6 +21,26 @@ final class Movie: Codable {
         case releaseDate = "release_date"
     }
     
+    init(adult: Bool,
+         backdropPath: String?,
+         originalLanguage: String,
+         title: String,
+         originalTitle: String,
+         overview: String,
+         popularity: Double,
+         posterPath: String?,
+         releaseDate: Date?) {
+        self.adult = false
+        self.backdropPath = backdropPath
+        self.originalLanguage = originalLanguage
+        self.title = title
+        self.originalTitle = originalTitle
+        self.overview = overview
+        self.popularity = popularity
+        self.posterPath = posterPath
+        self.releaseDate = releaseDate
+    }
+    
     init(title: String) {
         self.adult = false
         self.backdropPath = nil

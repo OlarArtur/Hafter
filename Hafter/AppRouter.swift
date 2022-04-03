@@ -11,6 +11,7 @@ final class AppRouter {
     
     private(set) var window: UIWindow
     private var baseNavigationController: UINavigationController?
+    private let localDataService: LocalServiceProtocol?
     
     init(window: UIWindow) {
         self.window = window
@@ -73,7 +74,8 @@ extension AppRouter: HereafterOutputProtocol {
 
 extension AppRouter: AddOutputProtocol {
     
-    func added(movie: Movie, controller: UIViewController) {
+    func added(movie: HereafterMovie, controller: UIViewController) {
+        localDataService?.save(movie: movie)
         controller.dismiss(animated: true)
     }
 }

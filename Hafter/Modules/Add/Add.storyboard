@@ -45,7 +45,7 @@
                                 <rect key="frame" x="20" y="112" width="374" height="60"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YJI-aG-ht2">
-                                        <rect key="frame" x="294" y="14.5" width="60" height="31"/>
+                                        <rect key="frame" x="304" y="14.5" width="60" height="31"/>
                                         <color key="backgroundColor" red="0.70588235290000001" green="0.84313725490000002" blue="0.83529411760000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="60" id="tI8-an-lmZ"/>
@@ -62,7 +62,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3lv-xP-rxb">
-                                        <rect key="frame" x="10" y="30" width="274" height="0.0"/>
+                                        <rect key="frame" x="10" y="30" width="284" height="0.0"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -70,7 +70,7 @@
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="YJI-aG-ht2" secondAttribute="trailing" constant="20" id="714-rF-Gqj"/>
+                                    <constraint firstAttribute="trailing" secondItem="YJI-aG-ht2" secondAttribute="trailing" constant="10" id="714-rF-Gqj"/>
                                     <constraint firstItem="YJI-aG-ht2" firstAttribute="leading" secondItem="3lv-xP-rxb" secondAttribute="trailing" constant="10" id="E9C-A9-Cno"/>
                                     <constraint firstItem="3lv-xP-rxb" firstAttribute="centerY" secondItem="R1R-Yt-pDv" secondAttribute="centerY" id="YQ4-b8-N5C"/>
                                     <constraint firstAttribute="height" constant="60" id="edB-I8-qf0"/>
