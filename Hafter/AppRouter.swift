@@ -11,7 +11,7 @@ final class AppRouter {
     
     private(set) var window: UIWindow
     private var baseNavigationController: UINavigationController?
-    private let localDataService: LocalServiceProtocol?
+    private var localDataService: LocalServiceProtocol?
     
     init(window: UIWindow) {
         self.window = window
@@ -47,7 +47,6 @@ final class AppRouter {
         baseNavigationController = navigationVC
         window.setRootViewController(navigationVC, animated: animated, completion: nil)
     }
-    
 }
 
 private extension AppRouter {
@@ -68,7 +67,7 @@ extension AppRouter: HereafterOutputProtocol {
         guard let addVC = AddBuilder.build(output: self) else {
             return
         }
-        rootViewController?.present(addVC, animated: true)
+        rootViewController?.show(addVC, sender: nil)
     }
 }
 
@@ -76,6 +75,6 @@ extension AppRouter: AddOutputProtocol {
     
     func added(movie: HereafterMovie, controller: UIViewController) {
         localDataService?.save(movie: movie)
-        controller.dismiss(animated: true)
+        controller.hide(animated: true)
     }
 }

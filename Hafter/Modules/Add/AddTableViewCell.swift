@@ -13,7 +13,6 @@ final class AddTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        selectionStyle = .none
         titleLabel.text = nil
     }
     

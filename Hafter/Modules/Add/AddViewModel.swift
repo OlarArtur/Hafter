@@ -18,6 +18,7 @@ protocol AddViewModelProtocol {
     func itemFor(index: Int) -> String
     func select(index: Int)
     
+    func updateSelectedType(type: HereafterMovieType)
     func clear()
     func search(query: String)
     func add(controller: UIViewController)
@@ -37,6 +38,8 @@ final class AddViewModel<Router: AddRouterProtocol>: BaseViewModel<Router> {
     private let networkService: MediaServiceProtocol
     
     private var currentTitle: String = ""
+    
+    private var selectedType: HereafterMovieType = .foremost
     private var selectedMovie: Movie? {
         didSet {
             guard let selectedMovie = selectedMovie else {
@@ -65,7 +68,7 @@ extension AddViewModel: AddViewModelProtocol {
     
     func add(controller: UIViewController) {
         let emptyMovie = Movie(title: currentTitle)
-        let hereafterMovie = HereafterMovie(type: .foremost, movie: selectedMovie ?? emptyMovie)
+        let hereafterMovie = HereafterMovie(type: selectedType, movie: selectedMovie ?? emptyMovie)
         router?.add(movie: hereafterMovie, controller: controller)
     }
     
@@ -104,6 +107,10 @@ extension AddViewModel: AddViewModelProtocol {
                 }
                 self?.movies = moviesResult
             }
+    }
+    
+    func updateSelectedType(type: HereafterMovieType) {
+        selectedType = type
     }
 }
 

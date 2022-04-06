@@ -58,6 +58,15 @@
 		BAC4283627F898CC004EAB08 /* HereafterMovie.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC4283527F898CC004EAB08 /* HereafterMovie.swift */; };
 		BAC4283A27F8A5EB004EAB08 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = BAC4283827F8A5EB004EAB08 /* Model.xcdatamodeld */; };
 		BAC4283C27F8BAAF004EAB08 /* LocalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC4283B27F8BAAF004EAB08 /* LocalService.swift */; };
+		BAC4283E27F9A61A004EAB08 /* DropListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC4283D27F9A61A004EAB08 /* DropListView.swift */; };
+		BAC4284027F9EE24004EAB08 /* DropListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC4283F27F9EE24004EAB08 /* DropListCell.swift */; };
+		BAF8BB7427FD860A00375C02 /* PresentAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BB7327FD860A00375C02 /* PresentAnimator.swift */; };
+		BAF8BB7627FD862300375C02 /* DismissAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BB7527FD862300375C02 /* DismissAnimator.swift */; };
+		BAF8BB7827FD87CE00375C02 /* TypeChooserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BB7727FD87CE00375C02 /* TypeChooserView.swift */; };
+		BAF8BB7E27FD8F4400375C02 /* CustomAlertPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BB7A27FD8F4400375C02 /* CustomAlertPresenter.swift */; };
+		BAF8BB7F27FD8F4400375C02 /* CustomAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BB7B27FD8F4400375C02 /* CustomAlertViewController.swift */; };
+		BAF8BB8027FD8F4400375C02 /* CustomAlert.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BAF8BB7C27FD8F4400375C02 /* CustomAlert.storyboard */; };
+		BAF8BB8127FD8F4400375C02 /* CustomAlertBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BB7D27FD8F4400375C02 /* CustomAlertBuilder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -114,6 +123,15 @@
 		BAC4283527F898CC004EAB08 /* HereafterMovie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HereafterMovie.swift; sourceTree = "<group>"; };
 		BAC4283927F8A5EB004EAB08 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		BAC4283B27F8BAAF004EAB08 /* LocalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalService.swift; sourceTree = "<group>"; };
+		BAC4283D27F9A61A004EAB08 /* DropListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropListView.swift; sourceTree = "<group>"; };
+		BAC4283F27F9EE24004EAB08 /* DropListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropListCell.swift; sourceTree = "<group>"; };
+		BAF8BB7327FD860A00375C02 /* PresentAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentAnimator.swift; sourceTree = "<group>"; };
+		BAF8BB7527FD862300375C02 /* DismissAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DismissAnimator.swift; sourceTree = "<group>"; };
+		BAF8BB7727FD87CE00375C02 /* TypeChooserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeChooserView.swift; sourceTree = "<group>"; };
+		BAF8BB7A27FD8F4400375C02 /* CustomAlertPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomAlertPresenter.swift; sourceTree = "<group>"; };
+		BAF8BB7B27FD8F4400375C02 /* CustomAlertViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomAlertViewController.swift; sourceTree = "<group>"; };
+		BAF8BB7C27FD8F4400375C02 /* CustomAlert.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = CustomAlert.storyboard; sourceTree = "<group>"; };
+		BAF8BB7D27FD8F4400375C02 /* CustomAlertBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomAlertBuilder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,6 +209,11 @@
 			children = (
 				BAA02EEA27F3794A00FDD198 /* Common */,
 				BAA02F3827F7491300FDD198 /* CustomSearchBar.swift */,
+				BAF8BB7227FD85F300375C02 /* Animators */,
+				BAC4283D27F9A61A004EAB08 /* DropListView.swift */,
+				BAF8BB7927FD8F4400375C02 /* CustomAlert */,
+				BAF8BB7727FD87CE00375C02 /* TypeChooserView.swift */,
+				BAC4283F27F9EE24004EAB08 /* DropListCell.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -330,6 +353,26 @@
 			path = CoreData;
 			sourceTree = "<group>";
 		};
+		BAF8BB7227FD85F300375C02 /* Animators */ = {
+			isa = PBXGroup;
+			children = (
+				BAF8BB7327FD860A00375C02 /* PresentAnimator.swift */,
+				BAF8BB7527FD862300375C02 /* DismissAnimator.swift */,
+			);
+			path = Animators;
+			sourceTree = "<group>";
+		};
+		BAF8BB7927FD8F4400375C02 /* CustomAlert */ = {
+			isa = PBXGroup;
+			children = (
+				BAF8BB7A27FD8F4400375C02 /* CustomAlertPresenter.swift */,
+				BAF8BB7B27FD8F4400375C02 /* CustomAlertViewController.swift */,
+				BAF8BB7C27FD8F4400375C02 /* CustomAlert.storyboard */,
+				BAF8BB7D27FD8F4400375C02 /* CustomAlertBuilder.swift */,
+			);
+			path = CustomAlert;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -388,6 +431,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BAF8BB8027FD8F4400375C02 /* CustomAlert.storyboard in Resources */,
 				BAA02F0927F381AA00FDD198 /* Hereafter.storyboard in Resources */,
 				BAC4283227F86C87004EAB08 /* AddTableViewCell.xib in Resources */,
 				BAA02EE827F3790700FDD198 /* Introduction.storyboard in Resources */,
@@ -412,18 +456,25 @@
 				BAA02EEE27F3798300FDD198 /* IntroductionRouter.swift in Sources */,
 				BAC4283027F86611004EAB08 /* AddTableViewCell.swift in Sources */,
 				BAA02EF627F37A5200FDD198 /* BaseViewController.swift in Sources */,
+				BAF8BB7427FD860A00375C02 /* PresentAnimator.swift in Sources */,
+				BAF8BB7F27FD8F4400375C02 /* CustomAlertViewController.swift in Sources */,
 				BAA02F1F27F7075D00FDD198 /* TMDbSettings.swift in Sources */,
 				BAA02EEC27F3795C00FDD198 /* BaseRouter.swift in Sources */,
+				BAC4283E27F9A61A004EAB08 /* DropListView.swift in Sources */,
 				BAC4283C27F8BAAF004EAB08 /* LocalService.swift in Sources */,
+				BAF8BB7827FD87CE00375C02 /* TypeChooserView.swift in Sources */,
 				BAC4283A27F8A5EB004EAB08 /* Model.xcdatamodeld in Sources */,
+				BAF8BB7E27FD8F4400375C02 /* CustomAlertPresenter.swift in Sources */,
 				BAC4282C27F8627D004EAB08 /* AddTableViewDataSource.swift in Sources */,
 				BAA02EE227F3781700FDD198 /* AppRouter.swift in Sources */,
 				BAA02EF027F379B300FDD198 /* IntroductionViewModel.swift in Sources */,
 				BAA02F1727F5D0BE00FDD198 /* LocalDataProvider.swift in Sources */,
 				BAA02F1D27F7071500FDD198 /* TMDbService.swift in Sources */,
 				BAA02F0327F3804000FDD198 /* HereafterRouter.swift in Sources */,
+				BAF8BB7627FD862300375C02 /* DismissAnimator.swift in Sources */,
 				BAA02F0527F3807A00FDD198 /* HereafterViewController.swift in Sources */,
 				BAA02F2127F7093200FDD198 /* TMDbNetworkDataProvider.swift in Sources */,
+				BAF8BB8127FD8F4400375C02 /* CustomAlertBuilder.swift in Sources */,
 				BAA02EFE27F37D3200FDD198 /* UIWindow.swift in Sources */,
 				BAA02F3127F7309D00FDD198 /* Movie.swift in Sources */,
 				BAA02F1327F5D07600FDD198 /* ServiceError.swift in Sources */,
@@ -432,6 +483,7 @@
 				BAA02EF227F379F800FDD198 /* BaseViewModel.swift in Sources */,
 				BAA02F2C27F71F9800FDD198 /* AddRouter.swift in Sources */,
 				BAC4282E27F8655E004EAB08 /* UITableView.swift in Sources */,
+				BAC4284027F9EE24004EAB08 /* DropListCell.swift in Sources */,
 				BAA02F3427F730E500FDD198 /* MovieParser.swift in Sources */,
 				BAA02EF427F37A2800FDD198 /* IntroductionViewController.swift in Sources */,
 				BAA02F2827F71F2B00FDD198 /* AddViewController.swift in Sources */,

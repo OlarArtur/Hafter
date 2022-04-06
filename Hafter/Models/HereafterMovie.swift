@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum HereafterMovieType: String {
+enum HereafterMovieType: String, CaseIterable {
     case foremost
     case possibly
     case ifNothingElse

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="lLb-35-bLd">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Custom Alert View Controller-->
+        <scene sceneID="Vax-pB-wNB">
+            <objects>
+                <viewController id="lLb-35-bLd" customClass="CustomAlertViewController" customModule="Hafter" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="F7i-Mr-I34">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bb0-Dz-FmE">
+                                <rect key="frame" x="38" y="244.5" width="338" height="347"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" spacing="18" translatesAutoresizingMaskIntoConstraints="NO" id="FMb-br-eBZ">
+                                        <rect key="frame" x="0.0" y="46" width="338" height="292"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ce7-JV-HTF" userLabel="Content View">
+                                                <rect key="frame" x="0.0" y="0.0" width="338" height="292"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </view>
+                                            <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="cHy-UW-heJ">
+                                                <rect key="frame" x="10" y="0.0" width="318" height="44"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="44" id="SKj-t8-PxS"/>
+                                                </constraints>
+                                            </stackView>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </stackView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2ER-7H-zaC">
+                                        <rect key="frame" x="293" y="20" width="25" height="25"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="25" id="VhC-GY-qD8"/>
+                                            <constraint firstAttribute="height" constant="25" id="e4f-kS-dGL"/>
+                                        </constraints>
+                                        <state key="normal" image="close"/>
+                                        <connections>
+                                            <action selector="closeAction:" destination="lLb-35-bLd" eventType="touchUpInside" id="i0S-eH-omu"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.95294117649999999" green="0.96862745100000003" blue="0.98823529409999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="FMb-br-eBZ" secondAttribute="trailing" id="7Q9-Ye-wRx"/>
+                                    <constraint firstAttribute="trailing" secondItem="2ER-7H-zaC" secondAttribute="trailing" constant="20" id="GWI-e8-frq"/>
+                                    <constraint firstItem="2ER-7H-zaC" firstAttribute="top" secondItem="Bb0-Dz-FmE" secondAttribute="top" constant="20" id="Il4-ZU-nGv"/>
+                                    <constraint firstAttribute="top" secondItem="FMb-br-eBZ" secondAttribute="bottom" constant="-338" id="JFN-nb-9lx"/>
+                                    <constraint firstAttribute="bottom" secondItem="FMb-br-eBZ" secondAttribute="bottom" constant="9" id="RNB-ZS-Lhk"/>
+                                    <constraint firstItem="FMb-br-eBZ" firstAttribute="leading" secondItem="Bb0-Dz-FmE" secondAttribute="leading" id="Y3e-C4-vsO"/>
+                                    <constraint firstItem="FMb-br-eBZ" firstAttribute="top" secondItem="Bb0-Dz-FmE" secondAttribute="top" constant="46" id="p1G-RV-GMa"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="20"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="rYB-Xs-ZWA"/>
+                        <color key="backgroundColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="0.80000000000000004" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="Bb0-Dz-FmE" firstAttribute="leading" secondItem="rYB-Xs-ZWA" secondAttribute="leading" constant="38" id="asl-sM-FTU"/>
+                            <constraint firstItem="rYB-Xs-ZWA" firstAttribute="trailing" secondItem="Bb0-Dz-FmE" secondAttribute="trailing" constant="38" id="lSL-sJ-506"/>
+                            <constraint firstItem="Bb0-Dz-FmE" firstAttribute="centerY" secondItem="F7i-Mr-I34" secondAttribute="centerY" constant="-30" id="vAB-gq-mX6"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="actionsStackView" destination="cHy-UW-heJ" id="uiG-h1-C2v"/>
+                        <outlet property="contentView" destination="ce7-JV-HTF" id="SVN-NN-udt"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4sf-i6-25q" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-410.14492753623193" y="53.571428571428569"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="close" width="14" height="15"/>
+    </resources>
+</document>
