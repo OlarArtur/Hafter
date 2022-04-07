@@ -16,6 +16,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="introduction" translatesAutoresizingMaskIntoConstraints="NO" id="8za-QY-Rsl">
+                                <rect key="frame" x="20" y="-849.5" width="374" height="2515"/>
+                            </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uPb-4g-WbL">
                                 <rect key="frame" x="157.5" y="432.5" width="99" height="31"/>
                                 <state key="normal" title="Button"/>
@@ -28,7 +31,10 @@
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="8za-QY-Rsl" firstAttribute="centerY" secondItem="5EZ-qb-Rvc" secondAttribute="centerY" constant="-40" id="3Mv-GJ-q3m"/>
+                            <constraint firstAttribute="trailing" secondItem="8za-QY-Rsl" secondAttribute="trailing" constant="20" id="Mke-kV-xvf"/>
                             <constraint firstItem="uPb-4g-WbL" firstAttribute="centerY" secondItem="5EZ-qb-Rvc" secondAttribute="centerY" id="Shw-4f-oj2"/>
+                            <constraint firstItem="8za-QY-Rsl" firstAttribute="leading" secondItem="5EZ-qb-Rvc" secondAttribute="leading" constant="20" id="eYt-zw-1cp"/>
                             <constraint firstItem="uPb-4g-WbL" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="tF6-CI-gQz"/>
                         </constraints>
                     </view>
@@ -39,6 +45,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="introduction" width="1849" height="2515"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

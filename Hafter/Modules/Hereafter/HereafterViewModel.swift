@@ -10,6 +10,7 @@ import Foundation
 protocol HereafterViewModelProtocol {
     func add()
     func openMenu()
+    func openList(type: HereafterMovieType)
 }
 
 final class HereafterViewModel<Router: HereafterRouterProtocol>: BaseViewModel<Router> {
@@ -25,5 +26,9 @@ extension HereafterViewModel: HereafterViewModelProtocol {
     
     func openMenu() {
         router?.openMenu()
+    }
+    
+    func openList(type: HereafterMovieType) {
+        router?.openList(type: type)
     }
 }

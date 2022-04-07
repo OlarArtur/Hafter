@@ -73,6 +73,11 @@
 		BAF8BB8A27FDBE7300375C02 /* MenuBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BB8927FDBE7300375C02 /* MenuBuilder.swift */; };
 		BAF8BB8C27FDCFF700375C02 /* Menu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BAF8BB8B27FDCFF700375C02 /* Menu.storyboard */; };
 		BAF8BB8E27FEC13C00375C02 /* MenuAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BB8D27FEC13B00375C02 /* MenuAnimator.swift */; };
+		BAF8BB9127FF678200375C02 /* ListBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BB9027FF678200375C02 /* ListBuilder.swift */; };
+		BAF8BB9327FF67D500375C02 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BB9227FF67D500375C02 /* ListViewController.swift */; };
+		BAF8BB9527FF682E00375C02 /* ListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BB9427FF682E00375C02 /* ListViewModel.swift */; };
+		BAF8BB9727FF68AF00375C02 /* ListRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BB9627FF68AF00375C02 /* ListRouter.swift */; };
+		BAF8BB9927FF690300375C02 /* List.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BAF8BB9827FF690300375C02 /* List.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -144,6 +149,11 @@
 		BAF8BB8927FDBE7300375C02 /* MenuBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBuilder.swift; sourceTree = "<group>"; };
 		BAF8BB8B27FDCFF700375C02 /* Menu.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Menu.storyboard; sourceTree = "<group>"; };
 		BAF8BB8D27FEC13B00375C02 /* MenuAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuAnimator.swift; sourceTree = "<group>"; };
+		BAF8BB9027FF678200375C02 /* ListBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListBuilder.swift; sourceTree = "<group>"; };
+		BAF8BB9227FF67D500375C02 /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
+		BAF8BB9427FF682E00375C02 /* ListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewModel.swift; sourceTree = "<group>"; };
+		BAF8BB9627FF68AF00375C02 /* ListRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListRouter.swift; sourceTree = "<group>"; };
+		BAF8BB9827FF690300375C02 /* List.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = List.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -197,6 +207,7 @@
 		BAA02EE327F3788400FDD198 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				BAF8BB8F27FF675900375C02 /* HafterList */,
 				BAF8BB8227FDBB8700375C02 /* Menu */,
 				BAA02F2227F71D8200FDD198 /* Add */,
 				BAA02EFF27F37FBA00FDD198 /* Hereafter */,
@@ -399,6 +410,18 @@
 			path = Menu;
 			sourceTree = "<group>";
 		};
+		BAF8BB8F27FF675900375C02 /* HafterList */ = {
+			isa = PBXGroup;
+			children = (
+				BAF8BB9027FF678200375C02 /* ListBuilder.swift */,
+				BAF8BB9427FF682E00375C02 /* ListViewModel.swift */,
+				BAF8BB9827FF690300375C02 /* List.storyboard */,
+				BAF8BB9627FF68AF00375C02 /* ListRouter.swift */,
+				BAF8BB9227FF67D500375C02 /* ListViewController.swift */,
+			);
+			path = HafterList;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -459,6 +482,7 @@
 			files = (
 				BAF8BB8027FD8F4400375C02 /* CustomAlert.storyboard in Resources */,
 				BAA02F0927F381AA00FDD198 /* Hereafter.storyboard in Resources */,
+				BAF8BB9927FF690300375C02 /* List.storyboard in Resources */,
 				BAC4283227F86C87004EAB08 /* AddTableViewCell.xib in Resources */,
 				BAF8BB8C27FDCFF700375C02 /* Menu.storyboard in Resources */,
 				BAA02EE827F3790700FDD198 /* Introduction.storyboard in Resources */,
@@ -491,6 +515,7 @@
 				BAA02F1F27F7075D00FDD198 /* TMDbSettings.swift in Sources */,
 				BAA02EEC27F3795C00FDD198 /* BaseRouter.swift in Sources */,
 				BAC4283E27F9A61A004EAB08 /* DropListView.swift in Sources */,
+				BAF8BB9127FF678200375C02 /* ListBuilder.swift in Sources */,
 				BAC4283C27F8BAAF004EAB08 /* LocalService.swift in Sources */,
 				BAF8BB7827FD87CE00375C02 /* TypeChooserView.swift in Sources */,
 				BAC4283A27F8A5EB004EAB08 /* Model.xcdatamodeld in Sources */,
@@ -515,15 +540,18 @@
 				BAA02F2C27F71F9800FDD198 /* AddRouter.swift in Sources */,
 				BAC4282E27F8655E004EAB08 /* UITableView.swift in Sources */,
 				BAF8BB8427FDBDBD00375C02 /* MenuViewController.swift in Sources */,
+				BAF8BB9327FF67D500375C02 /* ListViewController.swift in Sources */,
 				BAC4284027F9EE24004EAB08 /* DropListCell.swift in Sources */,
 				BAA02F3427F730E500FDD198 /* MovieParser.swift in Sources */,
 				BAA02EF427F37A2800FDD198 /* IntroductionViewController.swift in Sources */,
+				BAF8BB9727FF68AF00375C02 /* ListRouter.swift in Sources */,
 				BAA02F2827F71F2B00FDD198 /* AddViewController.swift in Sources */,
 				BAA02F3927F7491300FDD198 /* CustomSearchBar.swift in Sources */,
 				BAA02F0727F380AD00FDD198 /* HereafterViewModel.swift in Sources */,
 				BAA02F0127F37FEE00FDD198 /* HereafterBuilder.swift in Sources */,
 				BAA02F1B27F5D11700FDD198 /* HTTPNetworkDataProvider.swift in Sources */,
 				BAA02F1927F5D0DA00FDD198 /* NetworkDataProvider.swift in Sources */,
+				BAF8BB9527FF682E00375C02 /* ListViewModel.swift in Sources */,
 				BAA02ED227F22AD800FDD198 /* ViewController.swift in Sources */,
 				BAA02F1527F5D0A000FDD198 /* CommonDataProvider.swift in Sources */,
 				BAC4283627F898CC004EAB08 /* HereafterMovie.swift in Sources */,

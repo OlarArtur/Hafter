@@ -44,15 +44,15 @@ final class HereafterViewController: BaseViewController<HereafterViewModelProtoc
     
     
     @objc private func firstlyAction() {
-        
+        viewModel?.openList(type: .foremost)
     }
     
     @objc private func secondlyAction() {
-        
+        viewModel?.openList(type: .possibly)
     }
     
     @objc private func thirdlyAction() {
-        
+        viewModel?.openList(type: .ifNothingElse)
     }
     
     @objc private func addAction() {

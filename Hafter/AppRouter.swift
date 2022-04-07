@@ -11,7 +11,7 @@ final class AppRouter {
     
     private(set) var window: UIWindow
     private var baseNavigationController: UINavigationController?
-    private var localDataService: LocalServiceProtocol?
+    private var localDataService: LocalServiceProtocol = LocalService(provider: LocalDataProvider())
     
     init(window: UIWindow) {
         self.window = window
@@ -78,16 +78,27 @@ extension AppRouter: HereafterOutputProtocol {
         addVC.transitioningDelegate = addVC as? UIViewControllerTransitioningDelegate
         rootViewController?.present(addVC, animated: true)
     }
+    
+    func openList(type: HereafterMovieType) {
+        guard let listVC = ListBuilder.build(output: self, localDataService: localDataService) else {
+            return
+        }
+        rootViewController?.present(listVC, animated: true)
+    }
 }
 
 extension AppRouter: AddOutputProtocol {
     
     func added(movie: HereafterMovie, controller: UIViewController) {
-        localDataService?.save(movie: movie)
+        localDataService.save(movie: movie)
         controller.hide(animated: true)
     }
 }
 
 extension AppRouter: MenuOutputProtocol {
+    
+}
+
+extension AppRouter: ListOutputProtocol {
     
 }
