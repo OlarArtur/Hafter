@@ -12,7 +12,6 @@ final class AddViewController: BaseViewController<AddViewModelProtocol>, CustomA
     @IBOutlet private weak var addLabel: UILabel!
     @IBOutlet private weak var addButton: UIButton!
     @IBOutlet private weak var tableView: UITableView!
-    @IBOutlet private weak var typeDropListView: DropListView!
     @IBOutlet private weak var bottomConstraint: NSLayoutConstraint!
     
     private lazy var customSearchBar: CustomSearchBar = CustomSearchBar()

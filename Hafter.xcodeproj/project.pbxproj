@@ -67,6 +67,12 @@
 		BAF8BB7F27FD8F4400375C02 /* CustomAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BB7B27FD8F4400375C02 /* CustomAlertViewController.swift */; };
 		BAF8BB8027FD8F4400375C02 /* CustomAlert.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BAF8BB7C27FD8F4400375C02 /* CustomAlert.storyboard */; };
 		BAF8BB8127FD8F4400375C02 /* CustomAlertBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BB7D27FD8F4400375C02 /* CustomAlertBuilder.swift */; };
+		BAF8BB8427FDBDBD00375C02 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BB8327FDBDBD00375C02 /* MenuViewController.swift */; };
+		BAF8BB8627FDBDE600375C02 /* MenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BB8527FDBDE600375C02 /* MenuViewModel.swift */; };
+		BAF8BB8827FDBE2D00375C02 /* MenuRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BB8727FDBE2D00375C02 /* MenuRouter.swift */; };
+		BAF8BB8A27FDBE7300375C02 /* MenuBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BB8927FDBE7300375C02 /* MenuBuilder.swift */; };
+		BAF8BB8C27FDCFF700375C02 /* Menu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BAF8BB8B27FDCFF700375C02 /* Menu.storyboard */; };
+		BAF8BB8E27FEC13C00375C02 /* MenuAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BB8D27FEC13B00375C02 /* MenuAnimator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -132,6 +138,12 @@
 		BAF8BB7B27FD8F4400375C02 /* CustomAlertViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomAlertViewController.swift; sourceTree = "<group>"; };
 		BAF8BB7C27FD8F4400375C02 /* CustomAlert.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = CustomAlert.storyboard; sourceTree = "<group>"; };
 		BAF8BB7D27FD8F4400375C02 /* CustomAlertBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomAlertBuilder.swift; sourceTree = "<group>"; };
+		BAF8BB8327FDBDBD00375C02 /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
+		BAF8BB8527FDBDE600375C02 /* MenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewModel.swift; sourceTree = "<group>"; };
+		BAF8BB8727FDBE2D00375C02 /* MenuRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuRouter.swift; sourceTree = "<group>"; };
+		BAF8BB8927FDBE7300375C02 /* MenuBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBuilder.swift; sourceTree = "<group>"; };
+		BAF8BB8B27FDCFF700375C02 /* Menu.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Menu.storyboard; sourceTree = "<group>"; };
+		BAF8BB8D27FEC13B00375C02 /* MenuAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuAnimator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -185,6 +197,7 @@
 		BAA02EE327F3788400FDD198 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				BAF8BB8227FDBB8700375C02 /* Menu */,
 				BAA02F2227F71D8200FDD198 /* Add */,
 				BAA02EFF27F37FBA00FDD198 /* Hereafter */,
 				BAA02EE427F3789300FDD198 /* Introduction */,
@@ -357,6 +370,7 @@
 			isa = PBXGroup;
 			children = (
 				BAF8BB7327FD860A00375C02 /* PresentAnimator.swift */,
+				BAF8BB8D27FEC13B00375C02 /* MenuAnimator.swift */,
 				BAF8BB7527FD862300375C02 /* DismissAnimator.swift */,
 			);
 			path = Animators;
@@ -371,6 +385,18 @@
 				BAF8BB7D27FD8F4400375C02 /* CustomAlertBuilder.swift */,
 			);
 			path = CustomAlert;
+			sourceTree = "<group>";
+		};
+		BAF8BB8227FDBB8700375C02 /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				BAF8BB8327FDBDBD00375C02 /* MenuViewController.swift */,
+				BAF8BB8527FDBDE600375C02 /* MenuViewModel.swift */,
+				BAF8BB8B27FDCFF700375C02 /* Menu.storyboard */,
+				BAF8BB8927FDBE7300375C02 /* MenuBuilder.swift */,
+				BAF8BB8727FDBE2D00375C02 /* MenuRouter.swift */,
+			);
+			path = Menu;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -434,6 +460,7 @@
 				BAF8BB8027FD8F4400375C02 /* CustomAlert.storyboard in Resources */,
 				BAA02F0927F381AA00FDD198 /* Hereafter.storyboard in Resources */,
 				BAC4283227F86C87004EAB08 /* AddTableViewCell.xib in Resources */,
+				BAF8BB8C27FDCFF700375C02 /* Menu.storyboard in Resources */,
 				BAA02EE827F3790700FDD198 /* Introduction.storyboard in Resources */,
 				BAA02EDA27F22AD900FDD198 /* LaunchScreen.storyboard in Resources */,
 				BAA02ED727F22AD900FDD198 /* Assets.xcassets in Resources */,
@@ -452,10 +479,13 @@
 				BAA02EFB27F37CF400FDD198 /* NavigationControllerViewController.swift in Sources */,
 				BAA02F0D27F5CB6000FDD198 /* UIImage.swift in Sources */,
 				BAA02F0B27F4F01200FDD198 /* UIView+IBInspectable.swift in Sources */,
+				BAF8BB8627FDBDE600375C02 /* MenuViewModel.swift in Sources */,
 				BAA02EE627F378B100FDD198 /* IntroductionBuilder.swift in Sources */,
 				BAA02EEE27F3798300FDD198 /* IntroductionRouter.swift in Sources */,
 				BAC4283027F86611004EAB08 /* AddTableViewCell.swift in Sources */,
 				BAA02EF627F37A5200FDD198 /* BaseViewController.swift in Sources */,
+				BAF8BB8A27FDBE7300375C02 /* MenuBuilder.swift in Sources */,
+				BAF8BB8827FDBE2D00375C02 /* MenuRouter.swift in Sources */,
 				BAF8BB7427FD860A00375C02 /* PresentAnimator.swift in Sources */,
 				BAF8BB7F27FD8F4400375C02 /* CustomAlertViewController.swift in Sources */,
 				BAA02F1F27F7075D00FDD198 /* TMDbSettings.swift in Sources */,
@@ -467,6 +497,7 @@
 				BAF8BB7E27FD8F4400375C02 /* CustomAlertPresenter.swift in Sources */,
 				BAC4282C27F8627D004EAB08 /* AddTableViewDataSource.swift in Sources */,
 				BAA02EE227F3781700FDD198 /* AppRouter.swift in Sources */,
+				BAF8BB8E27FEC13C00375C02 /* MenuAnimator.swift in Sources */,
 				BAA02EF027F379B300FDD198 /* IntroductionViewModel.swift in Sources */,
 				BAA02F1727F5D0BE00FDD198 /* LocalDataProvider.swift in Sources */,
 				BAA02F1D27F7071500FDD198 /* TMDbService.swift in Sources */,
@@ -483,6 +514,7 @@
 				BAA02EF227F379F800FDD198 /* BaseViewModel.swift in Sources */,
 				BAA02F2C27F71F9800FDD198 /* AddRouter.swift in Sources */,
 				BAC4282E27F8655E004EAB08 /* UITableView.swift in Sources */,
+				BAF8BB8427FDBDBD00375C02 /* MenuViewController.swift in Sources */,
 				BAC4284027F9EE24004EAB08 /* DropListCell.swift in Sources */,
 				BAA02F3427F730E500FDD198 /* MovieParser.swift in Sources */,
 				BAA02EF427F37A2800FDD198 /* IntroductionViewController.swift in Sources */,

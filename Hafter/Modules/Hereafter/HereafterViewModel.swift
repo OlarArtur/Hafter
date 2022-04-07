@@ -9,6 +9,7 @@ import Foundation
 
 protocol HereafterViewModelProtocol {
     func add()
+    func openMenu()
 }
 
 final class HereafterViewModel<Router: HereafterRouterProtocol>: BaseViewModel<Router> {
@@ -20,5 +21,9 @@ extension HereafterViewModel: HereafterViewModelProtocol {
     
     func add() {
         router?.add()
+    }
+    
+    func openMenu() {
+        router?.openMenu()
     }
 }

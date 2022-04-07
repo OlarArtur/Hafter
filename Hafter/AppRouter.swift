@@ -69,6 +69,15 @@ extension AppRouter: HereafterOutputProtocol {
         }
         rootViewController?.show(addVC, sender: nil)
     }
+    
+    func openMenu() {
+        guard let addVC = MenuBuilder.build(output: self) else {
+            return
+        }
+        addVC.modalPresentationStyle = .fullScreen
+        addVC.transitioningDelegate = addVC as? UIViewControllerTransitioningDelegate
+        rootViewController?.present(addVC, animated: true)
+    }
 }
 
 extension AppRouter: AddOutputProtocol {
@@ -77,4 +86,8 @@ extension AppRouter: AddOutputProtocol {
         localDataService?.save(movie: movie)
         controller.hide(animated: true)
     }
+}
+
+extension AppRouter: MenuOutputProtocol {
+    
 }

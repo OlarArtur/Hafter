@@ -13,6 +13,10 @@ protocol HereafterViewProtocol: AnyObject {
 
 final class HereafterViewController: BaseViewController<HereafterViewModelProtocol> {
     
+    deinit {
+        print("deinit HereafterViewController")
+    }
+    
     @IBOutlet private weak var addView: UIView!
     @IBOutlet private weak var randomizeView: UIView!
     
@@ -60,7 +64,7 @@ final class HereafterViewController: BaseViewController<HereafterViewModelProtoc
     }
     
     @objc private func menuTapped() {
-        
+        viewModel?.openMenu()
     }
 }
 

@@ -21,6 +21,6 @@ extension CustomAlertRouterProtocol {
         alert.transitioningDelegate = alert as? UIViewControllerTransitioningDelegate
         let scenes = UIApplication.shared.connectedScenes
         let windowScene = scenes.first as? UIWindowScene
-        windowScene?.windows.filter {$0.isKeyWindow}.first?.rootViewController?.topmostPresenter.present(alert, animated: true, completion: nil)
+        windowScene?.windows.filter { $0.isKeyWindow }.first?.rootViewController?.topmostPresenter.present(alert, animated: true, completion: nil)
     }
 }

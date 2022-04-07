@@ -9,11 +9,12 @@ import Foundation
 
 protocol HereafterOutputProtocol: AnyObject {
     func add()
+    func openMenu()
 }
 
 protocol HereafterRouterProtocol: RouterProtocol {
-    func start()
     func add()
+    func openMenu()
 }
 
 final class HereafterRouter: BaseRouter {
@@ -22,11 +23,11 @@ final class HereafterRouter: BaseRouter {
 
 extension HereafterRouter: HereafterRouterProtocol {
     
-    func start() {
-        
-    }
-    
     func add() {
         output?.add()
+    }
+    
+    func openMenu() {
+        output?.openMenu()
     }
 }
