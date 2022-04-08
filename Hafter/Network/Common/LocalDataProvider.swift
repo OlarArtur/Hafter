@@ -9,7 +9,7 @@ import CoreData
 
 protocol LocalDataProviderProtocol {
     func save(movie: HereafterMovie)
-    func getMovies() -> [HereafterMovie]
+    func getMovies(type: HereafterMovieType?) -> [HereafterMovie]
 }
 
 final class LocalDataProvider {
@@ -71,9 +71,12 @@ extension LocalDataProvider: LocalDataProviderProtocol {
         }
     }
     
-    func getMovies() -> [HereafterMovie] {
+    func getMovies(type: HereafterMovieType?) -> [HereafterMovie] {
         guard let managedContext = persistentContainer?.viewContext else { return [] }
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "DBHereafterMovie")
+        if let type = type {
+            fetchRequest.predicate = NSPredicate(format: "type = %@", type.rawValue)  
+        }
         var resultData: [HereafterMovie] = []
         do {
             let result = try managedContext.fetch(fetchRequest)

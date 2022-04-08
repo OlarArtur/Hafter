@@ -79,4 +79,11 @@ final class Movie: Codable {
         dateFormatter.dateFormat = "yyyy-MM-dd"
         releaseDate = dateFormatter.date(from: releaseDateString)
     }
+    
+    public func posterImageURL() -> URL? {
+        guard let posterPath = posterPath else { return nil }
+        let path = "https://image.tmdb.org/t/p/w500" + posterPath
+        guard let url = path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return nil }
+        return URL(string: url)
+    }
 }

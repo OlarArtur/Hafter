@@ -11,6 +11,7 @@ enum HereafterMovieType: String, CaseIterable {
     case foremost
     case possibly
     case ifNothingElse
+    case viewed
 }
 
 final class HereafterMovie {

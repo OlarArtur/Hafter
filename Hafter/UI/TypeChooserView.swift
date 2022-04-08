@@ -13,7 +13,7 @@ final class TypeChooserView: UIView, AlertViewOutput {
     
     private let formostImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage.image(named: "formost_large_circle")
+        imageView.image = UIImage.image(named: ImageConstants.foremostLarge)
         imageView.isUserInteractionEnabled = true
         imageView.contentMode = .scaleAspectFit
         return imageView
@@ -21,7 +21,7 @@ final class TypeChooserView: UIView, AlertViewOutput {
     
     private let possiblyImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage.image(named: "possibly_large_circle")
+        imageView.image = UIImage.image(named: ImageConstants.possiblyLarge)
         imageView.isUserInteractionEnabled = true
         imageView.contentMode = .scaleAspectFit
         return imageView
@@ -29,7 +29,7 @@ final class TypeChooserView: UIView, AlertViewOutput {
     
     private let ifNothingElseImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage.image(named: "if_nothing_else_large_circle")
+        imageView.image = UIImage.image(named: ImageConstants.ifNothingElseLarge)
         imageView.isUserInteractionEnabled = true
         imageView.contentMode = .scaleAspectFit
         return imageView

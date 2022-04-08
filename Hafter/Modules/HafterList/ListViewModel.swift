@@ -10,6 +10,11 @@ import UIKit
 protocol ListViewModelProtocol {
     var showError: ((Error) -> Void)? { get set }
     var reloadData: (() -> Void)? { get set }
+    
+    func numberOfItems() -> Int
+    func itemFor(index: Int) -> Movie
+    
+    func start()
 }
 
 final class ListViewModel<Router: ListRouterProtocol>: BaseViewModel<Router> {
@@ -19,17 +24,29 @@ final class ListViewModel<Router: ListRouterProtocol>: BaseViewModel<Router> {
     
     private let localDataService: LocalServiceProtocol
     
-    private var currentTitle: String = ""
+    private let type: HereafterMovieType
+    private var movies: [HereafterMovie] = []
     
-    init(router: Router, localDataService: LocalServiceProtocol) {
+    init(router: Router, localDataService: LocalServiceProtocol, type: HereafterMovieType) {
         self.localDataService = localDataService
+        self.type = type
         super.init(router: router)
     }
 }
 
 extension ListViewModel: ListViewModelProtocol {
     
+    func start() {
+        movies = localDataService.getMovies(type: type)
+    }
     
+    func numberOfItems() -> Int {
+        return movies.count
+    }
+    
+    func itemFor(index: Int) -> Movie {
+        return movies[index].movie
+    }
 }
 
 private extension AddViewModel {

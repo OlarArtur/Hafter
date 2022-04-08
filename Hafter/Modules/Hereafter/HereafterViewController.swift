@@ -66,13 +66,19 @@ final class HereafterViewController: BaseViewController<HereafterViewModelProtoc
     @objc private func menuTapped() {
         viewModel?.openMenu()
     }
+    
+    @objc private func viewedTapped() {
+        viewModel?.openViewed()
+    }
 }
 
 private extension HereafterViewController {
     
     func setupNavigationController() {
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage.image(named: "menu"), style: .plain, target: self, action: #selector(menuTapped))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage.image(named: ImageConstants.menu), style: .plain, target: self, action: #selector(menuTapped))
         navigationItem.leftBarButtonItem?.tintColor = #colorLiteral(red: 0.1490196078, green: 0.1960784314, blue: 0.2196078431, alpha: 1)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage.image(named: ImageConstants.viewed), style: .plain, target: self, action: #selector(viewedTapped))
+        navigationItem.rightBarButtonItem?.tintColor = #colorLiteral(red: 0.1490196078, green: 0.1960784314, blue: 0.2196078431, alpha: 1)
     }
 }
 

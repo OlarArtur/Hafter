@@ -3,6 +3,7 @@
     <entity name="DBHereafterMovie" representedClassName="DBHereafterMovie" syncable="YES" codeGenerationType="class">
         <attribute name="adult" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="backdropPath" optional="YES" attributeType="String"/>
+        <attribute name="originalLanguage" optional="YES" attributeType="String"/>
         <attribute name="originalTitle" optional="YES" attributeType="String"/>
         <attribute name="overview" optional="YES" attributeType="String"/>
         <attribute name="popularity" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
@@ -12,6 +13,6 @@
         <attribute name="type" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="DBHereafterMovie" positionX="-63" positionY="-18" width="128" height="164"/>
+        <element name="DBHereafterMovie" positionX="-63" positionY="-18" width="128" height="179"/>
     </elements>
 </model>

@@ -78,6 +78,13 @@
 		BAF8BB9527FF682E00375C02 /* ListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BB9427FF682E00375C02 /* ListViewModel.swift */; };
 		BAF8BB9727FF68AF00375C02 /* ListRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BB9627FF68AF00375C02 /* ListRouter.swift */; };
 		BAF8BB9927FF690300375C02 /* List.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BAF8BB9827FF690300375C02 /* List.storyboard */; };
+		BAF8BB9B2800340B00375C02 /* ListTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BB9A2800340B00375C02 /* ListTableViewDataSource.swift */; };
+		BAF8BB9D2800341B00375C02 /* ListTableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BB9C2800341B00375C02 /* ListTableViewDelegate.swift */; };
+		BAF8BB9F280034A200375C02 /* ListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BB9E280034A200375C02 /* ListTableViewCell.swift */; };
+		BAF8BBA12800354700375C02 /* ListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BAF8BBA02800354700375C02 /* ListTableViewCell.xib */; };
+		BAF8BBA328003D9C00375C02 /* UIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BBA228003D9C00375C02 /* UIImageView.swift */; };
+		BAF8BBA628003DFB00375C02 /* WZImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BBA528003DFB00375C02 /* WZImageLoader.swift */; };
+		BAF8BBA828005B9100375C02 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BBA728005B9100375C02 /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -154,6 +161,13 @@
 		BAF8BB9427FF682E00375C02 /* ListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewModel.swift; sourceTree = "<group>"; };
 		BAF8BB9627FF68AF00375C02 /* ListRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListRouter.swift; sourceTree = "<group>"; };
 		BAF8BB9827FF690300375C02 /* List.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = List.storyboard; sourceTree = "<group>"; };
+		BAF8BB9A2800340B00375C02 /* ListTableViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewDataSource.swift; sourceTree = "<group>"; };
+		BAF8BB9C2800341B00375C02 /* ListTableViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewDelegate.swift; sourceTree = "<group>"; };
+		BAF8BB9E280034A200375C02 /* ListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewCell.swift; sourceTree = "<group>"; };
+		BAF8BBA02800354700375C02 /* ListTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ListTableViewCell.xib; sourceTree = "<group>"; };
+		BAF8BBA228003D9C00375C02 /* UIImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageView.swift; sourceTree = "<group>"; };
+		BAF8BBA528003DFB00375C02 /* WZImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WZImageLoader.swift; sourceTree = "<group>"; };
+		BAF8BBA728005B9100375C02 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -257,6 +271,7 @@
 			isa = PBXGroup;
 			children = (
 				BAA02EF827F37BA700FDD198 /* Settings.swift */,
+				BAF8BBA728005B9100375C02 /* Constants.swift */,
 				BAA02F1E27F7075D00FDD198 /* TMDbSettings.swift */,
 			);
 			path = Settings;
@@ -267,6 +282,7 @@
 			children = (
 				BAA02EFD27F37D3200FDD198 /* UIWindow.swift */,
 				BAA02F2D27F7271000FDD198 /* UIVIewController.swift */,
+				BAF8BBA228003D9C00375C02 /* UIImageView.swift */,
 				BAA02F0C27F5CB6000FDD198 /* UIImage.swift */,
 				BAA02F0A27F4F01200FDD198 /* UIView+IBInspectable.swift */,
 				BAC4282D27F8655E004EAB08 /* UITableView.swift */,
@@ -295,6 +311,7 @@
 				BAA02F1127F5D05600FDD198 /* Services */,
 				BAA02F1027F5D04F00FDD198 /* Common */,
 				BAA02F0F27F5D04300FDD198 /* Providers */,
+				BAF8BBA528003DFB00375C02 /* WZImageLoader.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -417,6 +434,10 @@
 				BAF8BB9427FF682E00375C02 /* ListViewModel.swift */,
 				BAF8BB9827FF690300375C02 /* List.storyboard */,
 				BAF8BB9627FF68AF00375C02 /* ListRouter.swift */,
+				BAF8BB9A2800340B00375C02 /* ListTableViewDataSource.swift */,
+				BAF8BB9E280034A200375C02 /* ListTableViewCell.swift */,
+				BAF8BBA02800354700375C02 /* ListTableViewCell.xib */,
+				BAF8BB9C2800341B00375C02 /* ListTableViewDelegate.swift */,
 				BAF8BB9227FF67D500375C02 /* ListViewController.swift */,
 			);
 			path = HafterList;
@@ -488,6 +509,7 @@
 				BAA02EE827F3790700FDD198 /* Introduction.storyboard in Resources */,
 				BAA02EDA27F22AD900FDD198 /* LaunchScreen.storyboard in Resources */,
 				BAA02ED727F22AD900FDD198 /* Assets.xcassets in Resources */,
+				BAF8BBA12800354700375C02 /* ListTableViewCell.xib in Resources */,
 				BAA02F2627F71F0B00FDD198 /* Add.storyboard in Resources */,
 				BAA02ED527F22AD800FDD198 /* Main.storyboard in Resources */,
 			);
@@ -509,6 +531,7 @@
 				BAC4283027F86611004EAB08 /* AddTableViewCell.swift in Sources */,
 				BAA02EF627F37A5200FDD198 /* BaseViewController.swift in Sources */,
 				BAF8BB8A27FDBE7300375C02 /* MenuBuilder.swift in Sources */,
+				BAF8BBA828005B9100375C02 /* Constants.swift in Sources */,
 				BAF8BB8827FDBE2D00375C02 /* MenuRouter.swift in Sources */,
 				BAF8BB7427FD860A00375C02 /* PresentAnimator.swift in Sources */,
 				BAF8BB7F27FD8F4400375C02 /* CustomAlertViewController.swift in Sources */,
@@ -516,7 +539,10 @@
 				BAA02EEC27F3795C00FDD198 /* BaseRouter.swift in Sources */,
 				BAC4283E27F9A61A004EAB08 /* DropListView.swift in Sources */,
 				BAF8BB9127FF678200375C02 /* ListBuilder.swift in Sources */,
+				BAF8BBA328003D9C00375C02 /* UIImageView.swift in Sources */,
+				BAF8BBA628003DFB00375C02 /* WZImageLoader.swift in Sources */,
 				BAC4283C27F8BAAF004EAB08 /* LocalService.swift in Sources */,
+				BAF8BB9F280034A200375C02 /* ListTableViewCell.swift in Sources */,
 				BAF8BB7827FD87CE00375C02 /* TypeChooserView.swift in Sources */,
 				BAC4283A27F8A5EB004EAB08 /* Model.xcdatamodeld in Sources */,
 				BAF8BB7E27FD8F4400375C02 /* CustomAlertPresenter.swift in Sources */,
@@ -534,6 +560,7 @@
 				BAA02EFE27F37D3200FDD198 /* UIWindow.swift in Sources */,
 				BAA02F3127F7309D00FDD198 /* Movie.swift in Sources */,
 				BAA02F1327F5D07600FDD198 /* ServiceError.swift in Sources */,
+				BAF8BB9B2800340B00375C02 /* ListTableViewDataSource.swift in Sources */,
 				BAA02F2A27F71F6800FDD198 /* AddViewModel.swift in Sources */,
 				BAA02EF927F37BA700FDD198 /* Settings.swift in Sources */,
 				BAA02EF227F379F800FDD198 /* BaseViewModel.swift in Sources */,
@@ -547,6 +574,7 @@
 				BAF8BB9727FF68AF00375C02 /* ListRouter.swift in Sources */,
 				BAA02F2827F71F2B00FDD198 /* AddViewController.swift in Sources */,
 				BAA02F3927F7491300FDD198 /* CustomSearchBar.swift in Sources */,
+				BAF8BB9D2800341B00375C02 /* ListTableViewDelegate.swift in Sources */,
 				BAA02F0727F380AD00FDD198 /* HereafterViewModel.swift in Sources */,
 				BAA02F0127F37FEE00FDD198 /* HereafterBuilder.swift in Sources */,
 				BAA02F1B27F5D11700FDD198 /* HTTPNetworkDataProvider.swift in Sources */,

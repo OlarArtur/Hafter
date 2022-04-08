@@ -9,13 +9,13 @@ import UIKit
 
 final class ListBuilder {
     
-    static func build(output: ListOutputProtocol?, localDataService: LocalServiceProtocol) -> UIViewController? {
+    static func build(type: HereafterMovieType, output: ListOutputProtocol?, localDataService: LocalServiceProtocol) -> UIViewController? {
         let addStoryboard = UIStoryboard(name: "List", bundle: nil)
         if let listVC = addStoryboard.instantiateInitialViewController() as? ListViewController {
             let router = ListRouter(presenter: listVC)
             router.output = output
            
-            let viewModel = ListViewModel(router: router, localDataService: localDataService)
+            let viewModel = ListViewModel(router: router, localDataService: localDataService, type: type)
             listVC.viewModel = viewModel
             return listVC
         }

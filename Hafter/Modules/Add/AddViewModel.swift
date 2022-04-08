@@ -18,6 +18,7 @@ protocol AddViewModelProtocol {
     func itemFor(index: Int) -> String
     func select(index: Int)
     
+    func update(title: String)
     func updateSelectedType(type: HereafterMovieType)
     func clear()
     func search(query: String)
@@ -74,6 +75,10 @@ extension AddViewModel: AddViewModelProtocol {
     
     func clear() {
         selectedMovie = nil
+    }
+    
+    func update(title: String) {
+        currentTitle = title
     }
     
     func numberOfItems() -> Int {

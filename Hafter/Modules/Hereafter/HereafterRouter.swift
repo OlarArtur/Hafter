@@ -10,12 +10,14 @@ import Foundation
 protocol HereafterOutputProtocol: AnyObject {
     func add()
     func openMenu()
+    func openViewed()
     func openList(type: HereafterMovieType)
 }
 
 protocol HereafterRouterProtocol: RouterProtocol {
     func add()
     func openMenu()
+    func openViewed()
     func openList(type: HereafterMovieType)
 }
 
@@ -31,6 +33,10 @@ extension HereafterRouter: HereafterRouterProtocol {
     
     func openMenu() {
         output?.openMenu()
+    }
+    
+    func openViewed() {
+        output?.openViewed()
     }
     
     func openList(type: HereafterMovieType) {

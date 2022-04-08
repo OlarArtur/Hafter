@@ -35,6 +35,7 @@ final class AddViewController: BaseViewController<AddViewModelProtocol>, CustomA
         showChooserView { [weak self] type in
             guard let self = self else { return }
             self.viewModel?.updateSelectedType(type: type)
+            self.viewModel?.update(title: self.addLabel.text ?? "")
             self.viewModel?.add(controller: self)
         }
     }
@@ -49,7 +50,7 @@ private extension AddViewController {
     func setupUI() {
         
         navigationItem.titleView = customSearchBar
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage.image(named: "back"), style: .plain, target: self, action: #selector(backTapped))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage.image(named: ImageConstants.back), style: .plain, target: self, action: #selector(backTapped))
         navigationItem.leftBarButtonItem?.tintColor = #colorLiteral(red: 0.6588235294, green: 0.7215686275, blue: 0.7843137255, alpha: 1)
         
         customSearchBar.delegate = self

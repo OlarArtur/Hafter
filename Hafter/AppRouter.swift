@@ -79,8 +79,15 @@ extension AppRouter: HereafterOutputProtocol {
         rootViewController?.present(addVC, animated: true)
     }
     
+    func openViewed() {
+        guard let listVC = ListBuilder.build(type: .viewed, output: self, localDataService: localDataService) else {
+            return
+        }
+        rootViewController?.present(listVC, animated: true)
+    }
+    
     func openList(type: HereafterMovieType) {
-        guard let listVC = ListBuilder.build(output: self, localDataService: localDataService) else {
+        guard let listVC = ListBuilder.build(type: type, output: self, localDataService: localDataService) else {
             return
         }
         rootViewController?.present(listVC, animated: true)

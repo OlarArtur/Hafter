@@ -55,7 +55,7 @@ open class DropListView: UIView {
         let size = frame.height
         let leftView = UIView(frame: CGRect(x: 0, y: 0, width: frame.width / 2, height: size))
         addSubview(leftView)
-        let leftImage = UIImage.image(named: "foremost")
+        let leftImage = UIImage.image(named: ImageConstants.foremost)
         let leftImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: size, height: size))
         leftImageView.contentMode = .scaleAspectFit
         leftImageView.image = leftImage
@@ -64,7 +64,7 @@ open class DropListView: UIView {
         
         let rightView = UIView(frame: CGRect(x: frame.width / 2, y: 0, width: frame.width / 2, height: size))
         addSubview(rightView)
-        let image = UIImage.image(named: "drop_list_arrow")
+        let image = UIImage.image(named: ImageConstants.dropListArrow)
         let imageView = UIImageView(frame: CGRect(x: ((size / 2) - ((image?.size.width ?? 0) / 2)), y: ((size / 2) - ((image?.size.height ?? 0) / 2)), width: 10, height: 7))
         imageView.contentMode = .scaleAspectFit
         imageView.image = image
