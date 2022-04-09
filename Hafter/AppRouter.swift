@@ -80,14 +80,15 @@ extension AppRouter: HereafterOutputProtocol {
     }
     
     func openViewed() {
-        guard let listVC = ListBuilder.build(type: .viewed, output: self, localDataService: localDataService) else {
+        guard let listVC = ListBuilder.build(type: .viewed, output: self, localDataService: localDataService, admissibleTypes: [.foremost, .possibly, .ifNothingElse]) else {
             return
         }
         rootViewController?.present(listVC, animated: true)
     }
     
     func openList(type: HereafterMovieType) {
-        guard let listVC = ListBuilder.build(type: type, output: self, localDataService: localDataService) else {
+        let types = HereafterMovieType.allCases.filter { $0 != type }
+        guard let listVC = ListBuilder.build(type: type, output: self, localDataService: localDataService, admissibleTypes: types) else {
             return
         }
         rootViewController?.present(listVC, animated: true)
@@ -97,8 +98,9 @@ extension AppRouter: HereafterOutputProtocol {
 extension AppRouter: AddOutputProtocol {
     
     func added(movie: HereafterMovie, controller: UIViewController) {
-        localDataService.save(movie: movie)
-        controller.hide(animated: true)
+        localDataService.save(movie: movie) { success in
+            controller.hide(animated: true)
+        }
     }
 }
 
@@ -108,4 +110,7 @@ extension AppRouter: MenuOutputProtocol {
 
 extension AppRouter: ListOutputProtocol {
     
+    func update(movie: HereafterMovie, completion: @escaping (Bool) -> Void) {
+        localDataService.update(movie: movie, completion: completion)
+    }
 }

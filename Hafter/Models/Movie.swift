@@ -10,6 +10,7 @@ import Foundation
 final class Movie: Codable {
     
     enum CodingKeys: String, CodingKey {
+        case id
         case adult
         case backdropPath = "backdrop_path"
         case originalLanguage = "original_language"
@@ -21,7 +22,8 @@ final class Movie: Codable {
         case releaseDate = "release_date"
     }
     
-    init(adult: Bool,
+    init(id: String,
+         adult: Bool,
          backdropPath: String?,
          originalLanguage: String,
          title: String,
@@ -30,6 +32,7 @@ final class Movie: Codable {
          popularity: Double,
          posterPath: String?,
          releaseDate: Date?) {
+        self.id = id
         self.adult = false
         self.backdropPath = backdropPath
         self.originalLanguage = originalLanguage
@@ -42,17 +45,19 @@ final class Movie: Codable {
     }
     
     init(title: String) {
+        self.title = title
         self.adult = false
         self.backdropPath = nil
         self.originalLanguage = ""
-        self.title = title
         self.originalTitle = ""
         self.overview = ""
         self.popularity = 0
         self.posterPath = nil
         self.releaseDate = nil
+        self.id = UUID().uuidString
     }
     
+    let id: String
     let adult: Bool
     let backdropPath: String?
     let originalLanguage: String
@@ -65,6 +70,8 @@ final class Movie: Codable {
     
     required public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        let idInt = try container.decode(Int.self, forKey: .id)
+        id = String(idInt)
         adult = try container.decode(Bool.self, forKey: .adult)
         backdropPath = try? container.decode(String.self, forKey: .backdropPath)
         originalLanguage = try container.decode(String.self, forKey: .originalLanguage)

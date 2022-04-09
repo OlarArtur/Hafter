@@ -8,7 +8,8 @@
 import Foundation
 
 protocol LocalServiceProtocol {
-    func save(movie: HereafterMovie)
+    func update(movie: HereafterMovie, completion: @escaping (Bool) -> Void)
+    func save(movie: HereafterMovie, completion: @escaping (Bool) -> Void)
     func getMovies(type: HereafterMovieType?) -> [HereafterMovie]
 }
 
@@ -23,11 +24,15 @@ final class LocalService {
 
 extension LocalService: LocalServiceProtocol {
     
-    func save(movie: HereafterMovie) {
-        return provider.save(movie: movie)
+    func save(movie: HereafterMovie, completion: @escaping (Bool) -> Void) {
+        return provider.save(movie: movie, completion: completion)
     }
     
     func getMovies(type: HereafterMovieType?) -> [HereafterMovie] {
         return provider.getMovies(type: type)
+    }
+    
+    func update(movie: HereafterMovie, completion: @escaping (Bool) -> Void) {
+        provider.update(movie: movie, completion: completion)
     }
 }

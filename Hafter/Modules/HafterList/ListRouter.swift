@@ -8,11 +8,11 @@
 import UIKit
 
 protocol ListOutputProtocol: AnyObject {
-    
+    func update(movie: HereafterMovie, completion: @escaping (Bool) -> Void)
 }
 
 protocol ListRouterProtocol: RouterProtocol {
-    
+    func update(movie: HereafterMovie, completion: @escaping (Bool) -> Void)
 }
 
 final class ListRouter: BaseRouter {
@@ -21,4 +21,7 @@ final class ListRouter: BaseRouter {
 
 extension ListRouter: ListRouterProtocol {
     
+    func update(movie: HereafterMovie, completion: @escaping (Bool) -> Void) {
+        output?.update(movie: movie, completion: completion)
+    }
 }

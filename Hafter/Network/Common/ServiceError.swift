@@ -10,4 +10,5 @@ import Foundation
 enum ServiceError: Error {
     case networkError(NetworkErrors)
     case parserError(ParsingError)
+    case localDataError
 }

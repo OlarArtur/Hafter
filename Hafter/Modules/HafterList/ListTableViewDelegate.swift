@@ -18,4 +18,31 @@ class ListTableViewDelegate: NSObject {
 
 extension ListTableViewDelegate: UITableViewDelegate {
     
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        var actions: [UIContextualAction] = []
+        for type in viewModel.swipeLeftTypes() {
+            let action = UIContextualAction(style: .normal,
+                                            title: type.title) { [weak self] (action, view, completionHandler) in
+                self?.viewModel.updateType(index: indexPath.row, type: type)
+                completionHandler(true)
+            }
+            action.backgroundColor = type.typeColor
+            actions.append(action)
+        }
+        return UISwipeActionsConfiguration(actions: actions)
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        var actions: [UIContextualAction] = []
+        for type in viewModel.swipeRightTypes() {
+            let action = UIContextualAction(style: .normal,
+                                            title: type.title) { [weak self] (action, view, completionHandler) in
+                self?.viewModel.updateType(index: indexPath.row, type: type)
+                completionHandler(true)
+            }
+            action.backgroundColor = type.typeColor
+            actions.append(action)
+        }
+        return UISwipeActionsConfiguration(actions: actions)
+    }
 }

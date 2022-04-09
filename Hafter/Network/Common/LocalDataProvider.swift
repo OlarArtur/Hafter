@@ -8,13 +8,14 @@
 import CoreData
 
 protocol LocalDataProviderProtocol {
-    func save(movie: HereafterMovie)
+    func save(movie: HereafterMovie, completion: ((Bool) -> Void)?)
     func getMovies(type: HereafterMovieType?) -> [HereafterMovie]
+    func update(movie: HereafterMovie, completion: @escaping (Bool) -> Void)
 }
 
 final class LocalDataProvider {
     
-    private var saveCompletion: (() -> Void)?
+    private var saveCompletion: ((Bool) -> Void)?
 
     private lazy var persistentContainer: NSPersistentContainer? = {
         guard let modelURL = Bundle.main.url(forResource: "Model", withExtension: "momd") else { return nil }
@@ -29,7 +30,7 @@ final class LocalDataProvider {
     }()
     
     // MARK: Private
-    private func saveContext(completion: (() -> Void)?) {
+    private func saveContext(completion: ((Bool) -> Void)?) {
         guard let context = persistentContainer?.viewContext else { return }
         saveCompletion = completion
         let notificationCenter = NotificationCenter.default
@@ -39,13 +40,14 @@ final class LocalDataProvider {
             do {
                 try context.save()
             } catch let error as NSError {
+                saveCompletion?(false)
                 Swift.print("[DBDataProvider] Failed to save context. \(error), \(error.userInfo)")
             }
         }
     }
     
     @objc private func managedObjectContextDidSave() {
-        saveCompletion?()
+        saveCompletion?(true)
         let notificationCenter = NotificationCenter.default
         notificationCenter.removeObserver(self)
     }
@@ -53,10 +55,11 @@ final class LocalDataProvider {
 
 extension LocalDataProvider: LocalDataProviderProtocol {
     
-    func save(movie: HereafterMovie) {
+    func save(movie: HereafterMovie, completion: ((Bool) -> Void)?) {
         guard let managedContext = persistentContainer?.viewContext else { return }
         if let hereafterMovieEntity = NSEntityDescription.entity(forEntityName: "DBHereafterMovie", in: managedContext) {
             let hereafterMovieItem = NSManagedObject(entity: hereafterMovieEntity, insertInto: managedContext)
+            hereafterMovieItem.setValue(movie.movie.id, forKey: "id")
             hereafterMovieItem.setValue(movie.type.rawValue, forKey: "type")
             hereafterMovieItem.setValue(movie.movie.title, forKey: "title")
             hereafterMovieItem.setValue(movie.movie.originalTitle, forKey: "originalTitle")
@@ -67,7 +70,7 @@ extension LocalDataProvider: LocalDataProviderProtocol {
             hereafterMovieItem.setValue(movie.movie.popularity, forKey: "popularity")
             hereafterMovieItem.setValue(movie.movie.posterPath, forKey: "posterPath")
             hereafterMovieItem.setValue(movie.movie.releaseDate, forKey: "releaseDate")
-            saveContext(completion: nil)
+            saveContext(completion: completion)
         }
     }
     
@@ -82,6 +85,7 @@ extension LocalDataProvider: LocalDataProviderProtocol {
             let result = try managedContext.fetch(fetchRequest)
             for data in result {
                 if let managedData = data as? NSManagedObject {
+                    guard let id = managedData.value(forKey: "id") as? String else { continue }
                     guard let title = managedData.value(forKey: "title") as? String else { continue }
                     guard let typeString = managedData.value(forKey: "type") as? String, let type = HereafterMovieType(rawValue: typeString) else { continue }
                     guard let adult = managedData.value(forKey: "adult") as? Bool else { continue }
@@ -92,7 +96,8 @@ extension LocalDataProvider: LocalDataProviderProtocol {
                     let releaseDate = managedData.value(forKey: "releaseDate") as? Date
                     let backdropPath = managedData.value(forKey: "backdropPath") as? String
                     let posterPath = managedData.value(forKey: "posterPath") as? String
-                    let movie = Movie(adult: adult,
+                    let movie = Movie(id: id,
+                                      adult: adult,
                                       backdropPath: backdropPath,
                                       originalLanguage: originalLanguage,
                                       title: title,
@@ -106,8 +111,30 @@ extension LocalDataProvider: LocalDataProviderProtocol {
                 }
             }
         } catch {
-            Swift.print("[DBDataProvider] Failed to fetch favorite items.")
+            Swift.print("[DataProvider] Failed to fetch items.")
         }
         return resultData
+    }
+    
+    func update(movie: HereafterMovie, completion: @escaping (Bool) -> Void) {
+        guard let managedContext = persistentContainer?.viewContext else {
+            completion(false)
+            return
+        }
+        let fetchRequest = DBHereafterMovie.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id = %@", movie.movie.id)
+        do {
+            let movieObjects = try managedContext.fetch(fetchRequest)
+            if movieObjects.isEmpty {
+                save(movie: movie, completion: completion)
+            } else {
+                let managedObject = movieObjects[0]
+                managedObject.setValue(movie.type.rawValue, forKey: "type")
+                saveContext(completion: completion)
+            }
+        } catch {
+            Swift.print("[DataProvider] Failed to fetch items.")
+            completion(false)
+        }
     }
 }
