@@ -8,6 +8,7 @@
 import Foundation
 
 protocol HereafterOutputProtocol: AnyObject {
+    func randomize()
     func add()
     func openMenu()
     func openViewed()
@@ -15,6 +16,7 @@ protocol HereafterOutputProtocol: AnyObject {
 }
 
 protocol HereafterRouterProtocol: RouterProtocol {
+    func randomize()
     func add()
     func openMenu()
     func openViewed()
@@ -26,6 +28,10 @@ final class HereafterRouter: BaseRouter {
 }
 
 extension HereafterRouter: HereafterRouterProtocol {
+    
+    func randomize() {
+        output?.randomize()
+    }
     
     func add() {
         output?.add()

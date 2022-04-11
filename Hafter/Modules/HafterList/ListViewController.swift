@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class ListViewController: BaseViewController<ListViewModelProtocol>, CustomAlertRouterProtocol {
+final class ListViewController: BaseViewController<ListViewModelProtocol>, CustomAlertRouterProtocol {    
     
     @IBOutlet private weak var tableView: UITableView!
     @IBOutlet private weak var closeButton: UIButton!

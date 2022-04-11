@@ -8,6 +8,7 @@
 import Foundation
 
 protocol HereafterViewModelProtocol {
+    func randomize()
     func add()
     func openMenu()
     func openViewed()
@@ -20,6 +21,10 @@ final class HereafterViewModel<Router: HereafterRouterProtocol>: BaseViewModel<R
 }
 
 extension HereafterViewModel: HereafterViewModelProtocol {
+    
+    func randomize() {
+        router?.randomize()
+    }
     
     func add() {
         router?.add()

@@ -17,7 +17,7 @@ import UIKit
         guard let fromVC = transitionContext.viewController(forKey: .from), let toVC = transitionContext.viewController(forKey: .to), let snapshot = fromVC.view.snapshotView(afterScreenUpdates: true) else {
             return
         }
-        
+        snapshot.tag = MenuAnimatorHelper.snapshotTag
         transitionContext.containerView.insertSubview(toVC.view, aboveSubview: fromVC.view)
         let final = CGRect(x: fromVC.view.frame.origin.x, y: fromVC.view.frame.origin.y, width: fromVC.view.frame.width, height: fromVC.view.frame.height)
         

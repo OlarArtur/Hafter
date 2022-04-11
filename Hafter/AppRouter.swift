@@ -12,6 +12,7 @@ final class AppRouter {
     private(set) var window: UIWindow
     private var baseNavigationController: UINavigationController?
     private var localDataService: LocalServiceProtocol = LocalService(provider: LocalDataProvider())
+    private let imageLoader = ImageLoader()
     
     init(window: UIWindow) {
         self.window = window
@@ -63,6 +64,15 @@ extension AppRouter: IntroductionOutputProtocol {
 
 extension AppRouter: HereafterOutputProtocol {
     
+    func randomize() {
+        let movies = localDataService.getMovies(type: .none)
+        
+        guard let randomizeVC = RandomizeBuilder.build(output: self, movies: movies, imageLoader: imageLoader) else {
+            return
+        }
+        rootViewController?.present(randomizeVC, animated: true)
+    }
+    
     func add() {
         guard let addVC = AddBuilder.build(output: self) else {
             return
@@ -105,6 +115,10 @@ extension AppRouter: AddOutputProtocol {
 }
 
 extension AppRouter: MenuOutputProtocol {
+    
+}
+
+extension AppRouter: RandomizeOutputProtocol {
     
 }
 

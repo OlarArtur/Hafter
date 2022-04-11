@@ -20,9 +20,9 @@ final class CustomAlertViewController: UIViewController {
         setupUI()
     }
     
-    func add(alertView: AlertViewOutput, actions: [CustomAlertAction] = []) {
+    func add<T: AlertViewOutput>(alertView: T, actions: [CustomAlertAction] = []) {
         self.alertView = alertView
-        alertView.outputAction = { [weak self] in
+        alertView.outputAction = { [weak self] output in
             self?.hide(animated: true)
         }
         self.actions = actions
@@ -75,6 +75,10 @@ extension CustomAlertViewController: UIViewControllerTransitioningDelegate {
     
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return PresentAnimator()
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return DismissAnimator()
     }
 }
 

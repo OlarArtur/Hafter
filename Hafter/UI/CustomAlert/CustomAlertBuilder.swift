@@ -8,12 +8,13 @@
 import UIKit
 
 protocol AlertViewOutput: UIView {
-    var outputAction: (() -> Void)? { get set }
+    associatedtype OutputResult
+    var outputAction: ((OutputResult) -> Void)? { get set }
 }
 
-final class CustomAlertBuilder {
+final class CustomAlertBuilder<T: AlertViewOutput> {
     
-    static func build(with alertView: AlertViewOutput, actions: [CustomAlertAction] = []) -> UIViewController? {
+    static func build(with alertView: T, actions: [CustomAlertAction] = []) -> UIViewController? {
         let statusModuleStoryboard = UIStoryboard(name: "CustomAlert", bundle: nil)
         if let alertVC = statusModuleStoryboard.instantiateInitialViewController() as? CustomAlertViewController {
             alertVC.add(alertView: alertView, actions: actions)

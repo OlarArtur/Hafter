@@ -8,13 +8,14 @@
 import UIKit
 
 protocol CustomAlertRouterProtocol {
-    func showChooserView(completion: @escaping (HereafterMovieType) -> Void)
+    func showChooserView(completion: ((HereafterMovieType) -> Void)?)
 }
 
 extension CustomAlertRouterProtocol {
     
-    func showChooserView(completion: @escaping (HereafterMovieType) -> Void) {
+    func showChooserView(completion: ((HereafterMovieType) -> Void)?) {
         let typeChooserView = TypeChooserView(completion: completion)
+        typeChooserView.outputAction = completion
         guard let alert = CustomAlertBuilder.build(with: typeChooserView) else {
             return
         }

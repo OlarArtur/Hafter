@@ -60,7 +60,7 @@ final class HereafterViewController: BaseViewController<HereafterViewModelProtoc
     }
     
     @objc private func randomizeAction() {
-        
+        viewModel?.randomize()
     }
     
     @objc private func menuTapped() {

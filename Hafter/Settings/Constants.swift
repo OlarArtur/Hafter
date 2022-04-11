@@ -23,4 +23,7 @@ final class ImageConstants {
 
 final class ColorConstants {
     static var main = UIColor(red: 180 / 255.0, green: 215 / 255.0, blue: 213 / 255.0, alpha: 1.0)
+    static var formost = UIColor(red: 180 / 255.0, green: 215 / 255.0, blue: 213 / 255.0, alpha: 1.0)
+    static var possibly = UIColor(red: 224 / 255.0, green: 215 / 255.0, blue: 238 / 255.0, alpha: 1.0)
+    static var ifNothingElse = UIColor(red: 238 / 255.0, green: 231 / 255.0, blue: 227 / 255.0, alpha: 1.0)
 }

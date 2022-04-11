@@ -94,8 +94,8 @@ extension AddViewModel: AddViewModelProtocol {
     }
     
     func search(query: String) {
-        
-        cancelable = networkService.search(query: query)
+        let modifiedQuery = query.replacingOccurrences(of: " ", with: "+")
+        cancelable = networkService.search(query: modifiedQuery)
             .sink(receiveCompletion: { [weak self] (completion) in
                 switch completion {
                 case .failure(let error):

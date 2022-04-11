@@ -17,16 +17,14 @@ import UIKit
         guard let fromVC = transitionContext.viewController(forKey: .from), let toVC = transitionContext.viewController(forKey: .to) else {
             return
         }
-        transitionContext.containerView.insertSubview(toVC.view, belowSubview: fromVC.view)
+        let containerView = transitionContext.containerView
+        containerView.addSubview(fromVC.view)
         let final = transitionContext.finalFrame(for: toVC)
-        
-        let toOff = final.offsetBy(dx: -final.width, dy: 0)
-        
-        fromVC.view.frame = final
-        
-        let duration = self.transitionDuration(using: transitionContext)
+
+        let duration = transitionDuration(using: transitionContext)
         UIView.animate(withDuration: duration, animations: {
-            fromVC.view.frame = toOff
+            fromVC.view.frame.origin.y = UIScreen.main.bounds.maxY
+            toVC.view.frame = final
         }, completion: { _ in
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         })

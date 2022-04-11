@@ -9,35 +9,32 @@ import UIKit
 
 final class TypeChooserView: UIView, AlertViewOutput {
     
-    var outputAction: (() -> Void)?
+    typealias OutputResult = HereafterMovieType
+    var outputAction: ((HereafterMovieType) -> Void)?
     
-    private let formostImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage.image(named: ImageConstants.foremostLarge)
-        imageView.isUserInteractionEnabled = true
-        imageView.contentMode = .scaleAspectFit
-        return imageView
+    private let types: [HereafterMovieType] = [.foremost, .possibly, .ifNothingElse]
+    private var selectedType: HereafterMovieType = .foremost
+    
+    private let pickerView: UIPickerView = {
+        let pickerView = UIPickerView()
+        return pickerView
     }()
     
-    private let possiblyImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage.image(named: ImageConstants.possiblyLarge)
-        imageView.isUserInteractionEnabled = true
-        imageView.contentMode = .scaleAspectFit
-        return imageView
+    private let setButton: UIButton = {
+        var config = UIButton.Configuration.filled()
+        config.title = "Set"
+        config.baseBackgroundColor = #colorLiteral(red: 0.2862745098, green: 0.3058823529, blue: 0.3764705882, alpha: 1)
+        config.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+        let setButton = UIButton(configuration: config, primaryAction: nil)
+        setButton.setTitleColor(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), for: .normal)
+        setButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+        return setButton
     }()
     
-    private let ifNothingElseImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage.image(named: ImageConstants.ifNothingElseLarge)
-        imageView.isUserInteractionEnabled = true
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }()
     
     private var completion: ((HereafterMovieType) -> Void)?
     
-    init(completion: @escaping (HereafterMovieType) -> Void) {
+    init(completion: ((HereafterMovieType) -> Void)?) {
         super.init(frame: .zero)
         self.completion = completion
         setupView()
@@ -55,52 +52,54 @@ final class TypeChooserView: UIView, AlertViewOutput {
     
     private func setupView() {
         backgroundColor = #colorLiteral(red: 0.9529411765, green: 0.968627451, blue: 0.9882352941, alpha: 1)
-        addSubview(formostImageView)
-        addSubview(possiblyImageView)
-        addSubview(ifNothingElseImageView)
+        addSubview(pickerView)
+        addSubview(setButton)
         setupConstraints()
         
-        let formostTap = UITapGestureRecognizer(target: self, action: #selector(formostAction))
-        formostImageView.addGestureRecognizer(formostTap)
-        let possiblyTap = UITapGestureRecognizer(target: self, action: #selector(possiblyAction))
-        possiblyImageView.addGestureRecognizer(possiblyTap)
-        let ifNothingElseTap = UITapGestureRecognizer(target: self, action: #selector(ifNothingElseAction))
-        ifNothingElseImageView.addGestureRecognizer(ifNothingElseTap)
+        setButton.addTarget(self, action: #selector(tapAction(_:)), for: .touchUpInside)
+        
+        pickerView.dataSource = self
+        pickerView.delegate = self
     }
     
-    @objc private func formostAction() {
-        completion?(.foremost)
-        outputAction?()
-    }
-    
-    @objc private func possiblyAction() {
-        completion?(.possibly)
-        outputAction?()
-    }
-    
-    @objc private func ifNothingElseAction() {
-        completion?(.ifNothingElse)
-        outputAction?()
+    @objc func tapAction(_ sender: UIButton) {
+        completion?(selectedType)
+        outputAction?(selectedType)
     }
     
     private func setupConstraints() {
-        formostImageView.translatesAutoresizingMaskIntoConstraints = false
-        possiblyImageView.translatesAutoresizingMaskIntoConstraints = false
-        ifNothingElseImageView.translatesAutoresizingMaskIntoConstraints = false
+        pickerView.translatesAutoresizingMaskIntoConstraints = false
+        setButton.translatesAutoresizingMaskIntoConstraints = false
         
-        formostImageView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        formostImageView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        formostImageView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        pickerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        pickerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        pickerView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         
-        possiblyImageView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        possiblyImageView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        possiblyImageView.topAnchor.constraint(equalTo: formostImageView.bottomAnchor, constant: 3).isActive = true
-        possiblyImageView.heightAnchor.constraint(equalTo: formostImageView.heightAnchor).isActive = true
-        
-        ifNothingElseImageView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        ifNothingElseImageView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        ifNothingElseImageView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        ifNothingElseImageView.topAnchor.constraint(equalTo: possiblyImageView.bottomAnchor, constant: 3).isActive = true
-        ifNothingElseImageView.heightAnchor.constraint(equalTo: possiblyImageView.heightAnchor).isActive = true
+        setButton.topAnchor.constraint(equalTo: pickerView.bottomAnchor).isActive = true
+        setButton.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        setButton.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        setButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
+    }
+}
+
+extension TypeChooserView: UIPickerViewDataSource {
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return types.count
+    }
+}
+
+extension TypeChooserView: UIPickerViewDelegate {
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return types[row].title
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        selectedType = types[row]
     }
 }

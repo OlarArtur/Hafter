@@ -85,6 +85,11 @@
 		BAF8BBA328003D9C00375C02 /* UIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BBA228003D9C00375C02 /* UIImageView.swift */; };
 		BAF8BBA628003DFB00375C02 /* WZImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BBA528003DFB00375C02 /* WZImageLoader.swift */; };
 		BAF8BBA828005B9100375C02 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BBA728005B9100375C02 /* Constants.swift */; };
+		BAF8BBAB2801DF9C00375C02 /* RandomizeBuild.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BBAA2801DF9C00375C02 /* RandomizeBuild.swift */; };
+		BAF8BBAD2801E01600375C02 /* RandomizeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BBAC2801E01600375C02 /* RandomizeRouter.swift */; };
+		BAF8BBAF2801E05900375C02 /* RandomizeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BBAE2801E05900375C02 /* RandomizeViewModel.swift */; };
+		BAF8BBB12801E14700375C02 /* RandomizeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BBB02801E14700375C02 /* RandomizeViewController.swift */; };
+		BAF8BBB32801E36100375C02 /* Randomize.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BAF8BBB22801E36100375C02 /* Randomize.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -168,6 +173,11 @@
 		BAF8BBA228003D9C00375C02 /* UIImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageView.swift; sourceTree = "<group>"; };
 		BAF8BBA528003DFB00375C02 /* WZImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WZImageLoader.swift; sourceTree = "<group>"; };
 		BAF8BBA728005B9100375C02 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		BAF8BBAA2801DF9C00375C02 /* RandomizeBuild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomizeBuild.swift; sourceTree = "<group>"; };
+		BAF8BBAC2801E01600375C02 /* RandomizeRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomizeRouter.swift; sourceTree = "<group>"; };
+		BAF8BBAE2801E05900375C02 /* RandomizeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomizeViewModel.swift; sourceTree = "<group>"; };
+		BAF8BBB02801E14700375C02 /* RandomizeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomizeViewController.swift; sourceTree = "<group>"; };
+		BAF8BBB22801E36100375C02 /* Randomize.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Randomize.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -221,6 +231,7 @@
 		BAA02EE327F3788400FDD198 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				BAF8BBA92801DE6D00375C02 /* Randomize */,
 				BAF8BB8F27FF675900375C02 /* HafterList */,
 				BAF8BB8227FDBB8700375C02 /* Menu */,
 				BAA02F2227F71D8200FDD198 /* Add */,
@@ -443,6 +454,18 @@
 			path = HafterList;
 			sourceTree = "<group>";
 		};
+		BAF8BBA92801DE6D00375C02 /* Randomize */ = {
+			isa = PBXGroup;
+			children = (
+				BAF8BBAA2801DF9C00375C02 /* RandomizeBuild.swift */,
+				BAF8BBAC2801E01600375C02 /* RandomizeRouter.swift */,
+				BAF8BBB22801E36100375C02 /* Randomize.storyboard */,
+				BAF8BBB02801E14700375C02 /* RandomizeViewController.swift */,
+				BAF8BBAE2801E05900375C02 /* RandomizeViewModel.swift */,
+			);
+			path = Randomize;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -505,6 +528,7 @@
 				BAA02F0927F381AA00FDD198 /* Hereafter.storyboard in Resources */,
 				BAF8BB9927FF690300375C02 /* List.storyboard in Resources */,
 				BAC4283227F86C87004EAB08 /* AddTableViewCell.xib in Resources */,
+				BAF8BBB32801E36100375C02 /* Randomize.storyboard in Resources */,
 				BAF8BB8C27FDCFF700375C02 /* Menu.storyboard in Resources */,
 				BAA02EE827F3790700FDD198 /* Introduction.storyboard in Resources */,
 				BAA02EDA27F22AD900FDD198 /* LaunchScreen.storyboard in Resources */,
@@ -522,6 +546,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BAF8BBAB2801DF9C00375C02 /* RandomizeBuild.swift in Sources */,
 				BAA02EFB27F37CF400FDD198 /* NavigationControllerViewController.swift in Sources */,
 				BAA02F0D27F5CB6000FDD198 /* UIImage.swift in Sources */,
 				BAA02F0B27F4F01200FDD198 /* UIView+IBInspectable.swift in Sources */,
@@ -550,14 +575,17 @@
 				BAA02EE227F3781700FDD198 /* AppRouter.swift in Sources */,
 				BAF8BB8E27FEC13C00375C02 /* MenuAnimator.swift in Sources */,
 				BAA02EF027F379B300FDD198 /* IntroductionViewModel.swift in Sources */,
+				BAF8BBAD2801E01600375C02 /* RandomizeRouter.swift in Sources */,
 				BAA02F1727F5D0BE00FDD198 /* LocalDataProvider.swift in Sources */,
 				BAA02F1D27F7071500FDD198 /* TMDbService.swift in Sources */,
 				BAA02F0327F3804000FDD198 /* HereafterRouter.swift in Sources */,
 				BAF8BB7627FD862300375C02 /* DismissAnimator.swift in Sources */,
 				BAA02F0527F3807A00FDD198 /* HereafterViewController.swift in Sources */,
 				BAA02F2127F7093200FDD198 /* TMDbNetworkDataProvider.swift in Sources */,
+				BAF8BBB12801E14700375C02 /* RandomizeViewController.swift in Sources */,
 				BAF8BB8127FD8F4400375C02 /* CustomAlertBuilder.swift in Sources */,
 				BAA02EFE27F37D3200FDD198 /* UIWindow.swift in Sources */,
+				BAF8BBAF2801E05900375C02 /* RandomizeViewModel.swift in Sources */,
 				BAA02F3127F7309D00FDD198 /* Movie.swift in Sources */,
 				BAA02F1327F5D07600FDD198 /* ServiceError.swift in Sources */,
 				BAF8BB9B2800340B00375C02 /* ListTableViewDataSource.swift in Sources */,
