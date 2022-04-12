@@ -26,7 +26,10 @@ final class RandomizeViewController: BaseViewController<RandomizeViewModelProtoc
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        guard let movie = viewModel?.getMovie() else { return }
+        guard let movie = viewModel?.getMovie() else {
+            clean()
+            return
+        }
         feel(movie: movie)
         feelPoster()
         
