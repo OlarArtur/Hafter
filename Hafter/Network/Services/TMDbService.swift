@@ -9,6 +9,7 @@ import Combine
 
 protocol MediaServiceProtocol {
     func search(query: String) -> AnyPublisher<MovieResponse?, ServiceError>
+    func detailFor(id: String) -> AnyPublisher<DetailedMovie?, ServiceError>
 }
 
 final class TMDbService {
@@ -44,6 +45,30 @@ extension TMDbService: MediaServiceProtocol {
                         return Result.Publisher(nil).eraseToAnyPublisher()
                 }
                 let result: AnyPublisher<MovieResponse?, ServiceError> =
+                    self.parser
+                    .parse(data: data)
+                    .mapError { ServiceError.parserError($0) }
+                    .eraseToAnyPublisher()
+                return result
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    func detailFor(id: String) -> AnyPublisher<DetailedMovie?, ServiceError> {
+        
+        let params = ["api_key" : TMDbSettings.shared.apiKeyV3]
+        let requestConfig = RequestConfig(requestType: .get, params: params, path: "/movie/\(id)")
+        
+        return networkProvider.doRequest(requestConfig: requestConfig)
+            .mapError {
+                ServiceError.networkError($0)
+            }
+            .flatMap { [weak self] data -> AnyPublisher<DetailedMovie?, ServiceError> in
+                guard let self = self,
+                    let data = data else {
+                        return Result.Publisher(nil).eraseToAnyPublisher()
+                }
+                let result: AnyPublisher<DetailedMovie?, ServiceError> =
                     self.parser
                     .parse(data: data)
                     .mapError { ServiceError.parserError($0) }

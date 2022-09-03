@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class Movie: Codable {
+class Movie: Codable {
     
     enum CodingKeys: String, CodingKey {
         case id

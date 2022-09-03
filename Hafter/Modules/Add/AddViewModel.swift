@@ -17,6 +17,7 @@ protocol AddViewModelProtocol {
     func numberOfItems() -> Int
     func itemFor(index: Int) -> String
     func select(index: Int)
+    func detailsFor(index: Int)
     
     func update(title: String)
     func updateSelectedType(type: HereafterMovieType)
@@ -91,6 +92,26 @@ extension AddViewModel: AddViewModelProtocol {
     
     func select(index: Int) {
         selectedMovie = movies[index]
+    }
+    
+    func detailsFor(index: Int) {
+        cancelable = networkService.detailFor(id: movies[index].id)
+            .sink(receiveCompletion: { [weak self] (completion) in
+                switch completion {
+                case .failure(let error):
+                    print(error)
+                    DispatchQueue.main.async {
+                        self?.showError?(error)
+                    }
+                case .finished:
+                    print("Success")
+                }
+            }, receiveValue: { [weak self] (value) in
+                guard let movie = value else { return }
+                DispatchQueue.main.async { [weak self] in
+                    self?.router?.showDetail(movie: movie)
+                }
+            })
     }
     
     func search(query: String) {

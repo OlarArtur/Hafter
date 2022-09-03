@@ -13,6 +13,7 @@ protocol AddOutputProtocol: AnyObject {
 
 protocol AddRouterProtocol: RouterProtocol {
     func add(movie: HereafterMovie, controller: UIViewController)
+    func showDetail(movie: DetailedMovie)
 }
 
 final class AddRouter: BaseRouter {
@@ -24,4 +25,15 @@ extension AddRouter: AddRouterProtocol {
     func add(movie: HereafterMovie, controller: UIViewController) {
         output?.added(movie: movie, controller: controller)
     }
+    
+    func showDetail(movie: DetailedMovie) {
+        guard let detailVC = DetailBuilder.build(movie: movie, output: self) else {
+            return
+        }
+        presenter?.present(detailVC, animated: true)
+    }
+}
+
+extension AddRouter: DetailOutputProtocol {
+    
 }

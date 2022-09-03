@@ -26,7 +26,9 @@ extension AddTableViewDataSource: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "AddTableViewCell", for: indexPath) as? AddTableViewCell else {
             return UITableViewCell()
         }
-        cell.setup(title: viewModel.itemFor(index: indexPath.row))
+        cell.setup(title: viewModel.itemFor(index: indexPath.row)) { [weak self] in
+            self?.viewModel.detailsFor(index: indexPath.row)
+        }
         return cell
     }
 }
