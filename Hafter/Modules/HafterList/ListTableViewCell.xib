@@ -28,6 +28,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
                     <constraint firstItem="Fuw-bQ-hjb" firstAttribute="centerY" secondItem="osJ-ps-nMG" secondAttribute="centerY" id="3X1-Wj-Pmd"/>
                     <constraint firstItem="Ohp-MB-paj" firstAttribute="centerY" secondItem="osJ-ps-nMG" secondAttribute="centerY" id="L5r-9b-BFo"/>
@@ -37,6 +38,7 @@
                     <constraint firstItem="Fuw-bQ-hjb" firstAttribute="leading" secondItem="osJ-ps-nMG" secondAttribute="leading" constant="10" id="n3d-3k-fnx"/>
                 </constraints>
             </tableViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
                 <outlet property="posterImageView" destination="Fuw-bQ-hjb" id="2bw-Hc-iuZ"/>
                 <outlet property="titleLabel" destination="Ohp-MB-paj" id="A3c-OW-KEe"/>

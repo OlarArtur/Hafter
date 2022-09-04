@@ -14,6 +14,8 @@ final class AppRouter {
     private var localDataService: LocalServiceProtocol = LocalService(provider: LocalDataProvider())
     private let imageLoader = ImageLoader()
     
+    private var addCompetion: (() -> Void)?
+    
     init(window: UIWindow) {
         self.window = window
     }
@@ -43,7 +45,7 @@ final class AppRouter {
         window.rootViewController = dummyView
         window.makeKeyAndVisible()
         
-        guard let hereafterViewController = HereafterBuilder.build(output: self) else { return }
+        guard let hereafterViewController = HereafterBuilder.build(localDataService: localDataService, output: self) else { return }
         let navigationVC = NavigationControllerViewController(rootViewController: hereafterViewController)
         baseNavigationController = navigationVC
         window.setRootViewController(navigationVC, animated: animated, completion: nil)
@@ -73,7 +75,8 @@ extension AppRouter: HereafterOutputProtocol {
         rootViewController?.present(randomizeVC, animated: true)
     }
     
-    func add() {
+    func add(completion: @escaping () -> Void) {
+        addCompetion = completion
         guard let addVC = AddBuilder.build(output: self) else {
             return
         }
@@ -108,8 +111,9 @@ extension AppRouter: HereafterOutputProtocol {
 extension AppRouter: AddOutputProtocol {
     
     func added(movie: HereafterMovie, controller: UIViewController) {
-        localDataService.save(movie: movie) { success in
+        localDataService.save(movie: movie) { [weak self] success in
             controller.hide(animated: true)
+            self?.addCompetion?()
         }
     }
 }

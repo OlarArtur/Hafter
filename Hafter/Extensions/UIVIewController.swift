@@ -35,4 +35,31 @@ extension UIViewController {
         ac.addAction(UIAlertAction(title: actionTitle ?? "Yes", style: .default))
         present(ac, animated: true)
     }
+    
+    func setupMainTitleView() -> UIView {
+        let view = UIView()
+        
+        let imageView = UIImageView()
+        imageView.image = UIImage.image(named: "hafter_logo_circle")
+        let label = UILabel()
+        label.text = "hereafter"
+        
+        view.addSubview(imageView)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(label)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        imageView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        imageView.bottomAnchor.constraint(equalTo: label.bottomAnchor).isActive = true
+        imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        imageView.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor).isActive = true
+        
+        label.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        label.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        label.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 5).isActive = true
+        label.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        
+        return view
+    }
 }

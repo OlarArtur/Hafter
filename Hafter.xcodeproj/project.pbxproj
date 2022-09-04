@@ -14,6 +14,7 @@
 		BA5E491728C37D79006C22A2 /* DetailRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5E491228C37D79006C22A2 /* DetailRouter.swift */; };
 		BA5E491828C37D79006C22A2 /* DetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5E491328C37D79006C22A2 /* DetailViewModel.swift */; };
 		BA5E491A28C380E6006C22A2 /* DetailedMovie.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5E491928C380E6006C22A2 /* DetailedMovie.swift */; };
+		BA5E491C28C49B46006C22A2 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5E491B28C49B46006C22A2 /* UIColor.swift */; };
 		BAA02ECE27F22AD800FDD198 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02ECD27F22AD800FDD198 /* AppDelegate.swift */; };
 		BAA02ED027F22AD800FDD198 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02ECF27F22AD800FDD198 /* SceneDelegate.swift */; };
 		BAA02ED227F22AD800FDD198 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02ED127F22AD800FDD198 /* ViewController.swift */; };
@@ -109,6 +110,7 @@
 		BA5E491228C37D79006C22A2 /* DetailRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailRouter.swift; sourceTree = "<group>"; };
 		BA5E491328C37D79006C22A2 /* DetailViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewModel.swift; sourceTree = "<group>"; };
 		BA5E491928C380E6006C22A2 /* DetailedMovie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedMovie.swift; sourceTree = "<group>"; };
+		BA5E491B28C49B46006C22A2 /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		BAA02ECA27F22AD800FDD198 /* Hafter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hafter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BAA02ECD27F22AD800FDD198 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BAA02ECF27F22AD800FDD198 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -347,6 +349,7 @@
 				BAA02F2D27F7271000FDD198 /* UIVIewController.swift */,
 				BAF8BBA228003D9C00375C02 /* UIImageView.swift */,
 				BAA02F0C27F5CB6000FDD198 /* UIImage.swift */,
+				BA5E491B28C49B46006C22A2 /* UIColor.swift */,
 				BAA02F0A27F4F01200FDD198 /* UIView+IBInspectable.swift */,
 				BAC4282D27F8655E004EAB08 /* UITableView.swift */,
 			);
@@ -674,6 +677,7 @@
 				BAC4283A27F8A5EB004EAB08 /* Model.xcdatamodeld in Sources */,
 				BAF8BB7E27FD8F4400375C02 /* CustomAlertPresenter.swift in Sources */,
 				BAC4282C27F8627D004EAB08 /* AddTableViewDataSource.swift in Sources */,
+				BA5E491C28C49B46006C22A2 /* UIColor.swift in Sources */,
 				BAA02EE227F3781700FDD198 /* AppRouter.swift in Sources */,
 				BAF8BB8E27FEC13C00375C02 /* MenuAnimator.swift in Sources */,
 				BAA02EF027F379B300FDD198 /* IntroductionViewModel.swift in Sources */,

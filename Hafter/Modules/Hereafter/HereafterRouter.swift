@@ -9,18 +9,20 @@ import Foundation
 
 protocol HereafterOutputProtocol: AnyObject {
     func randomize()
-    func add()
+    func add(completion: @escaping () -> Void)
     func openMenu()
     func openViewed()
     func openList(type: HereafterMovieType)
+    func update(movie: HereafterMovie, completion: @escaping (Bool) -> Void)
 }
 
 protocol HereafterRouterProtocol: RouterProtocol {
     func randomize()
-    func add()
+    func add(completion: @escaping () -> Void)
     func openMenu()
     func openViewed()
     func openList(type: HereafterMovieType)
+    func update(movie: HereafterMovie, completion: @escaping (Bool) -> Void)
 }
 
 final class HereafterRouter: BaseRouter {
@@ -33,8 +35,8 @@ extension HereafterRouter: HereafterRouterProtocol {
         output?.randomize()
     }
     
-    func add() {
-        output?.add()
+    func add(completion: @escaping () -> Void) {
+        output?.add(completion: completion)
     }
     
     func openMenu() {
@@ -47,5 +49,9 @@ extension HereafterRouter: HereafterRouterProtocol {
     
     func openList(type: HereafterMovieType) {
         output?.openList(type: type)
+    }
+    
+    func update(movie: HereafterMovie, completion: @escaping (Bool) -> Void) {
+        output?.update(movie: movie, completion: completion)
     }
 }
