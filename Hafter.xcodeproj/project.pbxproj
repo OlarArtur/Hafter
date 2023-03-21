@@ -15,6 +15,10 @@
 		BA5E491828C37D79006C22A2 /* DetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5E491328C37D79006C22A2 /* DetailViewModel.swift */; };
 		BA5E491A28C380E6006C22A2 /* DetailedMovie.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5E491928C380E6006C22A2 /* DetailedMovie.swift */; };
 		BA5E491C28C49B46006C22A2 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5E491B28C49B46006C22A2 /* UIColor.swift */; };
+		BA95C77728EDF33A008BCE59 /* Hereafter2.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA95C77628EDF33A008BCE59 /* Hereafter2.storyboard */; };
+		BA95C77928EDF76E008BCE59 /* HereafterCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA95C77828EDF76E008BCE59 /* HereafterCollectionViewCell.swift */; };
+		BA95C77B28EDF79F008BCE59 /* HereafterCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA95C77A28EDF79F008BCE59 /* HereafterCollectionViewCell.xib */; };
+		BA95C77D28EDF9A2008BCE59 /* HereafterV2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA95C77C28EDF9A2008BCE59 /* HereafterV2ViewController.swift */; };
 		BAA02ECE27F22AD800FDD198 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02ECD27F22AD800FDD198 /* AppDelegate.swift */; };
 		BAA02ED027F22AD800FDD198 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02ECF27F22AD800FDD198 /* SceneDelegate.swift */; };
 		BAA02ED227F22AD800FDD198 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02ED127F22AD800FDD198 /* ViewController.swift */; };
@@ -111,6 +115,10 @@
 		BA5E491328C37D79006C22A2 /* DetailViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewModel.swift; sourceTree = "<group>"; };
 		BA5E491928C380E6006C22A2 /* DetailedMovie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedMovie.swift; sourceTree = "<group>"; };
 		BA5E491B28C49B46006C22A2 /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		BA95C77628EDF33A008BCE59 /* Hereafter2.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Hereafter2.storyboard; sourceTree = "<group>"; };
+		BA95C77828EDF76E008BCE59 /* HereafterCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HereafterCollectionViewCell.swift; sourceTree = "<group>"; };
+		BA95C77A28EDF79F008BCE59 /* HereafterCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HereafterCollectionViewCell.xib; sourceTree = "<group>"; };
+		BA95C77C28EDF9A2008BCE59 /* HereafterV2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HereafterV2ViewController.swift; sourceTree = "<group>"; };
 		BAA02ECA27F22AD800FDD198 /* Hafter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hafter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BAA02ECD27F22AD800FDD198 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BAA02ECF27F22AD800FDD198 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -362,7 +370,11 @@
 				BAA02F0027F37FEE00FDD198 /* HereafterBuilder.swift */,
 				BAA02F0227F3804000FDD198 /* HereafterRouter.swift */,
 				BAA02F0827F381AA00FDD198 /* Hereafter.storyboard */,
+				BA95C77628EDF33A008BCE59 /* Hereafter2.storyboard */,
 				BAA02F0427F3807A00FDD198 /* HereafterViewController.swift */,
+				BA95C77C28EDF9A2008BCE59 /* HereafterV2ViewController.swift */,
+				BA95C77A28EDF79F008BCE59 /* HereafterCollectionViewCell.xib */,
+				BA95C77828EDF76E008BCE59 /* HereafterCollectionViewCell.swift */,
 				BAA02F0627F380AD00FDD198 /* HereafterViewModel.swift */,
 			);
 			path = Hereafter;
@@ -589,11 +601,13 @@
 				BAC4283227F86C87004EAB08 /* AddTableViewCell.xib in Resources */,
 				BAF8BBB32801E36100375C02 /* Randomize.storyboard in Resources */,
 				BAF8BB8C27FDCFF700375C02 /* Menu.storyboard in Resources */,
+				BA95C77728EDF33A008BCE59 /* Hereafter2.storyboard in Resources */,
 				BAA02EE827F3790700FDD198 /* Introduction.storyboard in Resources */,
 				BAA02EDA27F22AD900FDD198 /* LaunchScreen.storyboard in Resources */,
 				BAA02ED727F22AD900FDD198 /* Assets.xcassets in Resources */,
 				BAF8BBA12800354700375C02 /* ListTableViewCell.xib in Resources */,
 				BA5E491528C37D79006C22A2 /* Detail.storyboard in Resources */,
+				BA95C77B28EDF79F008BCE59 /* HereafterCollectionViewCell.xib in Resources */,
 				BAA02F2627F71F0B00FDD198 /* Add.storyboard in Resources */,
 				BAA02ED527F22AD800FDD198 /* Main.storyboard in Resources */,
 			);
@@ -660,6 +674,7 @@
 				BAA02EF627F37A5200FDD198 /* BaseViewController.swift in Sources */,
 				BAF8BB8A27FDBE7300375C02 /* MenuBuilder.swift in Sources */,
 				BAF8BBA828005B9100375C02 /* Constants.swift in Sources */,
+				BA95C77D28EDF9A2008BCE59 /* HereafterV2ViewController.swift in Sources */,
 				BAF8BB8827FDBE2D00375C02 /* MenuRouter.swift in Sources */,
 				BA5E491828C37D79006C22A2 /* DetailViewModel.swift in Sources */,
 				BAF8BB7427FD860A00375C02 /* PresentAnimator.swift in Sources */,
@@ -719,6 +734,7 @@
 				BAA02ED227F22AD800FDD198 /* ViewController.swift in Sources */,
 				BAA02F1527F5D0A000FDD198 /* CommonDataProvider.swift in Sources */,
 				BAC4283627F898CC004EAB08 /* HereafterMovie.swift in Sources */,
+				BA95C77928EDF76E008BCE59 /* HereafterCollectionViewCell.swift in Sources */,
 				BAA02ECE27F22AD800FDD198 /* AppDelegate.swift in Sources */,
 				BAA02F2427F71D9800FDD198 /* AddBuilder.swift in Sources */,
 				BAA02F3727F7362900FDD198 /* MovieResponse.swift in Sources */,

@@ -10,8 +10,8 @@ import UIKit
 final class HereafterBuilder {
     
     static func build(localDataService: LocalServiceProtocol, output: HereafterOutputProtocol?) -> UIViewController? {
-        let hereafterStoryboard = UIStoryboard(name: "Hereafter", bundle: nil)
-        if let hereafterVC = hereafterStoryboard.instantiateInitialViewController() as? HereafterViewController {
+        let hereafterStoryboard = UIStoryboard(name: "Hereafter2", bundle: nil)
+        if let hereafterVC = hereafterStoryboard.instantiateInitialViewController() as? HereafterV2ViewController {
             let router = HereafterRouter(presenter: hereafterVC)
             router.output = output
             let viewModel = HereafterViewModel(router: router, localDataService: localDataService)

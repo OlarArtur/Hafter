@@ -14,3 +14,11 @@ extension UITableView {
         register(nib, forCellReuseIdentifier: String(describing: cell))
     }
 }
+
+extension UICollectionView {
+    
+    func registerNibCell<T: UICollectionViewCell>(_ cell: T.Type) {
+        let nib = UINib(nibName: String(describing: cell), bundle: nil)
+        register(nib, forCellWithReuseIdentifier: String(describing: cell))
+    }
+}
