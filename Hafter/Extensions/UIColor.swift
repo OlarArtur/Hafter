@@ -9,15 +9,15 @@ import UIKit
 
 extension UIColor {
     
-    static func foremostColor() -> UIColor {
+    static var foremostColor: UIColor {
         return #colorLiteral(red: 0.7058823529, green: 0.8431372549, blue: 0.8352941176, alpha: 1)
     }
     
-    static func possiblyColor() -> UIColor {
+    static var possiblyColor: UIColor {
         return #colorLiteral(red: 0.8784313725, green: 0.8431372549, blue: 0.9333333333, alpha: 1)
     }
     
-    static func ifNothingElseColor() -> UIColor {
+    static var ifNothingElseColor: UIColor {
         return #colorLiteral(red: 0.9333333333, green: 0.9058823529, blue: 0.8901960784, alpha: 1)
     }
 }

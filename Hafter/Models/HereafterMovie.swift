@@ -29,11 +29,14 @@ enum HereafterMovieType: String, CaseIterable {
     var typeColor: UIColor {
         switch self {
         case .foremost:
-            return UIColor(red: 180 / 255.0, green: 215 / 255.0, blue: 213 / 255.0, alpha: 1.0)
+            // 4C98CF
+            return #colorLiteral(red: 0.2980392157, green: 0.5960784314, blue: 0.8117647059, alpha: 1)
         case .possibly:
-            return UIColor(red: 224 / 255.0, green: 215 / 255.0, blue: 238 / 255.0, alpha: 1.0)
+            // 4873A6
+            return #colorLiteral(red: 0.2823529412, green: 0.4509803922, blue: 0.6509803922, alpha: 1)
         case .ifNothingElse:
-            return UIColor(red: 238 / 255.0, green: 231 / 255.0, blue: 227 / 255.0, alpha: 1.0)
+            // 5B538A
+            return #colorLiteral(red: 0.3568627451, green: 0.3254901961, blue: 0.5411764706, alpha: 1)
         case .viewed:
             return UIColor(red: 184 / 255.0, green: 208 / 255.0, blue: 232 / 255.0, alpha: 1.0)
         }

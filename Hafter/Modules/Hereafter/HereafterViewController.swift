@@ -43,34 +43,34 @@ final class HereafterViewController: BaseViewController<HereafterViewModelProtoc
         let firstlyTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(firstlyAction))
         firstlyView.addGestureRecognizer(firstlyTapGestureRecognizer)
         firstlyView.layer.borderWidth = 1
-        firstlyView.layer.borderColor = UIColor.foremostColor().cgColor
+        firstlyView.layer.borderColor = UIColor.foremostColor.cgColor
         
         let secondlyTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(secondlyAction))
         secondlyView.addGestureRecognizer(secondlyTapGestureRecognizer)
         secondlyView.layer.borderWidth = 1
-        secondlyView.layer.borderColor = UIColor.possiblyColor().cgColor
+        secondlyView.layer.borderColor = UIColor.possiblyColor.cgColor
         
         let thirdlyTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(thirdlyAction))
         thirdlyView.addGestureRecognizer(thirdlyTapGestureRecognizer)
         thirdlyView.layer.borderWidth = 1
-        thirdlyView.layer.borderColor = UIColor.ifNothingElseColor().cgColor
+        thirdlyView.layer.borderColor = UIColor.ifNothingElseColor.cgColor
         
-        viewModel?.select(type: .foremost)
+        viewModel?.select(type: .foremost, rect: .zero)
         
         setupTableView()
     }
     
     
     @objc private func firstlyAction() {
-        viewModel?.select(type: .foremost)
+        viewModel?.select(type: .foremost, rect: .zero)
     }
     
     @objc private func secondlyAction() {
-        viewModel?.select(type: .possibly)
+        viewModel?.select(type: .possibly, rect: .zero)
     }
     
     @objc private func thirdlyAction() {
-        viewModel?.select(type: .ifNothingElse)
+        viewModel?.select(type: .ifNothingElse, rect: .zero)
     }
     
     @objc private func addAction() {
@@ -182,16 +182,16 @@ extension HereafterViewController: HereafterViewProtocol {
     
     func updateUI() {
         guard let viewModel = viewModel else { return }
-        firstlyView.backgroundColor = viewModel.selectedType == .foremost ? UIColor.foremostColor() : .white
-        secondlyView.backgroundColor = viewModel.selectedType == .possibly ? UIColor.possiblyColor() : .white
-        thirdlyView.backgroundColor = viewModel.selectedType == .ifNothingElse ? UIColor.ifNothingElseColor() : .white
+        firstlyView.backgroundColor = viewModel.selectedType == .foremost ? UIColor.foremostColor : .white
+        secondlyView.backgroundColor = viewModel.selectedType == .possibly ? UIColor.possiblyColor : .white
+        thirdlyView.backgroundColor = viewModel.selectedType == .ifNothingElse ? UIColor.ifNothingElseColor : .white
         switch viewModel.selectedType {
         case .foremost:
-            listTableView.backgroundColor = UIColor.foremostColor()
+            listTableView.backgroundColor = UIColor.foremostColor
         case .possibly:
-            listTableView.backgroundColor = UIColor.possiblyColor()
+            listTableView.backgroundColor = UIColor.possiblyColor
         case .ifNothingElse:
-            listTableView.backgroundColor = UIColor.ifNothingElseColor()
+            listTableView.backgroundColor = UIColor.ifNothingElseColor
         case .viewed:
             listTableView.backgroundColor = .white
         }

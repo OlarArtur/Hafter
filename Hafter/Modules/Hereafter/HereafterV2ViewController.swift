@@ -8,7 +8,6 @@
 import UIKit
 
 protocol HereafterV2ViewProtocol: AnyObject {
-    func reloadData()
     func updateUI()
     func showError(error: Error)
 }
@@ -22,6 +21,10 @@ final class HereafterV2ViewController: BaseViewController<HereafterViewModelProt
     @IBOutlet private weak var addView: UIView!
     @IBOutlet private weak var randomizeView: UIView!
     
+    @IBOutlet private weak var foremostView: UIView!
+    @IBOutlet private weak var possiblyView: UIView!
+    @IBOutlet private weak var ifNothingElseView: UIView!
+    
     private let imageLoader = ImageLoader()
     
     override func viewDidLoad() {
@@ -33,9 +36,15 @@ final class HereafterV2ViewController: BaseViewController<HereafterViewModelProt
         addView.addGestureRecognizer(addTapGestureRecognizer)
         let randomizeTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(randomizeAction))
         randomizeView.addGestureRecognizer(randomizeTapGestureRecognizer)
-        viewModel?.select(type: .foremost)
         
-        setupCollectionViews()
+        let foremostTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(foremostAction))
+        foremostView.addGestureRecognizer(foremostTapGestureRecognizer)
+        
+        let possiblyTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(possiblyAction))
+        possiblyView.addGestureRecognizer(possiblyTapGestureRecognizer)
+        
+        let ifNothingElseTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ifNothingElseAction))
+        ifNothingElseView.addGestureRecognizer(ifNothingElseTapGestureRecognizer)
     }
     
     @objc private func addAction() {
@@ -53,6 +62,18 @@ final class HereafterV2ViewController: BaseViewController<HereafterViewModelProt
     @objc private func viewedTapped() {
         viewModel?.openViewed()
     }
+    
+    @objc private func foremostAction() {
+        viewModel?.select(type: .foremost, rect: foremostView.frame)
+    }
+    
+    @objc private func possiblyAction() {
+        viewModel?.select(type: .possibly, rect: possiblyView.frame)
+    }
+    
+    @objc private func ifNothingElseAction() {
+        viewModel?.select(type: .ifNothingElse, rect: ifNothingElseView.frame)
+    }
 }
 
 private extension HereafterV2ViewController {
@@ -67,16 +88,6 @@ private extension HereafterV2ViewController {
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage.image(named: ImageConstants.viewed), style: .plain, target: self, action: #selector(viewedTapped))
         navigationItem.rightBarButtonItem?.tintColor = #colorLiteral(red: 0.1490196078, green: 0.1960784314, blue: 0.2196078431, alpha: 1)
-    }
-    
-    func setupCollectionViews() {
-        
-    }
-    
-    func setupCollectionViewFlowLayout() -> UICollectionViewFlowLayout {
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.scrollDirection = .horizontal
-        return flowLayout
     }
 }
 

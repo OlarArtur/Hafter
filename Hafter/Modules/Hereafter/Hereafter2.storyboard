@@ -42,7 +42,7 @@
                                                 <rect key="frame" x="-70" y="40" width="434" height="340"/>
                                             </imageView>
                                         </subviews>
-                                        <color key="backgroundColor" red="0.0" green="0.8015521764755249" blue="0.77736198902130127" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" red="0.0" green="0.80000000000000004" blue="0.77647058823529413" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstItem="V7u-No-mEa" firstAttribute="leading" secondItem="Po1-fA-wiD" secondAttribute="leading" constant="-70" id="5C4-oJ-lyB"/>
                                             <constraint firstItem="bjF-Uf-iUc" firstAttribute="top" secondItem="Po1-fA-wiD" secondAttribute="top" id="DcY-hc-baO"/>
@@ -125,7 +125,7 @@
                                                 <color key="backgroundColor" red="0.35686274509999999" green="0.32549019610000002" blue="0.54117647059999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="If Nothing Else" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Agm-Sp-LQg">
-                                                <rect key="frame" x="146" y="88" width="122.5" height="23"/>
+                                                <rect key="frame" x="145.5" y="88" width="123" height="23"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="19"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -241,6 +241,9 @@
                     </view>
                     <connections>
                         <outlet property="addView" destination="jTo-vN-vLz" id="Kd6-Rh-WKL"/>
+                        <outlet property="foremostView" destination="nBc-Ie-EVr" id="xJ8-fS-1Qw"/>
+                        <outlet property="ifNothingElseView" destination="z4n-YV-d88" id="UWw-Nd-V8S"/>
+                        <outlet property="possiblyView" destination="Oy2-qY-vkf" id="XbC-mF-9wm"/>
                         <outlet property="randomizeView" destination="bI0-v5-b2H" id="5yN-UB-D7D"/>
                     </connections>
                 </viewController>

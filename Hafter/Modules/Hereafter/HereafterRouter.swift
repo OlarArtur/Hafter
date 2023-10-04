@@ -12,7 +12,7 @@ protocol HereafterOutputProtocol: AnyObject {
     func add(completion: @escaping () -> Void)
     func openMenu()
     func openViewed()
-    func openList(type: HereafterMovieType)
+    func openList(type: HereafterMovieType, rect: CGRect)
     func update(movie: HereafterMovie, completion: @escaping (Bool) -> Void)
 }
 
@@ -21,7 +21,7 @@ protocol HereafterRouterProtocol: RouterProtocol {
     func add(completion: @escaping () -> Void)
     func openMenu()
     func openViewed()
-    func openList(type: HereafterMovieType)
+    func openList(type: HereafterMovieType, rect: CGRect)
     func update(movie: HereafterMovie, completion: @escaping (Bool) -> Void)
 }
 
@@ -47,8 +47,8 @@ extension HereafterRouter: HereafterRouterProtocol {
         output?.openViewed()
     }
     
-    func openList(type: HereafterMovieType) {
-        output?.openList(type: type)
+    func openList(type: HereafterMovieType, rect: CGRect) {
+        output?.openList(type: type, rect: rect)
     }
     
     func update(movie: HereafterMovie, completion: @escaping (Bool) -> Void) {

@@ -115,7 +115,13 @@ extension AddViewModel: AddViewModelProtocol {
     }
     
     func search(query: String) {
-        let modifiedQuery = query.replacingOccurrences(of: " ", with: "+")
+        var tempQuery = query
+        if tempQuery.last == " " {
+            tempQuery.removeLast()
+        } else if tempQuery.first == " " {
+            tempQuery.removeFirst()
+        }
+        let modifiedQuery = tempQuery.replacingOccurrences(of: " ", with: "+")
         cancelable = networkService.search(query: modifiedQuery)
             .sink(receiveCompletion: { [weak self] (completion) in
                 switch completion {

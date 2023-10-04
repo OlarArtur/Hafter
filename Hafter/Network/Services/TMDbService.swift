@@ -31,7 +31,7 @@ final class TMDbService {
 extension TMDbService: MediaServiceProtocol {
     
     func search(query: String) -> AnyPublisher<MovieResponse?, ServiceError> {
-        let params = ["query" : query,
+        let params = ["query" :  query,
                       "api_key" : TMDbSettings.shared.apiKeyV3]
         let requestConfig = RequestConfig(requestType: .get, params: params, path: "/search/movie")
         

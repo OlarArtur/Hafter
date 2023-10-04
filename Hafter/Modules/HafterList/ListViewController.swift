@@ -24,6 +24,10 @@ final class ListViewController: BaseViewController<ListViewModelProtocol>, Custo
         bindViewModel()
         setupTableView()
         emptyView.isHidden = (viewModel?.numberOfItems() ?? 0) > 0
+        
+        view.backgroundColor = viewModel?.backgrounColor
+        tableView.backgroundColor = viewModel?.backgrounColor
+        emptyView.backgroundColor = viewModel?.backgrounColor
     }
     
     @IBAction private func closeAction(_ sender: UIButton) {

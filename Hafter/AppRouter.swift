@@ -7,7 +7,10 @@
 
 import UIKit
 
-final class AppRouter {
+final class AppRouter: NSObject {
+    
+    private var startingRect: CGRect = .zero
+    private var selectedType: HereafterMovieType?
     
     private(set) var window: UIWindow
     private var baseNavigationController: UINavigationController?
@@ -96,14 +99,19 @@ extension AppRouter: HereafterOutputProtocol {
         guard let listVC = ListBuilder.build(type: .viewed, output: self, localDataService: localDataService, admissibleTypes: [.foremost, .possibly, .ifNothingElse]) else {
             return
         }
+        selectedType = .viewed
         rootViewController?.present(listVC, animated: true)
     }
     
-    func openList(type: HereafterMovieType) {
+    func openList(type: HereafterMovieType, rect: CGRect) {
+        startingRect = rect
+        selectedType = type
         let types = HereafterMovieType.allCases.filter { $0 != type }
         guard let listVC = ListBuilder.build(type: type, output: self, localDataService: localDataService, admissibleTypes: types) else {
             return
         }
+        listVC.modalPresentationStyle = .fullScreen
+        listVC.transitioningDelegate = self
         rootViewController?.present(listVC, animated: true)
     }
 }
@@ -130,5 +138,15 @@ extension AppRouter: ListOutputProtocol {
     
     func update(movie: HereafterMovie, completion: @escaping (Bool) -> Void) {
         localDataService.update(movie: movie, completion: completion)
+    }
+}
+
+extension AppRouter: UIViewControllerTransitioningDelegate {
+    
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        let presentAnimator = ExpandViewPresentAnimator()
+        presentAnimator.startingRect = startingRect
+        presentAnimator.color = selectedType?.typeColor
+        return presentAnimator
     }
 }

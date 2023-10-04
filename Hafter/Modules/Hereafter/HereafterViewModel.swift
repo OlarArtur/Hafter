@@ -15,7 +15,7 @@ protocol HereafterViewModelProtocol {
     func openViewed()
     func updateType(index: Int, type: HereafterMovieType)
     
-    func select(type: HereafterMovieType)
+    func select(type: HereafterMovieType, rect: CGRect)
     
     func numberOfItems() -> Int
     func itemFor(index: Int) -> Movie
@@ -61,10 +61,8 @@ extension HereafterViewModel: HereafterViewModelProtocol {
         return admissibleTypes.filter { $0 != .viewed }
     }
     
-    func select(type: HereafterMovieType) {
-        selectedType = type
-        movies = localDataService.getMovies(type: selectedType)
-        viewProtocol?.reloadData()
+    func select(type: HereafterMovieType, rect: CGRect) {
+        router?.openList(type: type, rect: rect)
     }
     
     func randomize() {
