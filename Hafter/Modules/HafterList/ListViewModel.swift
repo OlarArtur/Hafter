@@ -73,11 +73,11 @@ extension ListViewModel: ListViewModelProtocol {
     }
     
     func swipeLeftTypes() -> [HereafterMovieType] {
-        return admissibleTypes.filter { $0 == .viewed }
+        return admissibleTypes.filter { $0 != .viewed }
     }
     
     func swipeRightTypes() -> [HereafterMovieType] {
-        return admissibleTypes.filter { $0 != .viewed }
+        return [.viewed]
     }
 }
 

@@ -1,8 +1,8 @@
 //
-//  HereafterViewModel.swift
+//  HereafterMainViewModel.swift
 //  Hafter
 //
-//  Created by Artur Olar on 29.03.2022.
+//  Created by Artur Olar on 15.11.2023.
 //
 
 import Foundation
@@ -23,17 +23,18 @@ protocol HereafterViewModelProtocol {
     func swipeRightTypes() -> [HereafterMovieType]
 }
 
-final class HereafterViewModel<Router: HereafterRouterProtocol>: BaseViewModel<Router> {
+final class HereafterMainViewModel<Router: HereafterRouterProtocol>: BaseViewModel<Router> {
     
     weak var viewProtocol: HereafterViewProtocol?
     
     private let localDataService: LocalServiceProtocol
+    private let type: HereafterMovieType = .foremost
     private var movies: [HereafterMovie] = []
     private let admissibleTypes: [HereafterMovieType] = HereafterMovieType.allCases
     
     private(set) var selectedType: HereafterMovieType = .foremost {
         didSet {
-            viewProtocol?.updateUI()
+            loadMovies()
         }
     }
     
@@ -41,9 +42,15 @@ final class HereafterViewModel<Router: HereafterRouterProtocol>: BaseViewModel<R
         self.localDataService = localDataService
         super.init(router: router)
     }
+    
+    func loadMovies() {
+        movies = localDataService.getMovies(type: selectedType)
+        viewProtocol?.reloadData()
+    }
 }
 
-extension HereafterViewModel: HereafterViewModelProtocol {
+extension HereafterMainViewModel: HereafterViewModelProtocol {
+    
     
     func numberOfItems() -> Int {
         return movies.count
@@ -54,15 +61,15 @@ extension HereafterViewModel: HereafterViewModelProtocol {
     }
     
     func swipeLeftTypes() -> [HereafterMovieType] {
-        return admissibleTypes.filter { $0 == .viewed }
-    }
-    
-    func swipeRightTypes() -> [HereafterMovieType] {
         return admissibleTypes.filter { $0 != .viewed }
     }
     
+    func swipeRightTypes() -> [HereafterMovieType] {
+        return [.viewed]
+    }
+    
     func select(type: HereafterMovieType, rect: CGRect) {
-        router?.openList(type: type, rect: rect)
+        selectedType = type
     }
     
     func randomize() {

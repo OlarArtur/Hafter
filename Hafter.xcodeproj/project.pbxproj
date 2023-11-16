@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		42C5870718D47C0CE7708CF9 /* Pods_Hafter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A10078B088D16F09B1117F9 /* Pods_Hafter.framework */; };
+		BA287E612B0504BB000E1F83 /* VerticalLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA287E602B0504BB000E1F83 /* VerticalLabelView.swift */; };
 		BA5E491428C37D79006C22A2 /* DetailBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5E490F28C37D79006C22A2 /* DetailBuilder.swift */; };
 		BA5E491528C37D79006C22A2 /* Detail.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA5E491028C37D79006C22A2 /* Detail.storyboard */; };
 		BA5E491628C37D79006C22A2 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5E491128C37D79006C22A2 /* DetailViewController.swift */; };
@@ -15,10 +16,11 @@
 		BA5E491828C37D79006C22A2 /* DetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5E491328C37D79006C22A2 /* DetailViewModel.swift */; };
 		BA5E491A28C380E6006C22A2 /* DetailedMovie.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5E491928C380E6006C22A2 /* DetailedMovie.swift */; };
 		BA5E491C28C49B46006C22A2 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5E491B28C49B46006C22A2 /* UIColor.swift */; };
-		BA95C77728EDF33A008BCE59 /* Hereafter2.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA95C77628EDF33A008BCE59 /* Hereafter2.storyboard */; };
+		BA620DDF2B04C62500F93B22 /* HereAfterMain.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA620DDE2B04C62500F93B22 /* HereAfterMain.storyboard */; };
+		BA620DE12B04C64000F93B22 /* HereAfterMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA620DE02B04C64000F93B22 /* HereAfterMainViewController.swift */; };
+		BA620DE32B04D51900F93B22 /* HereafterMainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA620DE22B04D51900F93B22 /* HereafterMainViewModel.swift */; };
 		BA95C77928EDF76E008BCE59 /* HereafterCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA95C77828EDF76E008BCE59 /* HereafterCollectionViewCell.swift */; };
 		BA95C77B28EDF79F008BCE59 /* HereafterCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA95C77A28EDF79F008BCE59 /* HereafterCollectionViewCell.xib */; };
-		BA95C77D28EDF9A2008BCE59 /* HereafterV2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA95C77C28EDF9A2008BCE59 /* HereafterV2ViewController.swift */; };
 		BAA02ECE27F22AD800FDD198 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02ECD27F22AD800FDD198 /* AppDelegate.swift */; };
 		BAA02ED027F22AD800FDD198 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02ECF27F22AD800FDD198 /* SceneDelegate.swift */; };
 		BAA02ED227F22AD800FDD198 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02ED127F22AD800FDD198 /* ViewController.swift */; };
@@ -39,9 +41,6 @@
 		BAA02EFE27F37D3200FDD198 /* UIWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02EFD27F37D3200FDD198 /* UIWindow.swift */; };
 		BAA02F0127F37FEE00FDD198 /* HereafterBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02F0027F37FEE00FDD198 /* HereafterBuilder.swift */; };
 		BAA02F0327F3804000FDD198 /* HereafterRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02F0227F3804000FDD198 /* HereafterRouter.swift */; };
-		BAA02F0527F3807A00FDD198 /* HereafterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02F0427F3807A00FDD198 /* HereafterViewController.swift */; };
-		BAA02F0727F380AD00FDD198 /* HereafterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02F0627F380AD00FDD198 /* HereafterViewModel.swift */; };
-		BAA02F0927F381AA00FDD198 /* Hereafter.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BAA02F0827F381AA00FDD198 /* Hereafter.storyboard */; };
 		BAA02F0B27F4F01200FDD198 /* UIView+IBInspectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02F0A27F4F01200FDD198 /* UIView+IBInspectable.swift */; };
 		BAA02F0D27F5CB6000FDD198 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02F0C27F5CB6000FDD198 /* UIImage.swift */; };
 		BAA02F1327F5D07600FDD198 /* ServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA02F1227F5D07600FDD198 /* ServiceError.swift */; };
@@ -108,6 +107,7 @@
 /* Begin PBXFileReference section */
 		1A10078B088D16F09B1117F9 /* Pods_Hafter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Hafter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6265CA6267DDE5C61FE6061 /* Pods-Hafter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hafter.debug.xcconfig"; path = "Target Support Files/Pods-Hafter/Pods-Hafter.debug.xcconfig"; sourceTree = "<group>"; };
+		BA287E602B0504BB000E1F83 /* VerticalLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalLabelView.swift; sourceTree = "<group>"; };
 		BA5E490F28C37D79006C22A2 /* DetailBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailBuilder.swift; sourceTree = "<group>"; };
 		BA5E491028C37D79006C22A2 /* Detail.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Detail.storyboard; sourceTree = "<group>"; };
 		BA5E491128C37D79006C22A2 /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
@@ -115,10 +115,11 @@
 		BA5E491328C37D79006C22A2 /* DetailViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewModel.swift; sourceTree = "<group>"; };
 		BA5E491928C380E6006C22A2 /* DetailedMovie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedMovie.swift; sourceTree = "<group>"; };
 		BA5E491B28C49B46006C22A2 /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
-		BA95C77628EDF33A008BCE59 /* Hereafter2.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Hereafter2.storyboard; sourceTree = "<group>"; };
+		BA620DDE2B04C62500F93B22 /* HereAfterMain.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = HereAfterMain.storyboard; sourceTree = "<group>"; };
+		BA620DE02B04C64000F93B22 /* HereAfterMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HereAfterMainViewController.swift; sourceTree = "<group>"; };
+		BA620DE22B04D51900F93B22 /* HereafterMainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HereafterMainViewModel.swift; sourceTree = "<group>"; };
 		BA95C77828EDF76E008BCE59 /* HereafterCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HereafterCollectionViewCell.swift; sourceTree = "<group>"; };
 		BA95C77A28EDF79F008BCE59 /* HereafterCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HereafterCollectionViewCell.xib; sourceTree = "<group>"; };
-		BA95C77C28EDF9A2008BCE59 /* HereafterV2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HereafterV2ViewController.swift; sourceTree = "<group>"; };
 		BAA02ECA27F22AD800FDD198 /* Hafter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hafter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BAA02ECD27F22AD800FDD198 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BAA02ECF27F22AD800FDD198 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -141,9 +142,6 @@
 		BAA02EFD27F37D3200FDD198 /* UIWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIWindow.swift; sourceTree = "<group>"; };
 		BAA02F0027F37FEE00FDD198 /* HereafterBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HereafterBuilder.swift; sourceTree = "<group>"; };
 		BAA02F0227F3804000FDD198 /* HereafterRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HereafterRouter.swift; sourceTree = "<group>"; };
-		BAA02F0427F3807A00FDD198 /* HereafterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HereafterViewController.swift; sourceTree = "<group>"; };
-		BAA02F0627F380AD00FDD198 /* HereafterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HereafterViewModel.swift; sourceTree = "<group>"; };
-		BAA02F0827F381AA00FDD198 /* Hereafter.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Hereafter.storyboard; sourceTree = "<group>"; };
 		BAA02F0A27F4F01200FDD198 /* UIView+IBInspectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+IBInspectable.swift"; sourceTree = "<group>"; };
 		BAA02F0C27F5CB6000FDD198 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		BAA02F1227F5D07600FDD198 /* ServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceError.swift; sourceTree = "<group>"; };
@@ -322,6 +320,7 @@
 				BAA02F3827F7491300FDD198 /* CustomSearchBar.swift */,
 				BAF8BB7227FD85F300375C02 /* Animators */,
 				BAC4283D27F9A61A004EAB08 /* DropListView.swift */,
+				BA287E602B0504BB000E1F83 /* VerticalLabelView.swift */,
 				BAF8BB7927FD8F4400375C02 /* CustomAlert */,
 				BAF8BB7727FD87CE00375C02 /* TypeChooserView.swift */,
 				BAC4283F27F9EE24004EAB08 /* DropListCell.swift */,
@@ -369,13 +368,11 @@
 			children = (
 				BAA02F0027F37FEE00FDD198 /* HereafterBuilder.swift */,
 				BAA02F0227F3804000FDD198 /* HereafterRouter.swift */,
-				BAA02F0827F381AA00FDD198 /* Hereafter.storyboard */,
-				BA95C77628EDF33A008BCE59 /* Hereafter2.storyboard */,
-				BAA02F0427F3807A00FDD198 /* HereafterViewController.swift */,
-				BA95C77C28EDF9A2008BCE59 /* HereafterV2ViewController.swift */,
+				BA620DDE2B04C62500F93B22 /* HereAfterMain.storyboard */,
+				BA620DE02B04C64000F93B22 /* HereAfterMainViewController.swift */,
 				BA95C77A28EDF79F008BCE59 /* HereafterCollectionViewCell.xib */,
 				BA95C77828EDF76E008BCE59 /* HereafterCollectionViewCell.swift */,
-				BAA02F0627F380AD00FDD198 /* HereafterViewModel.swift */,
+				BA620DE22B04D51900F93B22 /* HereafterMainViewModel.swift */,
 			);
 			path = Hereafter;
 			sourceTree = "<group>";
@@ -596,12 +593,11 @@
 			files = (
 				BAD51A682805700300AF5381 /* GoogleService-Info.plist in Resources */,
 				BAF8BB8027FD8F4400375C02 /* CustomAlert.storyboard in Resources */,
-				BAA02F0927F381AA00FDD198 /* Hereafter.storyboard in Resources */,
 				BAF8BB9927FF690300375C02 /* List.storyboard in Resources */,
+				BA620DDF2B04C62500F93B22 /* HereAfterMain.storyboard in Resources */,
 				BAC4283227F86C87004EAB08 /* AddTableViewCell.xib in Resources */,
 				BAF8BBB32801E36100375C02 /* Randomize.storyboard in Resources */,
 				BAF8BB8C27FDCFF700375C02 /* Menu.storyboard in Resources */,
-				BA95C77728EDF33A008BCE59 /* Hereafter2.storyboard in Resources */,
 				BAA02EE827F3790700FDD198 /* Introduction.storyboard in Resources */,
 				BAA02EDA27F22AD900FDD198 /* LaunchScreen.storyboard in Resources */,
 				BAA02ED727F22AD900FDD198 /* Assets.xcassets in Resources */,
@@ -664,6 +660,7 @@
 			files = (
 				BAF8BBAB2801DF9C00375C02 /* RandomizeBuild.swift in Sources */,
 				BAA02EFB27F37CF400FDD198 /* NavigationControllerViewController.swift in Sources */,
+				BA620DE12B04C64000F93B22 /* HereAfterMainViewController.swift in Sources */,
 				BAA02F0D27F5CB6000FDD198 /* UIImage.swift in Sources */,
 				BAA02F0B27F4F01200FDD198 /* UIView+IBInspectable.swift in Sources */,
 				BAF8BB8627FDBDE600375C02 /* MenuViewModel.swift in Sources */,
@@ -674,7 +671,7 @@
 				BAA02EF627F37A5200FDD198 /* BaseViewController.swift in Sources */,
 				BAF8BB8A27FDBE7300375C02 /* MenuBuilder.swift in Sources */,
 				BAF8BBA828005B9100375C02 /* Constants.swift in Sources */,
-				BA95C77D28EDF9A2008BCE59 /* HereafterV2ViewController.swift in Sources */,
+				BA287E612B0504BB000E1F83 /* VerticalLabelView.swift in Sources */,
 				BAF8BB8827FDBE2D00375C02 /* MenuRouter.swift in Sources */,
 				BA5E491828C37D79006C22A2 /* DetailViewModel.swift in Sources */,
 				BAF8BB7427FD860A00375C02 /* PresentAnimator.swift in Sources */,
@@ -688,6 +685,7 @@
 				BA5E491628C37D79006C22A2 /* DetailViewController.swift in Sources */,
 				BAC4283C27F8BAAF004EAB08 /* LocalService.swift in Sources */,
 				BAF8BB9F280034A200375C02 /* ListTableViewCell.swift in Sources */,
+				BA620DE32B04D51900F93B22 /* HereafterMainViewModel.swift in Sources */,
 				BAF8BB7827FD87CE00375C02 /* TypeChooserView.swift in Sources */,
 				BAC4283A27F8A5EB004EAB08 /* Model.xcdatamodeld in Sources */,
 				BAF8BB7E27FD8F4400375C02 /* CustomAlertPresenter.swift in Sources */,
@@ -702,7 +700,6 @@
 				BA5E491428C37D79006C22A2 /* DetailBuilder.swift in Sources */,
 				BAA02F0327F3804000FDD198 /* HereafterRouter.swift in Sources */,
 				BAF8BB7627FD862300375C02 /* DismissAnimator.swift in Sources */,
-				BAA02F0527F3807A00FDD198 /* HereafterViewController.swift in Sources */,
 				BAA02F2127F7093200FDD198 /* TMDbNetworkDataProvider.swift in Sources */,
 				BAF8BBB12801E14700375C02 /* RandomizeViewController.swift in Sources */,
 				BAF8BB8127FD8F4400375C02 /* CustomAlertBuilder.swift in Sources */,
@@ -726,7 +723,6 @@
 				BAA02F2827F71F2B00FDD198 /* AddViewController.swift in Sources */,
 				BAA02F3927F7491300FDD198 /* CustomSearchBar.swift in Sources */,
 				BAF8BB9D2800341B00375C02 /* ListTableViewDelegate.swift in Sources */,
-				BAA02F0727F380AD00FDD198 /* HereafterViewModel.swift in Sources */,
 				BAA02F0127F37FEE00FDD198 /* HereafterBuilder.swift in Sources */,
 				BAA02F1B27F5D11700FDD198 /* HTTPNetworkDataProvider.swift in Sources */,
 				BAA02F1927F5D0DA00FDD198 /* NetworkDataProvider.swift in Sources */,

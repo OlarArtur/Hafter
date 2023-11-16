@@ -20,7 +20,7 @@ enum HereafterMovieType: String, CaseIterable {
         case .possibly:
             return "Possibly"
         case .ifNothingElse:
-            return "If noth. else"
+            return "If Nothing Else"
         case .viewed:
             return "Viewed"
         }
