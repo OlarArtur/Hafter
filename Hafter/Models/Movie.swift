@@ -87,9 +87,23 @@ class Movie: Codable {
         releaseDate = dateFormatter.date(from: releaseDateString)
     }
     
+    public func year() -> String? {
+        guard let releaseDate else { return nil }
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy"
+        return dateFormatter.string(from: releaseDate)
+    }
+    
     public func posterImageURL() -> URL? {
         guard let posterPath = posterPath else { return nil }
         let path = "https://image.tmdb.org/t/p/w500" + posterPath
+        guard let url = path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return nil }
+        return URL(string: url)
+    }
+    
+    public func posterOriginalImageURL() -> URL? {
+        guard let posterPath = posterPath else { return nil }
+        let path = "https://image.tmdb.org/t/p/original" + posterPath
         guard let url = path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return nil }
         return URL(string: url)
     }

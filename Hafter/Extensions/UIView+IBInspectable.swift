@@ -27,6 +27,7 @@ extension UIView {
         }
         set {
             layer.borderColor = newValue?.cgColor
+            layer.borderWidth = 1
         }
     }
 }

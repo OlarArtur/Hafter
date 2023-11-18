@@ -69,6 +69,13 @@ extension AppRouter: IntroductionOutputProtocol {
 
 extension AppRouter: HereafterOutputProtocol {
     
+    func selected(_ movie: DetailedMovie, type: HereafterMovieType) {
+        guard let detailVC = ItemDetailBuilder.build(movie: movie, type: type, localDataService: localDataService) else {
+            return
+        }
+        rootViewController?.present(detailVC, animated: true)
+    }
+    
     func randomize() {
         let movies = localDataService.getMovies(type: .none)
         
@@ -150,3 +157,4 @@ extension AppRouter: UIViewControllerTransitioningDelegate {
         return presentAnimator
     }
 }
+

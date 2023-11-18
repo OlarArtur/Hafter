@@ -91,7 +91,6 @@ private extension HereAfterMainViewController {
     func setupTableView() {
         listTableView.registerNibCell(ListTableViewCell.self)
         listTableView.rowHeight = 100
-        listTableView.separatorStyle = .none
         listTableView.dataSource = self
         listTableView.delegate = self
     }
@@ -168,7 +167,7 @@ extension HereAfterMainViewController: UITableViewDataSource {
 extension HereAfterMainViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        viewModel?.didSelect(index: indexPath.row)
     }
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

@@ -14,7 +14,12 @@ final class HereafterBuilder {
         if let hereafterVC = hereafterStoryboard.instantiateInitialViewController() as? HereAfterMainViewController {
             let router = HereafterRouter(presenter: hereafterVC)
             router.output = output
-            let viewModel = HereafterMainViewModel(router: router, localDataService: localDataService)
+            
+            let localProvider = LocalDataProvider()
+            let networkProvider = TMDbNetworkDataProvider()
+            let parser = MovieParser()
+            let networkService = TMDbService(networkProvider: networkProvider, localProvider: localProvider, parser: parser)
+            let viewModel = HereafterMainViewModel(router: router, localDataService: localDataService, networkService: networkService)
             viewModel.viewProtocol = hereafterVC
             hereafterVC.viewModel = viewModel
             return hereafterVC

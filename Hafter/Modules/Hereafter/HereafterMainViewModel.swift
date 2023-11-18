@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 protocol HereafterViewModelProtocol {
     var selectedType: HereafterMovieType { get }
@@ -21,11 +22,19 @@ protocol HereafterViewModelProtocol {
     func itemFor(index: Int) -> Movie
     func swipeLeftTypes() -> [HereafterMovieType]
     func swipeRightTypes() -> [HereafterMovieType]
+    
+    func didSelect(index: Int)
 }
 
 final class HereafterMainViewModel<Router: HereafterRouterProtocol>: BaseViewModel<Router> {
     
+    deinit {
+        cancelable?.cancel()
+    }
+    
     weak var viewProtocol: HereafterViewProtocol?
+    private let networkService: MediaServiceProtocol
+    private var cancelable: AnyCancellable?
     
     private let localDataService: LocalServiceProtocol
     private let type: HereafterMovieType = .foremost
@@ -38,7 +47,8 @@ final class HereafterMainViewModel<Router: HereafterRouterProtocol>: BaseViewMod
         }
     }
     
-    init(router: Router, localDataService: LocalServiceProtocol) {
+    init(router: Router, localDataService: LocalServiceProtocol, networkService: MediaServiceProtocol) {
+        self.networkService = networkService
         self.localDataService = localDataService
         super.init(router: router)
     }
@@ -50,7 +60,27 @@ final class HereafterMainViewModel<Router: HereafterRouterProtocol>: BaseViewMod
 }
 
 extension HereafterMainViewModel: HereafterViewModelProtocol {
+
     
+    func didSelect(index: Int) {
+        cancelable = networkService.detailFor(id: movies[index].movie.id)
+            .sink(receiveCompletion: { [weak self] (completion) in
+                switch completion {
+                case .failure(let error):
+                    print(error)
+                    DispatchQueue.main.async {
+                        self?.viewProtocol?.showError(error: error)
+                    }
+                case .finished:
+                    print("Success")
+                }
+            }, receiveValue: { [weak self] (value) in
+                guard let movie = value, let self else { return }
+                DispatchQueue.main.async {
+                    self.router?.selected(movie, type: self.selectedType)
+                }
+            })
+    }
     
     func numberOfItems() -> Int {
         return movies.count

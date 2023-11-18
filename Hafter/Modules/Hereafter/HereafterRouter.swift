@@ -8,6 +8,7 @@
 import Foundation
 
 protocol HereafterOutputProtocol: AnyObject {
+    func selected(_ movie: DetailedMovie, type: HereafterMovieType)
     func randomize()
     func add(completion: @escaping () -> Void)
     func openMenu()
@@ -17,6 +18,7 @@ protocol HereafterOutputProtocol: AnyObject {
 }
 
 protocol HereafterRouterProtocol: RouterProtocol {
+    func selected(_ movie: DetailedMovie, type: HereafterMovieType)
     func randomize()
     func add(completion: @escaping () -> Void)
     func openMenu()
@@ -30,6 +32,10 @@ final class HereafterRouter: BaseRouter {
 }
 
 extension HereafterRouter: HereafterRouterProtocol {
+    
+    func selected(_ movie: DetailedMovie, type: HereafterMovieType) {
+        output?.selected(movie, type: type)
+    }
     
     func randomize() {
         output?.randomize()

@@ -5,7 +5,7 @@
 //  Created by Artur Olar on 07.04.2022.
 //
 
-import UIKit
+import Foundation
 
 protocol ListOutputProtocol: AnyObject {
     func update(movie: HereafterMovie, completion: @escaping (Bool) -> Void)
