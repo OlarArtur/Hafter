@@ -53,6 +53,10 @@ final class DetailViewController: BaseViewController<DetailViewModelProtocol> {
             posterImageView.transition(to: UIImage.image(named: ImageConstants.posterholder))
         }
     }
+    
+    @IBAction private func closeAction(_ sender: UIButton) {
+        hide(animated: true)
+    }
 }
 
 private extension DetailViewController {
