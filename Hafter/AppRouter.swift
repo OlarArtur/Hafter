@@ -30,8 +30,11 @@ final class AppRouter: NSObject {
     var rootViewController: UIViewController? {
         return window.rootViewController
     }
+}
+
+private extension AppRouter {
     
-    internal func start() {
+    func start() {
         let introductionFinished = Settings.shared.introductionFinished
         
         if introductionFinished {
@@ -53,10 +56,6 @@ final class AppRouter: NSObject {
         baseNavigationController = navigationVC
         window.setRootViewController(navigationVC, animated: animated, completion: nil)
     }
-}
-
-private extension AppRouter {
-    
 }
 
 extension AppRouter: IntroductionOutputProtocol {

@@ -32,12 +32,8 @@ final class AddViewController: BaseViewController<AddViewModelProtocol>, CustomA
     }
     
     @IBAction func addAction(_ sender: UIButton) {
-        showChooserView { [weak self] type in
-            guard let self = self else { return }
-            self.viewModel?.updateSelectedType(type: type)
-            self.viewModel?.update(title: self.addLabel.text ?? "")
-            self.viewModel?.add(controller: self)
-        }
+        viewModel?.update(title: addLabel.text ?? "")
+        addMovie()
     }
     
     @objc private func backTapped() {
@@ -86,10 +82,21 @@ private extension AddViewController {
         tableView.registerNibCell(AddTableViewCell.self)
         tableView.rowHeight = 30
         tableView.separatorStyle = .none
-        addDataSource = AddTableViewDataSource(viewModel: viewModel)
+        addDataSource = AddTableViewDataSource(viewModel: viewModel) { [weak self] in
+            self?.viewModel?.update(title: self?.customSearchBar.text ?? "")
+            self?.addMovie()
+        }
         addDelegate = AddTableViewDelegate(viewModel: viewModel)
         tableView.dataSource = addDataSource
         tableView.delegate = addDelegate
+    }
+    
+    func addMovie() {
+        showChooserView { [weak self] type in
+            guard let self = self else { return }
+            self.viewModel?.updateSelectedType(type: type)
+            self.viewModel?.add(controller: self)
+        }
     }
     
     @objc func keyboardNotification(notification: NSNotification) {

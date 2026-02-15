@@ -10,9 +10,11 @@ import UIKit
 class AddTableViewDataSource: NSObject {
     
     private var viewModel: AddViewModelProtocol
+    private var addAction: (() -> Void)
     
-    init(viewModel: AddViewModelProtocol) {
+    init(viewModel: AddViewModelProtocol, addAction: @escaping (() -> Void)) {
         self.viewModel = viewModel
+        self.addAction = addAction
     }
 }
 
@@ -28,6 +30,10 @@ extension AddTableViewDataSource: UITableViewDataSource {
         }
         cell.setup(title: viewModel.itemFor(index: indexPath.row)) { [weak self] in
             self?.viewModel.detailsFor(index: indexPath.row)
+        }
+        cell.addAction = { [weak self] in
+            self?.viewModel.select(index: indexPath.row)
+            self?.addAction()
         }
         return cell
     }

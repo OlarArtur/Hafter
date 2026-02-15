@@ -16,6 +16,9 @@ final class IntroductionViewController: BaseViewController<IntroductionViewModel
     @IBOutlet private weak var startButton: UIButton!
     @IBOutlet private weak var userImageView: UIImageView!
     
+    private let images = [UIImage(named: "user_choosing_right")!, UIImage(named: "user_choosing_left")!]
+    private var currentImageIndex = 0
+    
     private let moviesCount = 24
     
     lazy var moviesGroup: [UIImageView] = {
@@ -44,6 +47,9 @@ final class IntroductionViewController: BaseViewController<IntroductionViewModel
         
 //        setupView()
         setupWaveAnimation()
+        animateUserImageView()
+        startButton.startPulseAnimation()
+        startButton.layer.zPosition = 10
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -63,6 +69,22 @@ private extension IntroductionViewController {
         for movie in moviesGroup {
             view.addSubview(movie)
         }
+    }
+    
+    func animateUserImageView() {
+        currentImageIndex = (currentImageIndex + 1) % images.count
+
+        UIView.transition(with: userImageView,
+                          duration: 0.5,
+                          options: [.transitionCrossDissolve],
+                          animations: {
+                              self.userImageView.image = self.images[self.currentImageIndex]
+                          },
+                          completion: { _ in
+                              DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                  self.animateUserImageView()
+                              }
+                          })
     }
     
     func setupMoviesBehaviors() {
@@ -108,7 +130,7 @@ private extension IntroductionViewController {
             movie.frame = CGRect(x: -160, y: 300, width: 60, height: 50)
             self.view.addSubview(movie)
             
-            let randomYOffset = CGFloat( arc4random_uniform(350))
+            let randomYOffset = CGFloat(arc4random_uniform(350))
             
             let path = UIBezierPath()
             path.move(to: CGPoint(x: 16, y: 239 + randomYOffset))
@@ -132,4 +154,19 @@ extension IntroductionViewController: IntroductionViewProtocol {
 
 extension IntroductionViewController: UICollisionBehaviorDelegate {
     
+}
+
+fileprivate extension UIButton {
+    
+    func startPulseAnimation() {
+        let pulse = CABasicAnimation(keyPath: "transform.scale")
+        pulse.duration = 0.6
+        pulse.fromValue = 1.0
+        pulse.toValue = 1.05
+        pulse.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        pulse.autoreverses = true
+        pulse.repeatCount = .infinity
+        
+        layer.add(pulse, forKey: "pulse")
+    }
 }

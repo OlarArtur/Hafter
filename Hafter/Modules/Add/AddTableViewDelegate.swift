@@ -20,7 +20,7 @@ extension AddTableViewDelegate: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         (tableView.cellForRow(at: indexPath) as? AddTableViewCell)?.isSelected = true
-        viewModel.select(index: indexPath.row)
+//        viewModel.select(index: indexPath.row)
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {

@@ -11,9 +11,11 @@ final class AddTableViewCell: UITableViewCell {
     
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var detailButton: UIButton!
+    @IBOutlet private weak var addButton: UIButton!
     @IBOutlet private weak var selectedImageView: UIImageView!
     
     private var infoAction: (() -> Void)?
+    var addAction: (() -> Void)?
     
     override var isSelected: Bool {
         get {
@@ -21,10 +23,10 @@ final class AddTableViewCell: UITableViewCell {
         }
         set {
             detailButton.isHidden = !isSelected
+            addButton.isHidden = !isSelected
             selectedImageView.isHidden = !isSelected
             super.isSelected = newValue
         }
-        
     }
     
     override func awakeFromNib() {
@@ -46,5 +48,9 @@ final class AddTableViewCell: UITableViewCell {
     
     @IBAction private func detailAction(_ sender: UIButton) {
         infoAction?()
+    }
+    
+    @IBAction private func addAction(_ sender: UIButton) {
+        addAction?()
     }
 }

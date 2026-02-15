@@ -37,8 +37,7 @@ final class HereAfterMainViewController: BaseViewController<HereafterViewModelPr
         setupGestures()
         setupTableView()
         
-        viewModel?.select(type: .foremost, rect: .zero)
-        select(type: .foremost)
+        foremostAction()
     }
     
     @objc private func addAction() {
@@ -90,7 +89,8 @@ private extension HereAfterMainViewController {
     
     func setupTableView() {
         listTableView.registerNibCell(ListTableViewCell.self)
-        listTableView.rowHeight = 100
+        listTableView.separatorStyle = .none
+        listTableView.rowHeight = 140
         listTableView.dataSource = self
         listTableView.delegate = self
     }
