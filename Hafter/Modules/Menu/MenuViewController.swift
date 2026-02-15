@@ -15,7 +15,7 @@ final class MenuViewController: BaseViewController<MenuViewModelProtocol> {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         let tap = UITapGestureRecognizer(target: self, action: #selector(tapAction))
         view.addGestureRecognizer(tap)
     }

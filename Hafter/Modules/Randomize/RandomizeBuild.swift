@@ -10,16 +10,13 @@ import UIKit
 final class RandomizeBuilder {
     
     static func build(output: RandomizeOutputProtocol?, movies: [HereafterMovie], imageLoader: ImageLoaderProtocol) -> UIViewController? {
-        let randomizeStoryboard = UIStoryboard(name: "Randomize", bundle: nil)
-        if let randomizeVC = randomizeStoryboard.instantiateInitialViewController() as? RandomizeViewController {
-            let router = RandomizeRouter(presenter: randomizeVC)
-            router.output = output
-           
-            let viewModel = RandomizeViewModel(router: router, movies: movies, imageLoader: imageLoader)
-            randomizeVC.viewModel = viewModel
-            randomizeVC.transitioningDelegate = randomizeVC
-            return randomizeVC
-        }
-        return nil
+        let randomizeVC = RandomizeViewController()
+        let router = RandomizeRouter(presenter: randomizeVC)
+        router.output = output
+
+        let viewModel = RandomizeViewModel(router: router, movies: movies, imageLoader: imageLoader)
+        randomizeVC.viewModel = viewModel
+        randomizeVC.transitioningDelegate = randomizeVC
+        return randomizeVC
     }
 }

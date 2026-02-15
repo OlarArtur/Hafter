@@ -15,11 +15,8 @@ protocol AlertViewOutput: UIView {
 final class CustomAlertBuilder<T: AlertViewOutput> {
     
     static func build(with alertView: T, actions: [CustomAlertAction] = []) -> UIViewController? {
-        let statusModuleStoryboard = UIStoryboard(name: "CustomAlert", bundle: nil)
-        if let alertVC = statusModuleStoryboard.instantiateInitialViewController() as? CustomAlertViewController {
-            alertVC.add(alertView: alertView, actions: actions)
-            return alertVC
-        }
-        return nil
+        let alertVC = CustomAlertViewController()
+        alertVC.add(alertView: alertView, actions: actions)
+        return alertVC
     }
 }

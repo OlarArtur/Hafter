@@ -14,15 +14,12 @@ protocol IntroductionOutputProtocol: AnyObject {
 final class IntroductionBuilder {
     
     static func build(output: IntroductionOutputProtocol?) -> UIViewController? {
-        let introductionStoryboard = UIStoryboard(name: "Introduction", bundle: nil)
-        if let introductionVC = introductionStoryboard.instantiateInitialViewController() as? IntroductionViewController {
-            let router = IntroductionRouter(presenter: introductionVC)
-            router.output = output
-            let viewModel = IntroductionViewModel(router: router)
-            viewModel.viewProtocol = introductionVC
-            introductionVC.viewModel = viewModel
-            return introductionVC
-        }
-        return nil
+        let introductionVC = IntroductionViewController()
+        let router = IntroductionRouter(presenter: introductionVC)
+        router.output = output
+        let viewModel = IntroductionViewModel(router: router)
+        viewModel.viewProtocol = introductionVC
+        introductionVC.viewModel = viewModel
+        return introductionVC
     }
 }
