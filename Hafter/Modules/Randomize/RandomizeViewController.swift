@@ -111,6 +111,7 @@ final class RandomizeViewController: BaseViewController<RandomizeViewModelProtoc
         l.text = "Formost"
         l.font = .systemFont(ofSize: 15)
         l.textAlignment = .center
+        l.numberOfLines = 0
         return l
     }()
 
@@ -119,6 +120,7 @@ final class RandomizeViewController: BaseViewController<RandomizeViewModelProtoc
         l.text = "Possibly"
         l.font = .systemFont(ofSize: 15)
         l.textAlignment = .center
+        l.numberOfLines = 0
         return l
     }()
 
@@ -127,6 +129,7 @@ final class RandomizeViewController: BaseViewController<RandomizeViewModelProtoc
         l.text = "If nothing else"
         l.font = .systemFont(ofSize: 15)
         l.textAlignment = .center
+        l.numberOfLines = 0
         return l
     }()
 
@@ -231,12 +234,18 @@ final class RandomizeViewController: BaseViewController<RandomizeViewModelProtoc
 
             allLabel.centerXAnchor.constraint(equalTo: bookmarkAllView.centerXAnchor),
             allLabel.centerYAnchor.constraint(equalTo: bookmarkAllView.centerYAnchor),
-            foremostLabel.centerXAnchor.constraint(equalTo: bookmarkFormostView.centerXAnchor),
+            
             foremostLabel.centerYAnchor.constraint(equalTo: bookmarkFormostView.centerYAnchor),
-            possiblyLabel.centerXAnchor.constraint(equalTo: bookmarkPossiblyView.centerXAnchor),
+            foremostLabel.leadingAnchor.constraint(equalTo: bookmarkFormostView.leadingAnchor),
+            foremostLabel.trailingAnchor.constraint(equalTo: bookmarkFormostView.trailingAnchor),
+            
             possiblyLabel.centerYAnchor.constraint(equalTo: bookmarkPossiblyView.centerYAnchor),
-            ifNothingElseLabel.centerXAnchor.constraint(equalTo: bookmarkIfNothElseView.centerXAnchor),
-            ifNothingElseLabel.centerYAnchor.constraint(equalTo: bookmarkIfNothElseView.centerYAnchor)
+            possiblyLabel.leadingAnchor.constraint(equalTo: bookmarkPossiblyView.leadingAnchor),
+            possiblyLabel.trailingAnchor.constraint(equalTo: bookmarkPossiblyView.trailingAnchor),
+            
+            ifNothingElseLabel.centerYAnchor.constraint(equalTo: bookmarkIfNothElseView.centerYAnchor),
+            ifNothingElseLabel.leadingAnchor.constraint(equalTo: bookmarkIfNothElseView.leadingAnchor),
+            ifNothingElseLabel.trailingAnchor.constraint(equalTo: bookmarkIfNothElseView.trailingAnchor)
         ])
     }
 

@@ -51,6 +51,11 @@ final class VerticalLabelView: UIView {
         commonInit()
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        convex()
+    }
+
     func commonInit() {
         addSubview(label)
         label.backgroundColor = .clear
@@ -62,7 +67,6 @@ final class VerticalLabelView: UIView {
         
         label.centerXAnchor.constraint(equalTo: centerXAnchor, constant: -10).isActive = true
         label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        convex()
     }
     
     func convex() {

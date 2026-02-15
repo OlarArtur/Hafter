@@ -106,7 +106,6 @@ protocol TransitionManagerDelegate: AnyObject {
 
         toViewController.beginAppearanceTransition(true, animated: true)
         let originalCenter = presentedControllerView.center
-        let originalSize = presentedControllerView.frame.size
 
         let final = fromViewController.view.frame
         

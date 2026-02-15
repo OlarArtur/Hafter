@@ -16,12 +16,14 @@ final class IntroductionViewController: BaseViewController<IntroductionViewModel
     private let startButton: UIButton = {
         let b = UIButton(type: .system)
         b.translatesAutoresizingMaskIntoConstraints = false
-        b.setTitle("Let's Go", for: .normal)
-        b.setTitleColor(.white, for: .normal)
-        b.titleLabel?.font = .boldSystemFont(ofSize: 20)
-        b.backgroundColor = UIColor(red: 0.51, green: 0.58, blue: 0.99, alpha: 1)
-        b.contentEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-        b.layer.cornerRadius = 18
+        var config = UIButton.Configuration.plain()
+        config.title = "Let's Go"
+        config.baseForegroundColor = .white
+        config.attributedTitle = AttributedString("Let's Go", attributes: AttributeContainer([.font: UIFont.boldSystemFont(ofSize: 20)]))
+        config.background.backgroundColor = UIColor(red: 0.51, green: 0.58, blue: 0.99, alpha: 1)
+        config.background.cornerRadius = 18
+        config.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+        b.configuration = config
         return b
     }()
 
