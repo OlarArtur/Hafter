@@ -12,19 +12,48 @@ protocol IntroductionViewProtocol: AnyObject {
 }
 
 final class IntroductionViewController: BaseViewController<IntroductionViewModelProtocol> {
+    
+    private let underlayButtonView: UIView = {
+        let v = UIView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.backgroundColor = .white
+        v.layer.borderColor = UIColor(red: 0.26, green: 0.32, blue: 0.72, alpha: 0.3).cgColor
+        v.layer.borderWidth = 1
+        v.layer.cornerRadius = 18
+        return v
+    }()
+    
+    private let lightShadowButtonView: UIView = {
+        let v = UIView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        return v
+    }()
+    
+    private let darkShadowButtonView: UIView = {
+        let v = UIView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        return v
+    }()
 
     private let startButton: UIButton = {
         let b = UIButton(type: .system)
         b.translatesAutoresizingMaskIntoConstraints = false
         var config = UIButton.Configuration.plain()
-        config.title = "Let's Go"
         config.baseForegroundColor = .white
-        config.attributedTitle = AttributedString("Let's Go", attributes: AttributeContainer([.font: UIFont.boldSystemFont(ofSize: 20)]))
+        config.attributedTitle = AttributedString("Let's Go", attributes: AttributeContainer([.font: UIFont.boldSystemFont(ofSize: 24)]))
         config.background.backgroundColor = UIColor(red: 0.51, green: 0.58, blue: 0.99, alpha: 1)
         config.background.cornerRadius = 18
-        config.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
         b.configuration = config
         return b
+    }()
+    
+    private let questionImageView: UIImageView = {
+        let v = UIImageView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.contentMode = .scaleAspectFit
+        v.clipsToBounds = true
+        v.image = UIImage(named: "user_choosing_question")
+        return v
     }()
 
     private let userImageView: UIImageView = {
@@ -39,8 +68,19 @@ final class IntroductionViewController: BaseViewController<IntroductionViewModel
     private let titleLabel: UILabel = {
         let l = UILabel()
         l.translatesAutoresizingMaskIntoConstraints = false
-        l.text = "Forget the 'What to watch?' \nstruggle"
-        l.font = .boldSystemFont(ofSize: 27)
+        l.text = "Too Many Movies."
+        l.font = .systemFont(ofSize: 38, weight: .semibold)
+        l.textColor = UIColor(red: 0.26, green: 0.32, blue: 0.72, alpha: 1)
+        l.textAlignment = .center
+        l.numberOfLines = 0
+        return l
+    }()
+    
+    private let subtitleLabel: UILabel = {
+        let l = UILabel()
+        l.translatesAutoresizingMaskIntoConstraints = false
+        l.text = "Zero Decisions."
+        l.font = .systemFont(ofSize: 36, weight: .semibold)
         l.textColor = UIColor(red: 0.51, green: 0.58, blue: 0.99, alpha: 1)
         l.textAlignment = .center
         l.numberOfLines = 0
@@ -52,11 +92,11 @@ final class IntroductionViewController: BaseViewController<IntroductionViewModel
         v.translatesAutoresizingMaskIntoConstraints = false
         v.contentMode = .scaleAspectFill
         v.clipsToBounds = true
-        v.image = UIImage(named: "choose_background")
+        v.image = UIImage(named: "onboardingBackground")
         return v
     }()
 
-    private let images = [UIImage(named: "user_choosing_right")!, UIImage(named: "user_choosing_left")!]
+    private let images = [UIImage(named: "user_choosing")!, UIImage(named: "user_choosing")!]
     private var currentImageIndex = 0
 
     private let moviesCount = 24
@@ -87,9 +127,9 @@ final class IntroductionViewController: BaseViewController<IntroductionViewModel
         view.backgroundColor = .systemBackground
         setupLayout()
         startButton.addTarget(self, action: #selector(getStartedAction), for: .touchUpInside)
-        setupWaveAnimation()
+//        setupWaveAnimation()
         animateUserImageView()
-        startButton.startPulseAnimation()
+        underlayButtonView.startPulseAnimation()
         startButton.layer.zPosition = 10
     }
 
@@ -107,8 +147,17 @@ private extension IntroductionViewController {
     func setupLayout() {
         view.addSubview(backgroundImageView)
         view.addSubview(titleLabel)
-        view.addSubview(startButton)
+        view.addSubview(subtitleLabel)
         view.addSubview(userImageView)
+        view.addSubview(questionImageView)
+        setup(shadowView: lightShadowButtonView, backgroundColor: .white, shadowColor: .white)
+        view.addSubview(lightShadowButtonView)
+        setup(shadowView: darkShadowButtonView,
+              backgroundColor: UIColor(red: 0.26, green: 0.32, blue: 0.72, alpha: 1),
+              shadowColor: UIColor(red: 0.26, green: 0.32, blue: 0.72, alpha: 1))
+        view.addSubview(darkShadowButtonView)
+        view.addSubview(underlayButtonView)
+        underlayButtonView.addSubview(startButton)
 
         NSLayoutConstraint.activate([
             backgroundImageView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -119,15 +168,40 @@ private extension IntroductionViewController {
             titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             titleLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             titleLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            
+            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
+            subtitleLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            subtitleLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            
+            underlayButtonView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -150),
+            underlayButtonView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            underlayButtonView.widthAnchor.constraint(equalToConstant: 222),
+            underlayButtonView.heightAnchor.constraint(equalToConstant: 56),
+            
+            lightShadowButtonView.topAnchor.constraint(equalTo: underlayButtonView.topAnchor, constant: -2),
+            lightShadowButtonView.leadingAnchor.constraint(equalTo: underlayButtonView.leadingAnchor, constant: 20),
+            lightShadowButtonView.trailingAnchor.constraint(equalTo: underlayButtonView.trailingAnchor, constant: -20),
+            lightShadowButtonView.heightAnchor.constraint(equalToConstant: 28),
+            
+            darkShadowButtonView.bottomAnchor.constraint(equalTo: underlayButtonView.bottomAnchor, constant: -2),
+            darkShadowButtonView.leadingAnchor.constraint(equalTo: underlayButtonView.leadingAnchor, constant: 20),
+            darkShadowButtonView.trailingAnchor.constraint(equalTo: underlayButtonView.trailingAnchor, constant: -20),
+            darkShadowButtonView.heightAnchor.constraint(equalToConstant: 28),
 
-            startButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
-            startButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            startButton.heightAnchor.constraint(equalToConstant: 54),
+            startButton.bottomAnchor.constraint(equalTo: underlayButtonView.bottomAnchor, constant: -2),
+            startButton.topAnchor.constraint(equalTo: underlayButtonView.topAnchor, constant: 2),
+            startButton.leadingAnchor.constraint(equalTo: underlayButtonView.leadingAnchor, constant: 2),
+            startButton.trailingAnchor.constraint(equalTo: underlayButtonView.trailingAnchor, constant: -2),
 
             userImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             userImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            userImageView.widthAnchor.constraint(equalToConstant: 200),
-            userImageView.heightAnchor.constraint(equalToConstant: 300)
+            userImageView.widthAnchor.constraint(equalToConstant: 400),
+            userImageView.heightAnchor.constraint(equalToConstant: 500),
+            
+            questionImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            questionImageView.bottomAnchor.constraint(equalTo: userImageView.topAnchor, constant: 250),
+            questionImageView.widthAnchor.constraint(equalToConstant: 200),
+            questionImageView.heightAnchor.constraint(equalToConstant: 300)
         ])
     }
 
@@ -135,16 +209,17 @@ private extension IntroductionViewController {
         currentImageIndex = (currentImageIndex + 1) % images.count
 
         UIView.transition(with: userImageView,
-                          duration: 0.5,
+                          duration: 0.3,
                           options: [.transitionCrossDissolve],
                           animations: {
-                              self.userImageView.image = self.images[self.currentImageIndex]
-                          },
+            self.userImageView.image = self.images[self.currentImageIndex]
+            self.questionImageView.alpha = self.currentImageIndex == 0 ? 1 : 0.8
+        },
                           completion: { _ in
-                              DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                  self.animateUserImageView()
-                              }
-                          })
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                self.animateUserImageView()
+            }
+        })
     }
 
     func setupMoviesBehaviors() {
@@ -181,6 +256,16 @@ private extension IntroductionViewController {
             animator?.addBehavior(flyBehavior)
         }
     }
+    
+    func setup(shadowView: UIView, backgroundColor: UIColor, shadowColor: UIColor) {
+        shadowView.backgroundColor = backgroundColor
+        shadowView.layer.cornerRadius = 24
+        shadowView.layer.shadowColor = shadowColor.cgColor
+        shadowView.layer.shadowOpacity = 0.8
+        shadowView.layer.shadowOffset = CGSize(width: 0, height: 4)
+        shadowView.layer.shadowRadius = 20
+        shadowView.clipsToBounds = false
+    }
 
     func setupWaveAnimation() {
         for movie in moviesGroup {
@@ -214,7 +299,7 @@ extension IntroductionViewController: UICollisionBehaviorDelegate {
 
 }
 
-fileprivate extension UIButton {
+fileprivate extension UIView {
 
     func startPulseAnimation() {
         let pulse = CABasicAnimation(keyPath: "transform.scale")
