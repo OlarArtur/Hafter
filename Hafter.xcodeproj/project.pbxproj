@@ -25,6 +25,7 @@
 		A45D44D3CAD9B5B6421AE6B0 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10587A1F65A14EC85541BE22 /* WidgetKit.framework */; };
 		A8F5AB04EDBEFC277E73B558 /* MovieSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E71365C0EED751634C00755 /* MovieSession.swift */; };
 		B1C2D3E42F6A4D0E9B8C7401 /* SessionPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C2D3E42F6A4D0E9B8C7402 /* SessionPool.swift */; };
+		B1C2D3E42F6A4D0E9B8C7602 /* ViewedShelf.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C2D3E42F6A4D0E9B8C7603 /* ViewedShelf.swift */; };
 		B1C2D3E42F6A4D0E9B8C7403 /* SessionLobbyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C2D3E42F6A4D0E9B8C7404 /* SessionLobbyViewController.swift */; };
 		B8C8FCA2BA3C9409C137E45B /* SocialCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D97CC908DFC4ADDDC7679987 /* SocialCoordinator.swift */; };
 		BA105804D1ECE13A6C85A346 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BAF3C5FDF9124E3B725A46D1 /* Foundation.framework */; };
@@ -153,6 +154,8 @@
 		A7C1E4B12F6A4D0E9B8C7105 /* AccountLocalState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountLocalState.swift; sourceTree = "<group>"; };
 		3E71365C0EED751634C00755 /* MovieSession.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MovieSession.swift; sourceTree = SOURCE_ROOT; };
 		B1C2D3E42F6A4D0E9B8C7402 /* SessionPool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPool.swift; sourceTree = "<group>"; };
+		B1C2D3E42F6A4D0E9B8C7601 /* Model 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Model 2.xcdatamodel"; sourceTree = "<group>"; };
+		B1C2D3E42F6A4D0E9B8C7603 /* ViewedShelf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewedShelf.swift; sourceTree = "<group>"; };
 		B1C2D3E42F6A4D0E9B8C7404 /* SessionLobbyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionLobbyViewController.swift; sourceTree = "<group>"; };
 		7C31B9B3402A3B0B4F49DFF2 /* Config.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = SOURCE_ROOT; };
 		8018D38FA249D0A3B6148F0A /* SocialUser.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SocialUser.swift; sourceTree = SOURCE_ROOT; };
@@ -369,6 +372,7 @@
 				8018D38FA249D0A3B6148F0A /* SocialUser.swift */,
 				3E71365C0EED751634C00755 /* MovieSession.swift */,
 				B1C2D3E42F6A4D0E9B8C7402 /* SessionPool.swift */,
+				B1C2D3E42F6A4D0E9B8C7603 /* ViewedShelf.swift */,
 			);
 			name = Models;
 			path = Models;
@@ -962,6 +966,7 @@
 				16FCD7F9EF75262A7EF156C0 /* SocialUser.swift in Sources */,
 				A8F5AB04EDBEFC277E73B558 /* MovieSession.swift in Sources */,
 				B1C2D3E42F6A4D0E9B8C7401 /* SessionPool.swift in Sources */,
+				B1C2D3E42F6A4D0E9B8C7602 /* ViewedShelf.swift in Sources */,
 				B1C2D3E42F6A4D0E9B8C7403 /* SessionLobbyViewController.swift in Sources */,
 				B8C8FCA2BA3C9409C137E45B /* SocialCoordinator.swift in Sources */,
 				D8733A348A5E5CECEA0965C1 /* AuthViewController.swift in Sources */,
@@ -1295,8 +1300,9 @@
 			isa = XCVersionGroup;
 			children = (
 				BAC4283927F8A5EB004EAB08 /* Model.xcdatamodel */,
+				B1C2D3E42F6A4D0E9B8C7601 /* Model 2.xcdatamodel */,
 			);
-			currentVersion = BAC4283927F8A5EB004EAB08 /* Model.xcdatamodel */;
+			currentVersion = B1C2D3E42F6A4D0E9B8C7601 /* Model 2.xcdatamodel */;
 			path = Model.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
