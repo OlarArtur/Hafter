@@ -42,8 +42,16 @@ extension AuthViewModel: AuthViewModelProtocol {
     }
 
     private func fetchOrCreateUser(uid: String) {
-        firestoreService.getUser(uid: uid) { [weak self] existing in
-            if let existing {
+        firestoreService.getUser(uid: uid) { [weak self] result in
+            switch result {
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    self?.onError?(SocialErrorMessage.userVisible(
+                        error,
+                        offline: "Couldn't sign in. Check your connection and try again."
+                    ))
+                }
+            case .success(let existing?):
                 self?.firestoreService.registerShareCode(
                     uid: existing.uid,
                     displayName: existing.displayName,
@@ -51,7 +59,7 @@ extension AuthViewModel: AuthViewModelProtocol {
                 ) { _ in
                     DispatchQueue.main.async { self?.onSuccess?(existing) }
                 }
-            } else {
+            case .success(nil):
                 self?.createNewUser(uid: uid)
             }
         }
@@ -70,7 +78,10 @@ extension AuthViewModel: AuthViewModelProtocol {
                     return
                 }
                 DispatchQueue.main.async {
-                    self?.onError?(error.localizedDescription)
+                    self?.onError?(SocialErrorMessage.userVisible(
+                        error,
+                        offline: "Couldn't create your profile. Check your connection and try again."
+                    ))
                 }
                 return
             }

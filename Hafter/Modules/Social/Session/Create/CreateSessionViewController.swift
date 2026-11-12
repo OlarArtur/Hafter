@@ -83,8 +83,10 @@ private extension CreateSessionViewController {
         viewModel?.onSessionCreated = { [weak self] session in
             self?.activityIndicator.stopAnimating()
             self?.createButton.isEnabled = true
-            self?.onSessionCreated?(session)
-            self?.dismiss(animated: true)
+            let callback = self?.onSessionCreated
+            self?.dismiss(animated: true) {
+                callback?(session)
+            }
         }
         viewModel?.onError = { [weak self] message in
             self?.activityIndicator.stopAnimating()

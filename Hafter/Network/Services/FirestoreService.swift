@@ -8,8 +8,10 @@
 //  - shareCodes/{code} is deleted, so the share code stops resolving.
 //  - Each friend's `friends` array has this uid removed.
 //  - Sessions this user created are deleted. Invitees may still list the
-//    session id in `pendingSessions` until they next open Friends; a missing
-//    session is dropped from that list.
+//    session id in `pendingSessions` until they next open Friends; a missing,
+//    declined, or week-old pending session is dropped from that list.
+//    Declining also removes this uid from the session, so the creator is not
+//    left waiting on a vote that will never arrive.
 //  - Sessions this user joined but did not create are kept. The uid is removed
 //    from `participants` and `votes.{uid}` is deleted. Remaining people continue.
 //    If the user was the only other participant, the creator remains.
@@ -25,20 +27,59 @@ protocol FirestoreServiceProtocol {
     // Users
     func createUser(_ user: SocialUser, completion: @escaping (Error?) -> Void)
     func registerShareCode(uid: String, displayName: String, shareCode: String, completion: @escaping (Error?) -> Void)
-    func getUser(uid: String, completion: @escaping (SocialUser?) -> Void)
-    func searchUser(byShareCode code: String, completion: @escaping (SocialUser?) -> Void)
+    func getUser(uid: String, completion: @escaping (Result<SocialUser?, Error>) -> Void)
+    func searchUser(byShareCode code: String, completion: @escaping (Result<SocialUser?, Error>) -> Void)
     func addFriend(myUID: String, friendUID: String, completion: @escaping (Error?) -> Void)
-    func observePendingSessions(uid: String, handler: @escaping ([String]) -> Void) -> ListenerRegistration
+    /// Drops a uid whose user document is gone or no longer readable. Only this
+    /// user's `friends` array is changed. The other profile is not written.
+    func removeStaleFriend(myUID: String, friendUID: String, completion: @escaping (Error?) -> Void)
+    func observeUser(uid: String, handler: @escaping (Result<SocialUser?, Error>) -> Void) -> ListenerRegistration
     func deleteAccountData(uid: String, completion: @escaping (Error?) -> Void)
 
     // Sessions
     func createSession(_ session: MovieSession, completion: @escaping (Error?) -> Void)
     func getSession(id: String, completion: @escaping (MovieSession?, Error?) -> Void)
     func acceptSession(sessionID: String, uid: String, completion: @escaping (Error?) -> Void)
+    /// Leaves the session and drops the invite. A missing session still drops the invite.
     func declineSession(sessionID: String, uid: String, completion: @escaping (Error?) -> Void)
+    /// Drops the invite without leaving the session. Used once a done or active
+    /// session has been opened, and when the session document is already gone.
+    func removePendingInvite(sessionID: String, uid: String, completion: @escaping (Error?) -> Void)
     func recordVote(sessionID: String, uid: String, movieID: String, vote: String, completion: @escaping (Error?) -> Void)
     func finaliseSession(sessionID: String, result: String?, completion: @escaping (Error?) -> Void)
-    func observeSession(id: String, handler: @escaping (MovieSession?) -> Void) -> ListenerRegistration
+    func observeSession(id: String, handler: @escaping (Result<MovieSession?, Error>) -> Void) -> ListenerRegistration
+}
+
+enum SocialErrorMessage {
+    static func isOffline(_ error: Error) -> Bool {
+        let nsError = error as NSError
+        if nsError.domain == FirestoreErrorDomain {
+            return nsError.code == FirestoreErrorCode.unavailable.rawValue
+                || nsError.code == FirestoreErrorCode.deadlineExceeded.rawValue
+                || nsError.code == FirestoreErrorCode.cancelled.rawValue
+        }
+        return nsError.domain == NSURLErrorDomain
+    }
+
+    /// The document is gone, or rules no longer let this user read it.
+    /// A network failure is not stale.
+    static func isStale(_ error: Error) -> Bool {
+        let nsError = error as NSError
+        guard nsError.domain == FirestoreErrorDomain else { return false }
+        return nsError.code == FirestoreErrorCode.notFound.rawValue
+            || nsError.code == FirestoreErrorCode.permissionDenied.rawValue
+    }
+
+    static func isNotFound(_ error: Error) -> Bool {
+        let nsError = error as NSError
+        return nsError.domain == FirestoreErrorDomain
+            && nsError.code == FirestoreErrorCode.notFound.rawValue
+    }
+
+    static func userVisible(_ error: Error, offline: String) -> String {
+        if isOffline(error) { return offline }
+        return error.localizedDescription
+    }
 }
 
 enum SocialDataError: LocalizedError {
@@ -85,6 +126,7 @@ extension FirestoreService: FirestoreServiceProtocol {
     // MARK: Users
 
     func createUser(_ user: SocialUser, completion: @escaping (Error?) -> Void) {
+        let completion = onMain(completion)
         let code = user.shareCode.uppercased()
         let userRef = usersCollection.document(user.uid)
         let codeRef = shareCodesCollection.document(code)
@@ -122,6 +164,7 @@ extension FirestoreService: FirestoreServiceProtocol {
     }
 
     func registerShareCode(uid: String, displayName: String, shareCode: String, completion: @escaping (Error?) -> Void) {
+        let completion = onMain(completion)
         let code = shareCode.uppercased()
         guard code.range(of: "^[A-Z0-9]{6}$", options: .regularExpression) != nil else {
             completion(nil)
@@ -141,45 +184,75 @@ extension FirestoreService: FirestoreServiceProtocol {
         }
     }
 
-    func getUser(uid: String, completion: @escaping (SocialUser?) -> Void) {
-        usersCollection.document(uid).getDocument { snapshot, _ in
-            guard let data = snapshot?.data() else { completion(nil); return }
-            completion(SocialUser(uid: uid, data: data))
+    func getUser(uid: String, completion: @escaping (Result<SocialUser?, Error>) -> Void) {
+        let completion = onMain(completion)
+        usersCollection.document(uid).getDocument { snapshot, error in
+            if let error {
+                completion(.failure(error))
+                return
+            }
+            guard let data = snapshot?.data(), let user = SocialUser(uid: uid, data: data) else {
+                completion(.success(nil))
+                return
+            }
+            completion(.success(user))
         }
     }
 
-    func searchUser(byShareCode code: String, completion: @escaping (SocialUser?) -> Void) {
+    func searchUser(byShareCode code: String, completion: @escaping (Result<SocialUser?, Error>) -> Void) {
+        let completion = onMain(completion)
         let normalized = code.uppercased().trimmingCharacters(in: .whitespacesAndNewlines)
         guard normalized.range(of: "^[A-Z0-9]{6}$", options: .regularExpression) != nil else {
-            completion(nil)
+            completion(.success(nil))
             return
         }
-        shareCodesCollection.document(normalized).getDocument { snapshot, _ in
+        shareCodesCollection.document(normalized).getDocument { snapshot, error in
+            if let error {
+                completion(.failure(error))
+                return
+            }
             guard let data = snapshot?.data(),
                   let uid = data["uid"] as? String,
                   let displayName = data["displayName"] as? String else {
-                completion(nil)
+                completion(.success(nil))
                 return
             }
-            completion(SocialUser(uid: uid, displayName: displayName, shareCode: normalized))
+            completion(.success(SocialUser(uid: uid, displayName: displayName, shareCode: normalized)))
         }
     }
 
     func addFriend(myUID: String, friendUID: String, completion: @escaping (Error?) -> Void) {
+        let completion = onMain(completion)
         let batch = db.batch()
         batch.updateData(["friends": FieldValue.arrayUnion([friendUID])], forDocument: usersCollection.document(myUID))
         batch.updateData(["friends": FieldValue.arrayUnion([myUID])], forDocument: usersCollection.document(friendUID))
         batch.commit { completion($0) }
     }
 
-    func observePendingSessions(uid: String, handler: @escaping ([String]) -> Void) -> ListenerRegistration {
-        usersCollection.document(uid).addSnapshotListener { snapshot, _ in
-            let ids = snapshot?.data()?["pendingSessions"] as? [String] ?? []
-            handler(ids)
+    func removeStaleFriend(myUID: String, friendUID: String, completion: @escaping (Error?) -> Void) {
+        let completion = onMain(completion)
+        usersCollection.document(myUID).updateData(
+            ["friends": FieldValue.arrayRemove([friendUID])]
+        ) { completion($0) }
+    }
+
+    func observeUser(uid: String, handler: @escaping (Result<SocialUser?, Error>) -> Void) -> ListenerRegistration {
+        let handler = onMain(handler)
+        return usersCollection.document(uid).addSnapshotListener { snapshot, error in
+            if let error {
+                handler(.failure(error))
+                return
+            }
+            guard let data = snapshot?.data(), let user = SocialUser(uid: uid, data: data) else {
+                handler(.success(nil))
+                return
+            }
+            handler(.success(user))
         }
     }
 
     func deleteAccountData(uid: String, completion: @escaping (Error?) -> Void) {
+        let completion = onMain(completion)
         usersCollection.document(uid).getDocument { [weak self] snapshot, error in
             guard let self else {
                 completion(nil)
@@ -212,6 +285,7 @@ extension FirestoreService: FirestoreServiceProtocol {
     // MARK: Sessions
 
     func createSession(_ session: MovieSession, completion: @escaping (Error?) -> Void) {
+        let completion = onMain(completion)
         let ref = sessionsCollection.document(session.id)
         let batch = db.batch()
         batch.setData(session.firestoreData, forDocument: ref)
@@ -226,19 +300,30 @@ extension FirestoreService: FirestoreServiceProtocol {
 
     func getSession(id: String, completion: @escaping (MovieSession?, Error?) -> Void) {
         sessionsCollection.document(id).getDocument { snapshot, error in
+            let session: MovieSession?
+            let failure: Error?
             if let error {
-                completion(nil, error)
-                return
+                session = nil
+                failure = error
+            } else if let data = snapshot?.data() {
+                session = MovieSession(id: id, data: data)
+                failure = nil
+            } else {
+                session = nil
+                failure = nil
             }
-            guard let data = snapshot?.data() else {
-                completion(nil, nil)
-                return
+            if Thread.isMainThread {
+                completion(session, failure)
+            } else {
+                DispatchQueue.main.async {
+                    completion(session, failure)
+                }
             }
-            completion(MovieSession(id: id, data: data), nil)
         }
     }
 
     func acceptSession(sessionID: String, uid: String, completion: @escaping (Error?) -> Void) {
+        let completion = onMain(completion)
         let batch = db.batch()
         batch.updateData(["status": SessionStatus.active.rawValue], forDocument: sessionsCollection.document(sessionID))
         batch.updateData(["pendingSessions": FieldValue.arrayRemove([sessionID])], forDocument: usersCollection.document(uid))
@@ -246,27 +331,82 @@ extension FirestoreService: FirestoreServiceProtocol {
     }
 
     func declineSession(sessionID: String, uid: String, completion: @escaping (Error?) -> Void) {
+        let completion = onMain(completion)
+        sessionsCollection.document(sessionID).updateData([
+            "participants": FieldValue.arrayRemove([uid]),
+            "votes.\(uid)": FieldValue.delete()
+        ]) { error in
+            // notFound: the session was deleted. permissionDenied: this uid is
+            // already gone from participants. Either way the invite should go.
+            // A network error leaves the invite so it can be retried.
+            let canClearInvite = error == nil || Self.isNotFound(error) || Self.isPermissionDenied(error)
+            guard canClearInvite else {
+                completion(error)
+                return
+            }
+            self.removePendingInvite(sessionID: sessionID, uid: uid, completion: completion)
+        }
+    }
+
+    func removePendingInvite(sessionID: String, uid: String, completion: @escaping (Error?) -> Void) {
+        let completion = onMain(completion)
         usersCollection.document(uid).updateData(
             ["pendingSessions": FieldValue.arrayRemove([sessionID])]
         ) { completion($0) }
     }
 
     func recordVote(sessionID: String, uid: String, movieID: String, vote: String, completion: @escaping (Error?) -> Void) {
+        let completion = onMain(completion)
         sessionsCollection.document(sessionID).updateData(
             ["votes.\(uid).\(movieID)": vote]
         ) { completion($0) }
     }
 
     func finaliseSession(sessionID: String, result: String?, completion: @escaping (Error?) -> Void) {
-        var update: [String: Any] = ["status": SessionStatus.done.rawValue]
-        if let result { update["result"] = result }
-        sessionsCollection.document(sessionID).updateData(update) { completion($0) }
+        let completion = onMain(completion)
+        let ref = sessionsCollection.document(sessionID)
+        db.runTransaction({ (transaction, errorPointer) -> Any? in
+            let snapshot: DocumentSnapshot
+            do {
+                snapshot = try transaction.getDocument(ref)
+            } catch let error as NSError {
+                errorPointer?.pointee = error
+                return nil
+            }
+            // The other participant may have already picked a result. Do not
+            // overwrite it with a second random choice.
+            if snapshot.data()?["status"] as? String == SessionStatus.done.rawValue {
+                return nil
+            }
+            var update: [String: Any] = ["status": SessionStatus.done.rawValue]
+            if let result { update["result"] = result }
+            transaction.updateData(update, forDocument: ref)
+            return nil
+        }, completion: { _, error in
+            completion(error)
+        })
     }
 
-    func observeSession(id: String, handler: @escaping (MovieSession?) -> Void) -> ListenerRegistration {
-        sessionsCollection.document(id).addSnapshotListener { snapshot, _ in
-            guard let data = snapshot?.data() else { handler(nil); return }
-            handler(MovieSession(id: id, data: data))
+    func observeSession(id: String, handler: @escaping (Result<MovieSession?, Error>) -> Void) -> ListenerRegistration {
+        let handler = onMain(handler)
+        return sessionsCollection.document(id).addSnapshotListener { snapshot, error in
+            if let error {
+                handler(.failure(error))
+                return
+            }
+            guard let data = snapshot?.data() else {
+                handler(.success(nil))
+                return
+            }
+            guard let session = MovieSession(id: id, data: data) else {
+                handler(.failure(NSError(
+                    domain: SocialDataError.domain,
+                    code: 2,
+                    userInfo: [NSLocalizedDescriptionKey: "This session could not be read."]
+                )))
+                return
+            }
+            handler(.success(session))
         }
     }
 }
@@ -274,6 +414,30 @@ extension FirestoreService: FirestoreServiceProtocol {
 // MARK: - Account deletion
 
 private extension FirestoreService {
+
+    func onMain<T>(_ completion: @escaping (T) -> Void) -> (T) -> Void {
+        return { value in
+            if Thread.isMainThread {
+                completion(value)
+            } else {
+                DispatchQueue.main.async {
+                    completion(value)
+                }
+            }
+        }
+    }
+
+    static func isNotFound(_ error: Error?) -> Bool {
+        guard let error else { return false }
+        let nsError = error as NSError
+        return nsError.domain == FirestoreErrorDomain && nsError.code == FirestoreErrorCode.notFound.rawValue
+    }
+
+    static func isPermissionDenied(_ error: Error?) -> Bool {
+        guard let error else { return false }
+        let nsError = error as NSError
+        return nsError.domain == FirestoreErrorDomain && nsError.code == FirestoreErrorCode.permissionDenied.rawValue
+    }
 
     func fetchSessions(uid: String, completion: @escaping (Result<[QueryDocumentSnapshot], Error>) -> Void) {
         let group = DispatchGroup()

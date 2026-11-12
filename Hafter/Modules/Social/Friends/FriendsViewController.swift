@@ -70,6 +70,10 @@ final class FriendsViewController: UIViewController {
         setupNavigationBar()
         setupLayout()
         bindViewModel()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         viewModel?.load()
     }
 }
@@ -377,7 +381,14 @@ private final class SessionInviteCell: UITableViewCell {
 
     func configure(with session: MovieSession) {
         titleLabel.text = "Session · \(session.mode.title)"
-        subtitleLabel.text = "\(session.movies.count) movies · tap to join"
+        switch session.status {
+        case .pending:
+            subtitleLabel.text = "\(session.movies.count) movies · tap to join"
+        case .active:
+            subtitleLabel.text = "\(session.movies.count) movies · in progress"
+        case .done:
+            subtitleLabel.text = "Result ready"
+        }
     }
 
     private func setupLayout() {

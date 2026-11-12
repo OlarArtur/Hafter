@@ -79,8 +79,9 @@ final class SocialCoordinator {
         let vc = CreateSessionViewController()
         let vm = CreateSessionViewModel(uid: uid, friend: friend, localService: localService, firestoreService: firestoreService)
         vc.viewModel = vm
-        vm.onSessionCreated = { [weak self] session in
-            // Creator skips the Join screen and goes straight to the session
+        vc.onSessionCreated = { [weak self] session in
+            // The create screen dismisses itself before calling this.
+            // Creator skips the Join screen and goes straight to the session.
             self?.routeCreatorToSession(session, uid: uid, from: presenter)
         }
         let nav = UINavigationController(rootViewController: vc)
@@ -106,14 +107,22 @@ final class SocialCoordinator {
         case .pending:
             showJoinSession(session, uid: uid, from: presenter)
         case .active:
+            clearInvite(session.id, uid: uid)
             switch session.mode {
             case .swipe:  showSwipeSession(session, uid: uid, from: presenter)
             case .vote:   showVoteSession(session, uid: uid, from: presenter)
             case .random: showResult(session, from: presenter)
             }
         case .done:
+            clearInvite(session.id, uid: uid)
             showResult(session, from: presenter)
         }
+    }
+
+    /// Active and finished sessions should not stay in the invite list.
+    /// A failure here leaves the row in place until the next refresh.
+    private func clearInvite(_ sessionID: String, uid: String) {
+        firestoreService.removePendingInvite(sessionID: sessionID, uid: uid) { _ in }
     }
 
     // MARK: - Join

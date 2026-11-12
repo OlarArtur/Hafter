@@ -12,6 +12,8 @@ import AppIntents
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        // Installs App Check, then configures Firebase once. SceneDelegate must not call this.
+        FirebaseBootstrap.configure()
         if #available(iOS 16, *) {
             HafterShortcuts.updateAppShortcutParameters()
         }

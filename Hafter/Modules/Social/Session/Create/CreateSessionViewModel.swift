@@ -82,7 +82,15 @@ extension CreateSessionViewModel: CreateSessionViewModelProtocol {
         firestoreService.createSession(session) { [weak self] error in
             DispatchQueue.main.async {
                 if let error {
-                    self?.onError?(error.localizedDescription)
+                    let message: String
+                    if SocialErrorMessage.isOffline(error) {
+                        message = "Couldn't create the session. Check your connection and try again."
+                    } else if SocialErrorMessage.isNotFound(error) {
+                        message = "That friend is no longer available."
+                    } else {
+                        message = error.localizedDescription
+                    }
+                    self?.onError?(message)
                 } else {
                     self?.onSessionCreated?(session)
                 }

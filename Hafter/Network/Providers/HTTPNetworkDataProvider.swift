@@ -24,7 +24,6 @@ final class HTTPNetworkDataProvider {
     }
 
     private func makeRequest(by requestConfig: RequestConfig) -> URLRequest? {
-        var request: URLRequest?
         let params = requestConfig.params
 
         let path: String? = {
@@ -45,57 +44,52 @@ final class HTTPNetworkDataProvider {
 
         switch requestConfig.requestType {
         case .get:
-            let paramsString = params?.map { (key, value) -> String? in
-                guard let value = value as? String else {
-                    return nil
-                }
-
-                return "\(key)=\(value)"
-            }.compactMap { $0 }.joined(separator: "&")
-
-            let urlString: String = {
-                var url = Constants.BASE_ULR
-                if let additionalPath = path, additionalPath.isEmpty == false {
-                    url.append(additionalPath)
-                }
-
-                if let requestParamsString = paramsString, requestParamsString.isEmpty == false {
-                    url.append(Constants.QUESTION_MARK)
-                    url.append(requestParamsString)
-                }
-                return url
-            }()
-
-            guard let url = URL(string: urlString) else {
-                return nil
-            }
-            request = URLRequest(url: url)
-            request?.httpMethod = "GET"
+            return makeQueryRequest(path: path, method: "GET", params: params)
         case .post:
-            let urlString: String = {
-                var url = Constants.BASE_ULR
-                if let additionalPath = path, additionalPath.isEmpty == false {
-                    url.append(additionalPath)
-                }
-                return url
-            }()
+            return makeBodyRequest(path: path, method: "POST", params: params)
+        case .put:
+            return makeBodyRequest(path: path, method: "PUT", params: params)
+        case .delete:
+            return makeQueryRequest(path: path, method: "DELETE", params: params)
+        }
+    }
 
-            guard let url = URL(string: urlString) else {
+    /// GET and DELETE share the query-string URL. Only string values are sent,
+    /// matching the previous GET behavior.
+    private func makeQueryRequest(path: String?, method: String, params: [String: AnyHashable]?) -> URLRequest? {
+        let paramsString = params?.map { (key, value) -> String? in
+            guard let value = value as? String else {
                 return nil
             }
-            request = URLRequest(url: url)
-            request?.httpMethod = "POST"
-            if let params = params, let data = try? JSONSerialization.data(withJSONObject: params, options: .prettyPrinted) {
-                request?.httpBody = data
-            }
-        case .put:
-            //TODO: should be implemented
-            return nil
-        case .delete:
-            //TODO: should be implemented
-            return nil
-        }
+            return "\(key)=\(value)"
+        }.compactMap { $0 }.joined(separator: "&")
 
+        var url = Constants.BASE_ULR
+        if let additionalPath = path, additionalPath.isEmpty == false {
+            url.append(additionalPath)
+        }
+        if let requestParamsString = paramsString, requestParamsString.isEmpty == false {
+            url.append(Constants.QUESTION_MARK)
+            url.append(requestParamsString)
+        }
+        guard let requestURL = URL(string: url) else { return nil }
+        var request = URLRequest(url: requestURL)
+        request.httpMethod = method
+        return request
+    }
+
+    /// POST and PUT send the parameter dictionary as a JSON body.
+    private func makeBodyRequest(path: String?, method: String, params: [String: AnyHashable]?) -> URLRequest? {
+        var url = Constants.BASE_ULR
+        if let additionalPath = path, additionalPath.isEmpty == false {
+            url.append(additionalPath)
+        }
+        guard let requestURL = URL(string: url) else { return nil }
+        var request = URLRequest(url: requestURL)
+        request.httpMethod = method
+        if let params, let data = try? JSONSerialization.data(withJSONObject: params, options: .prettyPrinted) {
+            request.httpBody = data
+        }
         return request
     }
 }

@@ -18,6 +18,10 @@ final class SwipeSessionViewController: UIViewController {
     private var movies: [SessionMovie] = []
     private var currentIndex = 0
     private var sessionListener: ListenerRegistration?
+    private var isSendingVote = false
+    private var isFinalising = false
+    private var didEndSession = false
+    private var didShowOfflineAlert = false
 
     // MARK: - Views
 
@@ -190,6 +194,11 @@ private extension SwipeSessionViewController {
     }
 
     func showNextCard() {
+        waitingView.isHidden = true
+        waitingSpinner.stopAnimating()
+        yesButton.isHidden = false
+        noButton.isHidden = false
+        progressLabel.isHidden = false
         cardStack.subviews.forEach { $0.removeFromSuperview() }
         guard currentIndex < movies.count else {
             showWaiting()
@@ -299,7 +308,7 @@ private extension SwipeSessionViewController {
     // MARK: - Gestures & actions
 
     @objc func handlePan(_ recognizer: UIPanGestureRecognizer) {
-        guard let card = recognizer.view else { return }
+        guard isSendingVote == false, let card = recognizer.view else { return }
         let translation = recognizer.translation(in: view)
         let rotation = translation.x / view.bounds.width * 0.3
 
@@ -347,30 +356,35 @@ private extension SwipeSessionViewController {
     }
 
     func vote(_ choice: String) {
+        guard isSendingVote == false else { return }
         guard let session, let uid, currentIndex < movies.count else { return }
+        isSendingVote = true
+        yesButton.isEnabled = false
+        noButton.isEnabled = false
         let movie = movies[currentIndex]
-        currentIndex += 1
-        firestoreService.recordVote(sessionID: session.id, uid: uid, movieID: movie.id, vote: choice) { _ in }
-        showNextCard()
-
-        if currentIndex >= movies.count {
-            checkCompletion()
-        }
-    }
-
-    func checkCompletion() {
-        guard let session, let uid else { return }
-        firestoreService.getSession(id: session.id) { [weak self] updated, _ in
-            guard let self, let updated else { return }
-            if updated.allParticipantsFinished() {
-                let matches = updated.matchingMovies()
-                let resultID = matches.randomElement()?.id
-                self.firestoreService.finaliseSession(sessionID: session.id, result: resultID) { _ in }
+        firestoreService.recordVote(sessionID: session.id, uid: uid, movieID: movie.id, vote: choice) { [weak self] error in
+            guard let self else { return }
+            self.isSendingVote = false
+            self.yesButton.isEnabled = true
+            self.noButton.isEnabled = true
+            if let error {
+                self.showNextCard()
+                if SocialErrorMessage.isStale(error) == false {
+                    self.showOfflineOnce(SocialErrorMessage.userVisible(
+                        error,
+                        offline: "Couldn't save your vote. Check your connection and try again."
+                    ))
+                }
+                return
             }
+            self.currentIndex += 1
+            self.showNextCard()
         }
     }
 
     @objc func closeTapped() {
+        sessionListener?.remove()
+        sessionListener = nil
         dismiss(animated: true)
     }
 }
@@ -380,14 +394,80 @@ private extension SwipeSessionViewController {
 private extension SwipeSessionViewController {
     func startListening() {
         guard let session else { return }
-        sessionListener = firestoreService.observeSession(id: session.id) { [weak self] updated in
-            guard let self, let updated else { return }
+        sessionListener?.remove()
+        sessionListener = firestoreService.observeSession(id: session.id) { [weak self] result in
+            self?.handleSession(result)
+        }
+    }
+
+    func handleSession(_ result: Result<MovieSession?, Error>) {
+        switch result {
+        case .failure(let error):
+            if SocialErrorMessage.isStale(error) {
+                endSession("This session is no longer available.")
+            } else {
+                showOfflineOnce(SocialErrorMessage.userVisible(
+                    error,
+                    offline: "Couldn't update the session. Check your connection and try again."
+                ))
+            }
+        case .success(nil):
+            endSession("This session was deleted.")
+        case .success(let updated?):
+            session = updated
+            guard let uid else { return }
+            if updated.participants.contains(uid) == false {
+                endSession("You were removed from this session.")
+                return
+            }
             if updated.status == .done {
-                self.sessionListener?.remove()
-                DispatchQueue.main.async {
-                    self.onFinished?(updated)
-                }
+                sessionListener?.remove()
+                sessionListener = nil
+                onFinished?(updated)
+                return
+            }
+            finaliseIfNeeded(updated)
+        }
+    }
+
+    func finaliseIfNeeded(_ updated: MovieSession) {
+        guard updated.isReadyToFinalise(), isFinalising == false else { return }
+        isFinalising = true
+        firestoreService.finaliseSession(sessionID: updated.id, result: updated.pickedResultID()) { [weak self] error in
+            guard let self else { return }
+            self.isFinalising = false
+            if let error {
+                self.showOfflineOnce(
+                    SocialErrorMessage.userVisible(
+                        error,
+                        offline: "Couldn't finish the session. Check your connection and try again."
+                    ),
+                    retry: { self.finaliseIfNeeded(updated) }
+                )
             }
         }
+    }
+
+    func endSession(_ message: String) {
+        guard didEndSession == false else { return }
+        didEndSession = true
+        sessionListener?.remove()
+        sessionListener = nil
+        let alert = UIAlertController(title: "Session ended", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+            self?.dismiss(animated: true)
+        })
+        present(alert, animated: true)
+    }
+
+    func showOfflineOnce(_ message: String, retry: (() -> Void)? = nil) {
+        guard didShowOfflineAlert == false else { return }
+        didShowOfflineAlert = true
+        let alert = UIAlertController(title: "Connection problem", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+            self?.didShowOfflineAlert = false
+            retry?()
+        })
+        present(alert, animated: true)
     }
 }
