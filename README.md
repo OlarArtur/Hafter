@@ -27,3 +27,7 @@ Posters still load from `image.tmdb.org` and do not use the key.
 ## Firebase in the app
 
 `AppDelegate` calls `FirebaseBootstrap.configure()` once. That is the only startup path.
+
+## iCloud
+
+The personal shelves, tags, ratings, and watched dates sync through the private iCloud database (`iCloud.app.olar.Hafter`) when that container is enabled for the App ID. If iCloud is signed out or the container is missing, the list stays on the device and the widget keeps using the App Group snapshot. CloudKit private storage does not need the Blaze plan.

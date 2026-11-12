@@ -10,11 +10,17 @@ import SwiftUI
 
 private let appGroupId = "group.app.olar.Hafter"
 private let moviesKey  = "widget_foremost_movies"
+private let tonightKey = "widget_tonight_pick"
 
 private struct SharedMovieEntry: Codable {
     let title: String
     let year: String?
     let posterPath: String?
+}
+
+private struct SharedTonightEntry: Codable {
+    let title: String
+    let year: String?
 }
 
 private func readSharedMovies() -> [SharedMovieEntry] {
@@ -24,6 +30,13 @@ private func readSharedMovies() -> [SharedMovieEntry] {
     return entries
 }
 
+private func readTonight() -> SharedTonightEntry? {
+    guard let data = UserDefaults(suiteName: appGroupId)?.data(forKey: tonightKey),
+          let entry = try? JSONDecoder().decode(SharedTonightEntry.self, from: data)
+    else { return nil }
+    return entry
+}
+
 // MARK: - Timeline
 
 struct HafterTimelineEntry: TimelineEntry {
@@ -31,12 +44,13 @@ struct HafterTimelineEntry: TimelineEntry {
     let title: String
     let year: String?
     let isEmpty: Bool
+    let isTonight: Bool
 }
 
 struct HafterProvider: TimelineProvider {
 
     func placeholder(in context: Context) -> HafterTimelineEntry {
-        .init(date: .now, title: "Oppenheimer", year: "2023", isEmpty: false)
+        .init(date: .now, title: "Oppenheimer", year: "2023", isEmpty: false, isTonight: false)
     }
 
     func getSnapshot(in context: Context, completion: @escaping (HafterTimelineEntry) -> Void) {
@@ -50,11 +64,14 @@ struct HafterProvider: TimelineProvider {
     }
 
     private func makeEntry() -> HafterTimelineEntry {
+        if let tonight = readTonight() {
+            return .init(date: .now, title: tonight.title, year: tonight.year, isEmpty: false, isTonight: true)
+        }
         let movies = readSharedMovies()
         guard let pick = movies.randomElement() else {
-            return .init(date: .now, title: "", year: nil, isEmpty: true)
+            return .init(date: .now, title: "", year: nil, isEmpty: true, isTonight: false)
         }
-        return .init(date: .now, title: pick.title, year: pick.year, isEmpty: false)
+        return .init(date: .now, title: pick.title, year: pick.year, isEmpty: false, isTonight: false)
     }
 }
 
@@ -85,7 +102,7 @@ struct HafterSmallView: View {
 
     private var filledView: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("Hafter")
+            Text(entry.isTonight ? "Tonight" : "Hafter")
                 .font(.system(size: 11, weight: .semibold))
                 .foregroundColor(WidgetColor.labelMuted)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -147,7 +164,7 @@ struct HafterMediumView: View {
                 .padding(.vertical, 20)
 
             VStack(alignment: .leading, spacing: 6) {
-                Text("Watch tonight")
+                Text(entry.isTonight ? "Tonight's pick" : "Watch tonight")
                     .font(.system(size: 11, weight: .semibold))
                     .foregroundColor(WidgetColor.labelMuted)
 
@@ -212,6 +229,6 @@ struct HafterWidgetEntryView: View {
 #Preview(as: .systemSmall) {
     HafterWidget()
 } timeline: {
-    HafterTimelineEntry(date: .now, title: "Interstellar", year: "2014", isEmpty: false)
-    HafterTimelineEntry(date: .now, title: "", year: nil, isEmpty: true)
+    HafterTimelineEntry(date: .now, title: "Interstellar", year: "2014", isEmpty: false, isTonight: true)
+    HafterTimelineEntry(date: .now, title: "", year: nil, isEmpty: true, isTonight: false)
 }

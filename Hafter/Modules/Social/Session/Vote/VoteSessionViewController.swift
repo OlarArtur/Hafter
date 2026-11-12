@@ -341,7 +341,10 @@ private final class VoteMovieCell: UITableViewCell {
 
     func configure(with movie: SessionMovie, selected: Bool, imageLoader: ImageLoader) {
         titleLabel.text = movie.title
-        yearLabel.text = movie.year ?? ""
+        yearLabel.text = [movie.year, movie.sharedLabel].compactMap { value in
+            guard let value, value.isEmpty == false else { return nil }
+            return value
+        }.joined(separator: " · ")
         checkIcon.isHidden = !selected
         contentView.backgroundColor = selected ? DS.Color.accentDim : .systemBackground
         if let url = movie.posterThumbnailURL {

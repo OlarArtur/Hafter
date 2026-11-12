@@ -247,6 +247,25 @@ final class ItemDetailViewController: BaseViewController<ItemDetailViewModelProt
         setupUI()
         setupGenresCollectionView()
         setupTagsCollectionView()
+        if viewModel?.canEditViewed == true {
+            let button = UIButton(type: .system)
+            button.translatesAutoresizingMaskIntoConstraints = false
+            button.setTitle("Edit rating and date", for: .normal)
+            button.titleLabel?.font = DS.Typography.body
+            button.addTarget(self, action: #selector(editViewed), for: .touchUpInside)
+            view.addSubview(button)
+            NSLayoutConstraint.activate([
+                button.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -8)
+            ])
+        }
+    }
+
+    @objc private func editViewed() {
+        ViewedDetailsEditor.present(on: self) { [weak self] rating, date in
+            self?.viewModel?.updateViewedDetails(rating: rating, date: date)
+            self?.setupUI()
+        }
     }
 
     @objc private func closeAction() {

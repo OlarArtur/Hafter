@@ -40,10 +40,14 @@ final class HereafterMovie: NSObject {
     var type: HereafterMovieType
     let movie: Movie
     var tags: [String]
+    var rating: Int?
+    var watchedDate: Date?
 
-    init(type: HereafterMovieType, movie: Movie, tags: [String] = []) {
+    init(type: HereafterMovieType, movie: Movie, tags: [String] = [], rating: Int? = nil, watchedDate: Date? = nil) {
         self.type = type
         self.movie = movie
         self.tags = tags
+        self.rating = rating
+        self.watchedDate = watchedDate
     }
 }

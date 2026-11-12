@@ -38,6 +38,15 @@ struct SessionMovie: Equatable {
     let title: String
     let posterPath: String?
     let year: String?
+    /// Firebase uids whose chosen list includes this movie. More than one means it is shared.
+    var contributors: [String]
+
+    var isShared: Bool { contributors.count > 1 }
+
+    var sharedLabel: String? {
+        guard isShared else { return nil }
+        return "On \(contributors.count) lists"
+    }
 
     var posterThumbnailURL: URL? {
         guard let posterPath else { return nil }
@@ -48,14 +57,16 @@ struct SessionMovie: Equatable {
         var d: [String: Any] = ["id": id, "title": title]
         if let posterPath { d["posterPath"] = posterPath }
         if let year { d["year"] = year }
+        if contributors.isEmpty == false { d["contributors"] = contributors }
         return d
     }
 
-    init(id: String, title: String, posterPath: String?, year: String?) {
+    init(id: String, title: String, posterPath: String?, year: String?, contributors: [String] = []) {
         self.id = id
         self.title = title
         self.posterPath = posterPath
         self.year = year
+        self.contributors = contributors
     }
 
     init?(data: [String: Any]) {
@@ -65,6 +76,7 @@ struct SessionMovie: Equatable {
         self.title = title
         self.posterPath = data["posterPath"] as? String
         self.year = data["year"] as? String
+        self.contributors = data["contributors"] as? [String] ?? []
     }
 }
 
@@ -76,14 +88,20 @@ struct MovieSession {
     let mode: SessionMode
     let sourceList: String
     var movies: [SessionMovie]
+    /// uid -> shelf name that person contributed, such as "foremost".
+    var contributions: [String: String]
     /// votes[uid][movieId] = "yes" | "no"
     var votes: [String: [String: String]]
     var result: String?
+    /// Participants who have marked the winning movie as watched.
+    var watchedBy: [String]
     let createdAt: Date
 
     init(id: String, createdBy: String, participants: [String], status: SessionStatus,
          mode: SessionMode, sourceList: String, movies: [SessionMovie],
-         votes: [String: [String: String]] = [:], result: String? = nil, createdAt: Date = Date()) {
+         contributions: [String: String] = [:],
+         votes: [String: [String: String]] = [:], result: String? = nil,
+         watchedBy: [String] = [], createdAt: Date = Date()) {
         self.id = id
         self.createdBy = createdBy
         self.participants = participants
@@ -91,8 +109,10 @@ struct MovieSession {
         self.mode = mode
         self.sourceList = sourceList
         self.movies = movies
+        self.contributions = contributions
         self.votes = votes
         self.result = result
+        self.watchedBy = watchedBy
         self.createdAt = createdAt
     }
 
@@ -113,8 +133,10 @@ struct MovieSession {
         self.mode = mode
         self.sourceList = sourceList
         self.movies = moviesData.compactMap { SessionMovie(data: $0) }
+        self.contributions = data["contributions"] as? [String: String] ?? [:]
         self.votes = data["votes"] as? [String: [String: String]] ?? [:]
         self.result = data["result"] as? String
+        self.watchedBy = data["watchedBy"] as? [String] ?? []
         self.createdAt = (data["createdAt"] as? Double).map { Date(timeIntervalSince1970: $0) } ?? Date()
     }
 
@@ -126,10 +148,12 @@ struct MovieSession {
             "mode": mode.rawValue,
             "sourceList": sourceList,
             "movies": movies.map { $0.firestoreData },
+            "contributions": contributions,
             "votes": votes,
             "createdAt": createdAt.timeIntervalSince1970
         ]
         if let result { d["result"] = result }
+        if watchedBy.isEmpty == false { d["watchedBy"] = watchedBy }
         return d
     }
 

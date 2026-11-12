@@ -74,8 +74,8 @@ service cloud.firestore {
     }
 
     function validSession(data) {
-      return data.keys().hasAll(['createdBy', 'participants', 'status', 'mode', 'sourceList', 'movies', 'votes', 'createdAt'])
-        && data.keys().hasOnly(['createdBy', 'participants', 'status', 'mode', 'sourceList', 'movies', 'votes', 'createdAt', 'result'])
+      return data.keys().hasAll(['createdBy', 'participants', 'status', 'mode', 'sourceList', 'movies', 'contributions', 'votes', 'createdAt'])
+        && data.keys().hasOnly(['createdBy', 'participants', 'status', 'mode', 'sourceList', 'movies', 'contributions', 'votes', 'createdAt', 'result', 'watchedBy'])
         && data.createdBy is string
         && data.participants is list
         && data.participants.size() <= 8
@@ -87,9 +87,12 @@ service cloud.firestore {
         && data.movies is list
         && data.movies.size() >= 1
         && data.movies.size() <= 2000
+        && data.contributions is map
+        && data.contributions.size() <= 8
         && data.votes is map
         && data.createdAt is number
-        && (!('result' in data) || data.result is string);
+        && (!('result' in data) || data.result is string)
+        && (!('watchedBy' in data) || (data.watchedBy is list && data.watchedBy.size() <= 8));
     }
 
     function isParticipant() {
@@ -101,18 +104,52 @@ service cloud.firestore {
         && request.resource.data.votes.diff(resource.data.get('votes', {})).affectedKeys().hasOnly([request.auth.uid]);
     }
 
-    function acceptUpdate() {
+    // The creator can open the pool early. Anyone can open it once every
+    // participant has a contribution entry. Random sessions skip `active`
+    // and go straight to done.
+    function startUpdate() {
       return resource.data.status == 'pending'
         && request.resource.data.status == 'active'
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status']);
+        && resource.data.mode != 'random'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+        && catalogUnchanged()
+        && (
+          request.auth.uid == resource.data.createdBy
+          || resource.data.contributions.size() == resource.data.participants.size()
+        );
+    }
+
+    // A participant adds only their own shelf. The merged movie list may grow.
+    // Firestore rules cannot prove each previous movie map was preserved, so
+    // the client merges inside a transaction and the rule rejects a shorter list.
+    function contributeUpdate() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['movies', 'contributions'])
+        && request.resource.data.contributions.diff(resource.data.get('contributions', {})).affectedKeys().hasOnly([request.auth.uid])
+        && request.resource.data.contributions[request.auth.uid] is string
+        && request.resource.data.contributions[request.auth.uid].size() > 0
+        && request.resource.data.contributions[request.auth.uid].size() <= 40
+        && request.resource.data.movies.size() >= resource.data.movies.size()
+        && request.resource.data.movies.size() <= 2000;
     }
 
     function finaliseUpdate() {
       return request.resource.data.status == 'done'
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'result'])
+        && catalogUnchanged()
         && (
           !request.resource.data.diff(resource.data).affectedKeys().hasAny(['result'])
           || request.resource.data.result is string
+        )
+        && (
+          resource.data.status == 'active'
+          || (
+            resource.data.mode == 'random'
+            && resource.data.status == 'pending'
+            && (
+              request.auth.uid == resource.data.createdBy
+              || resource.data.contributions.size() == resource.data.participants.size()
+            )
+          )
         );
     }
 
@@ -125,12 +162,24 @@ service cloud.firestore {
         && !request.resource.data.get('votes', {}).keys().hasAny([request.auth.uid]);
     }
 
+    function markWatchedUpdate() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['watchedBy'])
+        && request.resource.data.watchedBy is list
+        && request.resource.data.watchedBy.size() <= 8
+        && request.resource.data.watchedBy.toSet().difference(resource.data.get('watchedBy', []).toSet()).hasOnly([request.auth.uid])
+        && resource.data.get('watchedBy', []).toSet().difference(request.resource.data.watchedBy.toSet()).size() == 0;
+    }
+
     function sessionIdentityUnchanged() {
       return request.resource.data.createdBy == resource.data.createdBy
         && request.resource.data.mode == resource.data.mode
         && request.resource.data.sourceList == resource.data.sourceList
-        && request.resource.data.movies == resource.data.movies
         && request.resource.data.createdAt == resource.data.createdAt;
+    }
+
+    function catalogUnchanged() {
+      return request.resource.data.movies == resource.data.movies
+        && request.resource.data.contributions == resource.data.contributions;
     }
 
     match /users/{userId} {
@@ -203,16 +252,21 @@ service cloud.firestore {
         && validSession(request.resource.data)
         && request.resource.data.createdBy == request.auth.uid
         && request.auth.uid in request.resource.data.participants
-        && request.resource.data.votes.size() == 0;
+        && request.resource.data.votes.size() == 0
+        && request.resource.data.status == 'pending'
+        && request.resource.data.contributions.keys().hasOnly([request.auth.uid])
+        && request.resource.data.contributions[request.auth.uid] is string;
 
       allow update: if isParticipant()
         && validSession(request.resource.data)
         && sessionIdentityUnchanged()
         && (
-          voteUpdate()
-          || acceptUpdate()
-          || finaliseUpdate()
-          || leaveUpdate()
+          (voteUpdate() && catalogUnchanged())
+          || startUpdate()
+          || (finaliseUpdate() && catalogUnchanged())
+          || (leaveUpdate() && catalogUnchanged())
+          || contributeUpdate()
+          || markWatchedUpdate()
         );
 
       allow delete: if signedIn() && resource.data.createdBy == request.auth.uid;

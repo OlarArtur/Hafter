@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21D62" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="DBHereafterMovie" representedClassName="DBHereafterMovie" syncable="YES" codeGenerationType="class">
+        <attribute name="adult" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="backdropPath" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="String"/>
+        <attribute name="originalLanguage" optional="YES" attributeType="String"/>
+        <attribute name="originalTitle" optional="YES" attributeType="String"/>
+        <attribute name="overview" optional="YES" attributeType="String"/>
+        <attribute name="popularity" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="posterPath" optional="YES" attributeType="String"/>
+        <attribute name="releaseDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="tags" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <attribute name="type" optional="YES" attributeType="String"/>
+        <attribute name="rating" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="watchedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
+    <elements>
+        <element name="DBHereafterMovie" positionX="-63" positionY="-18" width="128" height="209"/>
+    </elements>
+</model>

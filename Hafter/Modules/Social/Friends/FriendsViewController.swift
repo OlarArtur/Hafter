@@ -383,7 +383,7 @@ private final class SessionInviteCell: UITableViewCell {
         titleLabel.text = "Session · \(session.mode.title)"
         switch session.status {
         case .pending:
-            subtitleLabel.text = "\(session.movies.count) movies · tap to join"
+            subtitleLabel.text = "\(session.movies.count) movies · add your list"
         case .active:
             subtitleLabel.text = "\(session.movies.count) movies · in progress"
         case .done:

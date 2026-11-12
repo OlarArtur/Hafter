@@ -38,6 +38,8 @@ protocol FirestoreServiceProtocol {
 
     // Sessions
     func createSession(_ session: MovieSession, completion: @escaping (Error?) -> Void)
+    func contributeMovies(sessionID: String, uid: String, listName: String, movies: [SessionMovie], completion: @escaping (Result<MovieSession, Error>) -> Void)
+    func startSession(sessionID: String, completion: @escaping (Error?) -> Void)
     func getSession(id: String, completion: @escaping (MovieSession?, Error?) -> Void)
     func acceptSession(sessionID: String, uid: String, completion: @escaping (Error?) -> Void)
     /// Leaves the session and drops the invite. A missing session still drops the invite.
@@ -47,6 +49,7 @@ protocol FirestoreServiceProtocol {
     func removePendingInvite(sessionID: String, uid: String, completion: @escaping (Error?) -> Void)
     func recordVote(sessionID: String, uid: String, movieID: String, vote: String, completion: @escaping (Error?) -> Void)
     func finaliseSession(sessionID: String, result: String?, completion: @escaping (Error?) -> Void)
+    func markWatched(sessionID: String, uid: String, completion: @escaping (Error?) -> Void)
     func observeSession(id: String, handler: @escaping (Result<MovieSession?, Error>) -> Void) -> ListenerRegistration
 }
 
@@ -298,6 +301,61 @@ extension FirestoreService: FirestoreServiceProtocol {
         batch.commit { completion($0) }
     }
 
+    func contributeMovies(sessionID: String, uid: String, listName: String, movies: [SessionMovie], completion: @escaping (Result<MovieSession, Error>) -> Void) {
+        let completion = onMain(completion)
+        let ref = sessionsCollection.document(sessionID)
+        db.runTransaction({ (transaction, errorPointer) -> Any? in
+            let snapshot: DocumentSnapshot
+            do {
+                snapshot = try transaction.getDocument(ref)
+            } catch let error as NSError {
+                errorPointer?.pointee = error
+                return nil
+            }
+            guard let data = snapshot.data(), var session = MovieSession(id: sessionID, data: data) else {
+                errorPointer?.pointee = NSError(
+                    domain: SocialDataError.domain,
+                    code: 2,
+                    userInfo: [NSLocalizedDescriptionKey: "This session could not be read."]
+                )
+                return nil
+            }
+            let incoming = movies.map {
+                SessionPool.Incoming(id: $0.id, title: $0.title, posterPath: $0.posterPath, year: $0.year)
+            }
+            session.movies = SessionPool.merge(session.movies, incoming: incoming, uid: uid)
+            session.contributions[uid] = listName
+            transaction.updateData([
+                "movies": session.movies.map { $0.firestoreData },
+                "contributions": session.contributions
+            ], forDocument: ref)
+            return nil
+        }, completion: { [weak self] _, error in
+            if let error {
+                completion(.failure(error))
+                return
+            }
+            self?.getSession(id: sessionID) { session, readError in
+                if let session {
+                    completion(.success(session))
+                } else {
+                    completion(.failure(readError ?? NSError(
+                        domain: SocialDataError.domain,
+                        code: 2,
+                        userInfo: [NSLocalizedDescriptionKey: "This session could not be read."]
+                    )))
+                }
+            }
+        })
+    }
+
+    func startSession(sessionID: String, completion: @escaping (Error?) -> Void) {
+        let completion = onMain(completion)
+        sessionsCollection.document(sessionID).updateData([
+            "status": SessionStatus.active.rawValue
+        ]) { completion($0) }
+    }
+
     func getSession(id: String, completion: @escaping (MovieSession?, Error?) -> Void) {
         sessionsCollection.document(id).getDocument { snapshot, error in
             let session: MovieSession?
@@ -385,6 +443,13 @@ extension FirestoreService: FirestoreServiceProtocol {
         }, completion: { _, error in
             completion(error)
         })
+    }
+
+    func markWatched(sessionID: String, uid: String, completion: @escaping (Error?) -> Void) {
+        let completion = onMain(completion)
+        sessionsCollection.document(sessionID).updateData([
+            "watchedBy": FieldValue.arrayUnion([uid])
+        ]) { completion($0) }
     }
 
     func observeSession(id: String, handler: @escaping (Result<MovieSession?, Error>) -> Void) -> ListenerRegistration {

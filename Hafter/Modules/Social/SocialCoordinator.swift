@@ -81,10 +81,26 @@ final class SocialCoordinator {
         vc.viewModel = vm
         vc.onSessionCreated = { [weak self] session in
             // The create screen dismisses itself before calling this.
-            // Creator skips the Join screen and goes straight to the session.
-            self?.routeCreatorToSession(session, uid: uid, from: presenter)
+            self?.showLobby(session, uid: uid, from: presenter)
         }
         let nav = UINavigationController(rootViewController: vc)
+        presenter.present(nav, animated: true)
+    }
+
+    private func showLobby(_ session: MovieSession, uid: String, from presenter: UIViewController) {
+        let lobby = SessionLobbyViewController()
+        lobby.session = session
+        lobby.uid = uid
+        lobby.localService = localService
+        lobby.onReady = { [weak self] ready in
+            self?.routeToSession(ready, uid: uid, from: presenter)
+        }
+        let nav = UINavigationController(rootViewController: lobby)
+        nav.modalPresentationStyle = .pageSheet
+        if let sheet = nav.sheetPresentationController {
+            sheet.detents = [.large()]
+            sheet.prefersGrabberVisible = true
+        }
         presenter.present(nav, animated: true)
     }
 
@@ -105,7 +121,7 @@ final class SocialCoordinator {
     private func routeToSession(_ session: MovieSession, uid: String, from presenter: UIViewController) {
         switch session.status {
         case .pending:
-            showJoinSession(session, uid: uid, from: presenter)
+            showLobby(session, uid: uid, from: presenter)
         case .active:
             clearInvite(session.id, uid: uid)
             switch session.mode {
@@ -179,6 +195,8 @@ final class SocialCoordinator {
     private func showResult(_ session: MovieSession, from presenter: UIViewController) {
         let vc = SessionResultViewController()
         vc.session = session
+        vc.localService = localService
+        vc.uid = authService.currentUID
         vc.modalPresentationStyle = .fullScreen
         presenter.present(vc, animated: true)
     }

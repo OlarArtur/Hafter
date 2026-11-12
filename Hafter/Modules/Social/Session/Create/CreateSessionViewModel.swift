@@ -40,44 +40,33 @@ final class CreateSessionViewModel {
 extension CreateSessionViewModel: CreateSessionViewModelProtocol {
 
     func createSession() {
-        let movies: [SessionMovie] = localService
+        let tagged = localService
             .getMovies(type: selectedList)
             .map { hm in
                 SessionMovie(
                     id: hm.movie.id,
                     title: hm.movie.title,
                     posterPath: hm.movie.posterPath,
-                    year: hm.movie.year()
+                    year: hm.movie.year(),
+                    contributors: [uid]
                 )
             }
 
-        guard !movies.isEmpty else {
+        guard !tagged.isEmpty else {
             onError?("Your \(selectedList.title) list is empty. Add some movies first.")
             return
         }
 
-        var session = MovieSession(
+        let session = MovieSession(
             id: UUID().uuidString,
             createdBy: uid,
             participants: [uid, friend.uid],
             status: .pending,
             mode: selectedMode,
             sourceList: selectedList.rawValue,
-            movies: movies
+            movies: tagged,
+            contributions: [uid: selectedList.rawValue]
         )
-
-        if selectedMode == .random {
-            session = MovieSession(
-                id: session.id,
-                createdBy: uid,
-                participants: [uid, friend.uid],
-                status: .done,
-                mode: .random,
-                sourceList: selectedList.rawValue,
-                movies: movies,
-                result: movies.randomElement()?.id
-            )
-        }
 
         firestoreService.createSession(session) { [weak self] error in
             DispatchQueue.main.async {

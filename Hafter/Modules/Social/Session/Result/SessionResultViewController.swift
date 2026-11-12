@@ -9,6 +9,7 @@ final class SessionResultViewController: UIViewController {
 
     var session: MovieSession?
     var uid: String?
+    var localService: LocalServiceProtocol?
 
     private let imageLoader = ImageLoader()
 
@@ -75,6 +76,18 @@ final class SessionResultViewController: UIViewController {
         return l
     }()
 
+    private lazy var watchedButton: UIButton = {
+        var c = UIButton.Configuration.filled()
+        c.title = "Mark as watched"
+        c.baseBackgroundColor = .white
+        c.baseForegroundColor = DS.Color.brandIndigo
+        c.cornerStyle = .medium
+        let b = UIButton(configuration: c)
+        b.translatesAutoresizingMaskIntoConstraints = false
+        b.addTarget(self, action: #selector(watchedTapped), for: .touchUpInside)
+        return b
+    }()
+
     private lazy var doneButton: UIButton = {
         var c = UIButton.Configuration.filled()
         c.title = "Done"
@@ -93,6 +106,9 @@ final class SessionResultViewController: UIViewController {
         super.viewDidLoad()
         setupLayout()
         configure()
+        if let session, let localService {
+            TonightSync.remember(session: session, local: localService)
+        }
     }
 
     override func viewDidLayoutSubviews() {
@@ -112,6 +128,7 @@ private extension SessionResultViewController {
         view.addSubview(titleLabel)
         view.addSubview(yearLabel)
         view.addSubview(subtitleLabel)
+        view.addSubview(watchedButton)
         view.addSubview(doneButton)
 
         NSLayoutConstraint.activate([
@@ -132,6 +149,11 @@ private extension SessionResultViewController {
 
             subtitleLabel.topAnchor.constraint(equalTo: yearLabel.bottomAnchor, constant: DS.Spacing.m),
             subtitleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+
+            watchedButton.bottomAnchor.constraint(equalTo: doneButton.topAnchor, constant: -DS.Spacing.xs),
+            watchedButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: DS.Spacing.m),
+            watchedButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -DS.Spacing.m),
+            watchedButton.heightAnchor.constraint(equalToConstant: 50),
 
             doneButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -DS.Spacing.l),
             doneButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: DS.Spacing.m),
@@ -166,6 +188,17 @@ private extension SessionResultViewController {
             imageLoader.imageFromUrl(url: url) { [weak self] image in
                 DispatchQueue.main.async { self?.posterImageView.image = image }
             }
+        }
+    }
+
+    @objc func watchedTapped() {
+        guard let session, let localService else { return }
+        ViewedDetailsEditor.present(on: self) { [weak self] rating, date in
+            TonightSync.markWatched(session: session, uid: self?.uid, rating: rating, watchedDate: date, local: localService)
+            self?.watchedButton.isEnabled = false
+            var config = self?.watchedButton.configuration
+            config?.title = "Moved to Viewed"
+            self?.watchedButton.configuration = config
         }
     }
 
