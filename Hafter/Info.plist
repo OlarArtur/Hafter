@@ -2,10 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>TMDbAPIKeyV3</key>
-	<string>$(TMDB_API_KEY_V3)</string>
-	<key>TMDbAPIKeyV4</key>
-	<string>$(TMDB_API_KEY_V4)</string>
+	<key>TMDbProxyBaseURL</key>
+	<string>$(TMDB_PROXY_BASE_URL)</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

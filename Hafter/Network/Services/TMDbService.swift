@@ -31,8 +31,9 @@ final class TMDbService {
 extension TMDbService: MediaServiceProtocol {
     
     func search(query: String) -> AnyPublisher<MovieResponse?, ServiceError> {
-        let params = ["query" :  query,
-                      "api_key" : TMDbSettings.shared.apiKeyV3]
+        // The provider attaches proxy credentials, or the Debug direct key.
+        // The key is not part of the request the service describes.
+        let params = ["query": query]
         let requestConfig = RequestConfig(requestType: .get, params: params, path: "/search/movie")
         
         return networkProvider.doRequest(requestConfig: requestConfig)
@@ -55,9 +56,7 @@ extension TMDbService: MediaServiceProtocol {
     }
     
     func detailFor(id: String) -> AnyPublisher<DetailedMovie?, ServiceError> {
-        
-        let params = ["api_key" : TMDbSettings.shared.apiKeyV3]
-        let requestConfig = RequestConfig(requestType: .get, params: params, path: "/movie/\(id)")
+        let requestConfig = RequestConfig(requestType: .get, params: nil, path: "/movie/\(id)")
         
         return networkProvider.doRequest(requestConfig: requestConfig)
             .mapError {

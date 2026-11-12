@@ -1,0 +1,18 @@
+// Copy to Hafter/Config.xcconfig (gitignored). Do not put real keys in git.
+//
+// Release builds do not copy a TMDb key into the app. Debug builds copy
+// TMDB_DIRECT_API_KEY_V3 only. The old TMDB_API_KEY_V3 name is ignored, so a
+// key left over from the previous setup is not embedded. See functions/README.md.
+//
+// Cloud Functions need the Blaze plan:
+//   firebase functions:secrets:set TMDB_API_KEY
+//   firebase deploy --only functions
+
+// Optional. Empty uses https://us-central1-<firebase-project-id>.cloudfunctions.net/tmdb
+TMDB_PROXY_BASE_URL =
+
+// Debug only. Set both to call api.themoviedb.org from a Debug build.
+// TMDB_USE_DIRECT_API = YES
+// TMDB_DIRECT_API_KEY_V3 = your_v3_key
+TMDB_USE_DIRECT_API =
+TMDB_DIRECT_API_KEY_V3 =

@@ -120,13 +120,10 @@ extension AddViewModel: AddViewModelProtocol {
     }
     
     func search(query: String) {
-        var tempQuery = query
-        if tempQuery.last == " " {
-            tempQuery.removeLast()
-        } else if tempQuery.first == " " {
-            tempQuery.removeFirst()
-        }
-        let modifiedQuery = tempQuery.replacingOccurrences(of: " ", with: "+")
+        // The provider percent-encodes the query. Replacing spaces with "+"
+        // here would be encoded again and TMDb would search for a literal plus.
+        let modifiedQuery = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard modifiedQuery.isEmpty == false else { return }
         cancelable = networkService.search(query: modifiedQuery)
             .sink(receiveCompletion: { [weak self] (completion) in
                 switch completion {
