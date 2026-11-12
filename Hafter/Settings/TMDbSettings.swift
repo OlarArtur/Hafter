@@ -2,11 +2,11 @@
 //  TMDbSettings.swift
 //  Hafter
 //
-//  Release builds call the Cloud Functions proxy and do not contain a TMDb key.
-//  Debug builds can fall back to api.themoviedb.org when Config.xcconfig sets
-//  TMDB_USE_DIRECT_API = YES and TMDB_DIRECT_API_KEY_V3. That key is written
-//  into the Debug Info.plist only. The old TMDB_API_KEY_V3 name is not read.
-//  See functions/README.md.
+//  Movie search calls api.themoviedb.org with TMDB_API_KEY_V3 from the gitignored
+//  Config.xcconfig, copied into Info.plist for Debug and Release.
+//  Set TMDB_USE_PROXY = YES to send those calls through the Cloud Functions
+//  proxy in functions/ instead. That path is off until there is a reason to
+//  pay for Blaze. See README.md and functions/README.md.
 //
 
 import FirebaseCore
@@ -22,22 +22,17 @@ final class TMDbSettings {
 
     private init() {}
 
-    /// True only for a Debug build that opted into the direct key.
-    var usesDirectAPI: Bool {
-        #if DEBUG
-        guard string("TMDbUseDirectAPI") == "YES" else { return false }
-        return !apiKeyV3.isEmpty
-        #else
-        return false
-        #endif
+    /// Default is direct TMDb. Only the string YES turns the proxy on.
+    var usesProxy: Bool {
+        string("TMDbUseProxy") == "YES"
     }
 
-    #if DEBUG
+    /// v3 key from Info.plist (`TMDB_API_KEY_V3`). Empty when the xcconfig value was not set.
     var apiKeyV3: String { string("TMDbAPIKeyV3") }
-    #endif
 
     /// Override with TMDB_PROXY_BASE_URL when the deploy URL is not the
     /// default cloudfunctions.net host. Empty means "derive from the Firebase project id".
+    /// Used only when `usesProxy` is true.
     var proxyBaseURL: URL? {
         let override = string("TMDbProxyBaseURL")
         if override.hasPrefix("https://"), let url = URL(string: override) {

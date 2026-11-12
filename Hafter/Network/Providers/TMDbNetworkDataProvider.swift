@@ -11,7 +11,7 @@ import FirebaseAuth
 import FirebaseCore
 import Foundation
 
-/// Talks to the TMDb proxy (or, in an opted-in Debug build, to TMDb directly).
+/// Talks to api.themoviedb.org with the v3 key, unless TMDB_USE_PROXY is YES.
 /// Only the endpoints `TMDbService` uses are built here: search and movie detail.
 final class TMDbNetworkDataProvider {
 
@@ -21,6 +21,8 @@ final class TMDbNetworkDataProvider {
     }
 
     private let session: URLSession
+    private static var didLogRoute = false
+    private static var didLogMissingKey = false
 
     init() {
         let configuration = URLSessionConfiguration.default
@@ -78,17 +80,31 @@ final class TMDbNetworkDataProvider {
         return components.url
     }
 
-    #if DEBUG
-    private func directRequest(for call: Call) -> URLRequest? {
+    private func directRequest(for call: Call) -> Result<URLRequest, NetworkErrors> {
         let key = TMDbSettings.shared.apiKeyV3
-        guard key.isEmpty == false,
-              let base = URL(string: "https://api.themoviedb.org/3"),
-              let url = url(base: base, call: call, extraQuery: [URLQueryItem(name: "api_key", value: key)]) else {
-            return nil
+        guard key.isEmpty == false else {
+            if Self.didLogMissingKey == false {
+                Self.didLogMissingKey = true
+                print("[TMDb] Missing API key. Set TMDB_API_KEY_V3 in Hafter/Config.xcconfig (gitignored) and rebuild. Movie search calls api.themoviedb.org directly while TMDB_USE_PROXY is not YES.")
+            }
+            return .failure(.missingAPIKey)
         }
-        return URLRequest(url: url)
+        guard let base = URL(string: "https://api.themoviedb.org/3"),
+              let url = url(base: base, call: call, extraQuery: [URLQueryItem(name: "api_key", value: key)]) else {
+            return .failure(.incorrectInputParams)
+        }
+        return .success(URLRequest(url: url))
     }
-    #endif
+
+    private func logRouteOnce() {
+        guard Self.didLogRoute == false else { return }
+        Self.didLogRoute = true
+        if TMDbSettings.shared.usesProxy {
+            print("[TMDb] TMDB_USE_PROXY is YES. Search goes through the Cloud Functions proxy.")
+        } else {
+            print("[TMDb] Calling api.themoviedb.org directly.")
+        }
+    }
 
     private func proxyRequest(for call: Call, headers: [String: String]) -> URLRequest? {
         guard let base = TMDbSettings.shared.proxyBaseURL,
@@ -148,15 +164,16 @@ extension TMDbNetworkDataProvider: NetworkDataProviderProtocol {
         guard let call = allowedCall(requestConfig) else {
             return Fail(error: .incorrectInputParams).eraseToAnyPublisher()
         }
+        logRouteOnce()
 
-        #if DEBUG
-        if TMDbSettings.shared.usesDirectAPI {
-            guard let request = directRequest(for: call) else {
-                return Fail(error: .incorrectInputParams).eraseToAnyPublisher()
+        guard TMDbSettings.shared.usesProxy else {
+            switch directRequest(for: call) {
+            case .success(let request):
+                return perform(request)
+            case .failure(let error):
+                return Fail(error: error).eraseToAnyPublisher()
             }
-            return perform(request)
         }
-        #endif
 
         return proxyHeaders()
             .flatMap { [weak self] headers -> AnyPublisher<Data?, NetworkErrors> in
