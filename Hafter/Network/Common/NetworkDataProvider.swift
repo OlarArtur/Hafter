@@ -15,12 +15,38 @@ enum NetworkRequestType: String {
     case delete = "DELETE"
 }
 
-enum NetworkErrors: Error {
+enum NetworkErrors: Error, LocalizedError {
     case general
     case unauthorized
     case incorrectInputParams
     case statusCode(Int)
     case other(Error)
+
+    var errorDescription: String? {
+        switch self {
+        case .general:
+            return "The movie service didn't respond. Try again."
+        case .unauthorized:
+            return "Movie search isn't authorized yet. Check your connection and try again."
+        case .incorrectInputParams:
+            return "That movie request was invalid."
+        case .statusCode(let code):
+            switch code {
+            case 401, 403:
+                return "Movie search isn't authorized yet. Check your connection and try again."
+            case 429:
+                return "Too many movie searches. Wait a moment and try again."
+            default:
+                return "The movie service returned an error (\(code))."
+            }
+        case .other(let error):
+            let nsError = error as NSError
+            if nsError.domain == NSURLErrorDomain {
+                return "Couldn't reach the movie service. Check your connection and try again."
+            }
+            return error.localizedDescription
+        }
+    }
 
     static func map(_ error: Error) -> NetworkErrors {
         return (error as? NetworkErrors) ?? .other(error)
