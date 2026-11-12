@@ -18,6 +18,7 @@
 		5E86B6160687A6C110BC7E5E /* SwipeSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB8547B844F007448931060D /* SwipeSessionViewController.swift */; };
 		60A8B9E9017CC0A9439EE596 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 69CEC9A9CD46C5B405FA04A8 /* FirebaseAuth */; };
 		C4E8A1B22F6A4D0E9B8C7301 /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = C4E8A1B22F6A4D0E9B8C7302 /* FirebaseAppCheck */; };
+		C5E8A1B22F6A4D0E9B8C7501 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10587A1F65A14EC85541BE22 /* WidgetKit.framework */; };
 		C4E8A1B22F6A4D0E9B8C7304 /* FirebaseBootstrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E8A1B22F6A4D0E9B8C7303 /* FirebaseBootstrap.swift */; };
 		8827923E281C9052A62D7C0A /* CreateSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C6246D11B47266654CDC9F /* CreateSessionViewController.swift */; };
 		9E2079630FD99A92D2EC8A46 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 9057966917BB898A5955678E /* FirebaseFirestore */; };
@@ -275,6 +276,7 @@
 				60A8B9E9017CC0A9439EE596 /* FirebaseAuth in Frameworks */,
 				9E2079630FD99A92D2EC8A46 /* FirebaseFirestore in Frameworks */,
 				C4E8A1B22F6A4D0E9B8C7301 /* FirebaseAppCheck in Frameworks */,
+				C5E8A1B22F6A4D0E9B8C7501 /* WidgetKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
