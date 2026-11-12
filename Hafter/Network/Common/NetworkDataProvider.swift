@@ -19,6 +19,7 @@ enum NetworkErrors: Error, LocalizedError {
     case general
     case unauthorized
     case incorrectInputParams
+    case missingAPIKey
     case statusCode(Int)
     case other(Error)
 
@@ -26,6 +27,8 @@ enum NetworkErrors: Error, LocalizedError {
         switch self {
         case .general:
             return "The movie service didn't respond. Try again."
+        case .missingAPIKey:
+            return "Movie search needs a TMDb API key. Add TMDB_API_KEY_V3 to Hafter/Config.xcconfig and rebuild."
         case .unauthorized:
             return "Movie search isn't authorized yet. Check your connection and try again."
         case .incorrectInputParams:
