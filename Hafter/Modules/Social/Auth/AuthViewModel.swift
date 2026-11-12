@@ -44,26 +44,38 @@ extension AuthViewModel: AuthViewModelProtocol {
     private func fetchOrCreateUser(uid: String) {
         firestoreService.getUser(uid: uid) { [weak self] existing in
             if let existing {
-                DispatchQueue.main.async { self?.onSuccess?(existing) }
+                self?.firestoreService.registerShareCode(
+                    uid: existing.uid,
+                    displayName: existing.displayName,
+                    shareCode: existing.shareCode
+                ) { _ in
+                    DispatchQueue.main.async { self?.onSuccess?(existing) }
+                }
             } else {
                 self?.createNewUser(uid: uid)
             }
         }
     }
 
-    private func createNewUser(uid: String) {
+    private func createNewUser(uid: String, attempts: Int = 0) {
         let user = SocialUser(
             uid: uid,
             displayName: "Hafter User",
             shareCode: SocialUser.generateShareCode()
         )
         firestoreService.createUser(user) { [weak self] error in
-            DispatchQueue.main.async {
-                if let error {
-                    self?.onError?(error.localizedDescription)
-                } else {
-                    self?.onSuccess?(user)
+            if let error {
+                if attempts < 4, SocialDataError.isShareCodeTaken(error) {
+                    self?.createNewUser(uid: uid, attempts: attempts + 1)
+                    return
                 }
+                DispatchQueue.main.async {
+                    self?.onError?(error.localizedDescription)
+                }
+                return
+            }
+            DispatchQueue.main.async {
+                self?.onSuccess?(user)
             }
         }
     }

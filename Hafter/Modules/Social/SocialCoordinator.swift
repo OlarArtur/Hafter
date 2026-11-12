@@ -51,9 +51,12 @@ final class SocialCoordinator {
 
     private func showFriends(uid: String) {
         let friendsVC = FriendsViewController()
-        let vm = FriendsViewModel(uid: uid, firestoreService: firestoreService)
+        let vm = FriendsViewModel(uid: uid, authService: authService, firestoreService: firestoreService)
         friendsVC.viewModel = vm
 
+        vm.onAccountDeleted = { [weak self] in
+            self?.presenter?.dismiss(animated: true)
+        }
         vm.onPresentCreateSession = { [weak self] friend in
             self?.showCreateSession(uid: uid, friend: friend, from: friendsVC)
         }

@@ -1,0 +1,221 @@
+rules_version = '2';
+
+// Hafter Firestore rules.
+//
+// Deploy (from a machine logged into the Hafter Firebase project):
+//   firebase deploy --only firestore:rules
+//
+// These rules are not active until that command succeeds. The client in this
+// repo expects this schema; deploy the rules with the app build that writes
+// `shareCodes/{code}`.
+//
+// Data model
+// ----------
+// users/{uid}
+//   displayName, shareCode, friends[], pendingSessions[]
+// shareCodes/{CODE}
+//   { uid, displayName }  — document id is the exact 6-character code
+// sessions/{id}
+//   createdBy, participants[], status, mode, sourceList, movies[], votes, createdAt, result?
+//
+// Share-code lookup
+// -----------------
+// Listing `users` is denied, so a client cannot scan the user collection or
+// query it by share code. The only lookup is `get` of `shareCodes/{CODE}`.
+// `list` on that collection is denied, so codes cannot be enumerated. A client
+// who already knows one exact code can read that one document.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function validUser(data) {
+      return data.keys().hasOnly(['displayName', 'shareCode', 'friends', 'pendingSessions'])
+        && data.displayName is string
+        && data.displayName.size() > 0
+        && data.displayName.size() <= 80
+        && data.shareCode is string
+        && data.shareCode.matches('^[A-Z0-9]{6}$')
+        && data.friends is list
+        && data.friends.size() <= 500
+        && data.pendingSessions is list
+        && data.pendingSessions.size() <= 200;
+    }
+
+    function identityUnchanged() {
+      return request.resource.data.displayName == resource.data.displayName
+        && request.resource.data.shareCode == resource.data.shareCode;
+    }
+
+    // Another user may add or remove only their own uid. Empty diffs are fine.
+    function friendsDeltaOnlySelf() {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny(['friends'])
+        || (
+          request.resource.data.friends.toSet().difference(resource.data.friends.toSet()).hasOnly([request.auth.uid])
+          && resource.data.friends.toSet().difference(request.resource.data.friends.toSet()).hasOnly([request.auth.uid])
+        );
+    }
+
+    // Session creation inserts exactly one invite id. Other users cannot clear
+    // or rewrite someone else's invite list. The owner manages their own list.
+    function pendingChangeIsSingleInvite() {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny(['pendingSessions'])
+        || (
+          resource.data.pendingSessions.toSet().difference(request.resource.data.pendingSessions.toSet()).size() == 0
+          && request.resource.data.pendingSessions.toSet().difference(resource.data.pendingSessions.toSet()).size() == 1
+        );
+    }
+
+    function validSession(data) {
+      return data.keys().hasAll(['createdBy', 'participants', 'status', 'mode', 'sourceList', 'movies', 'votes', 'createdAt'])
+        && data.keys().hasOnly(['createdBy', 'participants', 'status', 'mode', 'sourceList', 'movies', 'votes', 'createdAt', 'result'])
+        && data.createdBy is string
+        && data.participants is list
+        && data.participants.size() <= 8
+        && data.status in ['pending', 'active', 'done']
+        && data.mode in ['swipe', 'vote', 'random']
+        && data.sourceList is string
+        && data.sourceList.size() > 0
+        && data.sourceList.size() <= 40
+        && data.movies is list
+        && data.movies.size() >= 1
+        && data.movies.size() <= 2000
+        && data.votes is map
+        && data.createdAt is number
+        && (!('result' in data) || data.result is string);
+    }
+
+    function isParticipant() {
+      return signedIn() && request.auth.uid in resource.data.participants;
+    }
+
+    function voteUpdate() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['votes'])
+        && request.resource.data.votes.diff(resource.data.get('votes', {})).affectedKeys().hasOnly([request.auth.uid]);
+    }
+
+    function acceptUpdate() {
+      return resource.data.status == 'pending'
+        && request.resource.data.status == 'active'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status']);
+    }
+
+    function finaliseUpdate() {
+      return request.resource.data.status == 'done'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'result'])
+        && (
+          !request.resource.data.diff(resource.data).affectedKeys().hasAny(['result'])
+          || request.resource.data.result is string
+        );
+    }
+
+    // Account deletion removes the caller and their vote map. It cannot
+    // remove anyone else or change the rest of the session.
+    function leaveUpdate() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['participants', 'votes'])
+        && resource.data.participants.toSet().difference(request.resource.data.participants.toSet()).hasOnly([request.auth.uid])
+        && request.resource.data.participants.toSet().difference(resource.data.participants.toSet()).size() == 0
+        && !request.resource.data.get('votes', {}).keys().hasAny([request.auth.uid]);
+    }
+
+    function sessionIdentityUnchanged() {
+      return request.resource.data.createdBy == resource.data.createdBy
+        && request.resource.data.mode == resource.data.mode
+        && request.resource.data.sourceList == resource.data.sourceList
+        && request.resource.data.movies == resource.data.movies
+        && request.resource.data.createdAt == resource.data.createdAt;
+    }
+
+    match /users/{userId} {
+      // Direct reads only. Collection queries (including share-code scans) are denied.
+      // A profile is readable by its owner and by someone already in `friends`.
+      allow get: if isOwner(userId)
+        || (signedIn() && request.auth.uid in resource.data.get('friends', []));
+      allow list: if false;
+
+      allow create: if isOwner(userId)
+        && validUser(request.resource.data)
+        && request.resource.data.friends.size() == 0
+        && request.resource.data.pendingSessions.size() == 0;
+
+      allow update: if signedIn()
+        && validUser(request.resource.data)
+        && identityUnchanged()
+        && (
+          (
+            isOwner(userId)
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['friends', 'pendingSessions'])
+          )
+          || (
+            !isOwner(userId)
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['friends', 'pendingSessions'])
+            && friendsDeltaOnlySelf()
+            && pendingChangeIsSingleInvite()
+          )
+        );
+
+      allow delete: if isOwner(userId);
+    }
+
+    match /shareCodes/{code} {
+      // Exact-match lookup: the document id is the code. Listing is impossible.
+      allow get: if signedIn() && code.matches('^[A-Z0-9]{6}$');
+      allow list: if false;
+
+      allow create: if signedIn()
+        && code.matches('^[A-Z0-9]{6}$')
+        && request.resource.data.keys().hasOnly(['uid', 'displayName'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.displayName is string
+        && request.resource.data.displayName.size() > 0
+        && request.resource.data.displayName.size() <= 80;
+
+      // Owner may rewrite their own lookup (setData during account creation).
+      // The uid cannot be transferred to someone else.
+      allow update: if signedIn()
+        && resource.data.uid == request.auth.uid
+        && code.matches('^[A-Z0-9]{6}$')
+        && request.resource.data.keys().hasOnly(['uid', 'displayName'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.displayName is string
+        && request.resource.data.displayName.size() > 0
+        && request.resource.data.displayName.size() <= 80;
+      allow delete: if signedIn() && resource.data.uid == request.auth.uid;
+    }
+
+    match /sessions/{sessionId} {
+      // Reads and queries succeed only for the creator or a participant.
+      // That allows `createdBy == me` and `participants array-contains me`
+      // and rejects an unfiltered collection scan.
+      allow get, list: if signedIn() && (
+        resource.data.createdBy == request.auth.uid
+        || request.auth.uid in resource.data.participants
+      );
+
+      allow create: if signedIn()
+        && validSession(request.resource.data)
+        && request.resource.data.createdBy == request.auth.uid
+        && request.auth.uid in request.resource.data.participants
+        && request.resource.data.votes.size() == 0;
+
+      allow update: if isParticipant()
+        && validSession(request.resource.data)
+        && sessionIdentityUnchanged()
+        && (
+          voteUpdate()
+          || acceptUpdate()
+          || finaliseUpdate()
+          || leaveUpdate()
+        );
+
+      allow delete: if signedIn() && resource.data.createdBy == request.auth.uid;
+    }
+  }
+}

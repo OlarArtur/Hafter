@@ -360,7 +360,7 @@ private extension SwipeSessionViewController {
 
     func checkCompletion() {
         guard let session, let uid else { return }
-        firestoreService.getSession(id: session.id) { [weak self] updated in
+        firestoreService.getSession(id: session.id) { [weak self] updated, _ in
             guard let self, let updated else { return }
             if updated.allParticipantsFinished() {
                 let matches = updated.matchingMovies()

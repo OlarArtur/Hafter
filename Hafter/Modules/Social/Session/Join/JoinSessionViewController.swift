@@ -145,7 +145,7 @@ private extension JoinSessionViewController {
                 return
             }
             // Fetch the updated session (status = .active) before routing
-            self?.firestoreService.getSession(id: session.id) { [weak self] updated in
+            self?.firestoreService.getSession(id: session.id) { [weak self] updated, _ in
                 DispatchQueue.main.async {
                     self?.onJoined?(updated ?? session)
                     self?.dismiss(animated: true)

@@ -36,6 +36,31 @@ final class FriendsViewController: UIViewController {
         return l
     }()
 
+    private let deletingOverlay: UIView = {
+        let v = UIView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.backgroundColor = UIColor.systemBackground.withAlphaComponent(0.85)
+        v.isHidden = true
+        return v
+    }()
+
+    private let deletingSpinner: UIActivityIndicatorView = {
+        let spinner = UIActivityIndicatorView(style: .large)
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        spinner.hidesWhenStopped = true
+        return spinner
+    }()
+
+    private let deletingLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Deleting account…"
+        label.font = DS.Typography.body
+        label.textColor = DS.Color.labelMuted
+        label.textAlignment = .center
+        return label
+    }()
+
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
@@ -66,6 +91,9 @@ private extension FriendsViewController {
     func setupLayout() {
         view.addSubview(tableView)
         view.addSubview(emptyLabel)
+        view.addSubview(deletingOverlay)
+        deletingOverlay.addSubview(deletingSpinner)
+        deletingOverlay.addSubview(deletingLabel)
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -75,7 +103,18 @@ private extension FriendsViewController {
             emptyLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             emptyLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             emptyLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: DS.Spacing.xl),
-            emptyLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -DS.Spacing.xl)
+            emptyLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -DS.Spacing.xl),
+
+            deletingOverlay.topAnchor.constraint(equalTo: view.topAnchor),
+            deletingOverlay.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            deletingOverlay.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            deletingOverlay.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            deletingSpinner.centerXAnchor.constraint(equalTo: deletingOverlay.centerXAnchor),
+            deletingSpinner.centerYAnchor.constraint(equalTo: deletingOverlay.centerYAnchor, constant: -DS.Spacing.s),
+            deletingLabel.topAnchor.constraint(equalTo: deletingSpinner.bottomAnchor, constant: DS.Spacing.s),
+            deletingLabel.leadingAnchor.constraint(equalTo: deletingOverlay.leadingAnchor, constant: DS.Spacing.m),
+            deletingLabel.trailingAnchor.constraint(equalTo: deletingOverlay.trailingAnchor, constant: -DS.Spacing.m)
         ])
     }
 
@@ -89,6 +128,17 @@ private extension FriendsViewController {
             let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default))
             self?.present(alert, animated: true)
+        }
+        viewModel?.onDeletingChanged = { [weak self] deleting in
+            self?.deletingOverlay.isHidden = !deleting
+            self?.navigationItem.rightBarButtonItem?.isEnabled = !deleting
+            self?.tableView.isUserInteractionEnabled = !deleting
+            self?.navigationController?.isModalInPresentation = deleting
+            if deleting {
+                self?.deletingSpinner.startAnimating()
+            } else {
+                self?.deletingSpinner.stopAnimating()
+            }
         }
     }
 
@@ -106,19 +156,34 @@ private extension FriendsViewController {
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         present(alert, animated: true)
     }
+
+    @objc func deleteAccountTapped() {
+        let alert = UIAlertController(
+            title: "Delete Account?",
+            message: "This permanently deletes your Hafter sign-in, share code, and friend links. Movie sessions you created are deleted. Sessions a friend created stay open, with you removed. Movie lists saved on this device stay on this device. Apple will ask you to confirm.",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "Delete Account", style: .destructive) { [weak self] _ in
+            guard let self else { return }
+            self.viewModel?.deleteAccount(from: self)
+        })
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        present(alert, animated: true)
+    }
 }
 
 // MARK: - UITableViewDataSource
 
 extension FriendsViewController: UITableViewDataSource {
 
-    func numberOfSections(in tableView: UITableView) -> Int { 3 }
+    func numberOfSections(in tableView: UITableView) -> Int { 4 }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0: return 1
-        case 1: return viewModel?.pendingSessions.count ?? 0
-        case 2: return viewModel?.friends.count ?? 0
+        case 1: return 1
+        case 2: return viewModel?.pendingSessions.count ?? 0
+        case 3: return viewModel?.friends.count ?? 0
         default: return 0
         }
     }
@@ -126,8 +191,9 @@ extension FriendsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0: return "Your Share Code"
-        case 1: return (viewModel?.pendingSessions.isEmpty ?? true) ? nil : "Invitations"
-        case 2: return (viewModel?.friends.isEmpty ?? true) ? nil : "Friends"
+        case 1: return "Account"
+        case 2: return (viewModel?.pendingSessions.isEmpty ?? true) ? nil : "Invitations"
+        case 3: return (viewModel?.friends.isEmpty ?? true) ? nil : "Friends"
         default: return nil
         }
     }
@@ -151,6 +217,19 @@ extension FriendsViewController: UITableViewDataSource {
             return cell
 
         case 1:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+            var config = cell.defaultContentConfiguration()
+            config.text = "Delete Account"
+            config.textProperties.font = DS.Typography.body
+            config.textProperties.color = .systemRed
+            config.secondaryText = "Permanently removes your sign-in, friends, and sessions you created"
+            config.secondaryTextProperties.font = DS.Typography.caption
+            config.secondaryTextProperties.color = .secondaryLabel
+            cell.contentConfiguration = config
+            cell.selectionStyle = .default
+            return cell
+
+        case 2:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: SessionInviteCell.reuseId, for: indexPath) as? SessionInviteCell,
                   let session = viewModel?.pendingSessions[indexPath.row] else {
                 return UITableViewCell()
@@ -158,7 +237,7 @@ extension FriendsViewController: UITableViewDataSource {
             cell.configure(with: session)
             return cell
 
-        case 2:
+        case 3:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: FriendCell.reuseId, for: indexPath) as? FriendCell,
                   let friend = viewModel?.friends[indexPath.row] else {
                 return UITableViewCell()
@@ -178,8 +257,9 @@ extension FriendsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0: return 80
-        case 1: return 60
-        case 2: return 56
+        case 1: return 64
+        case 2: return 60
+        case 3: return 56
         default: return UITableView.automaticDimension
         }
     }
@@ -188,9 +268,11 @@ extension FriendsViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.section {
         case 1:
+            deleteAccountTapped()
+        case 2:
             guard let session = viewModel?.pendingSessions[indexPath.row] else { return }
             viewModel?.onSessionTapped(session)
-        case 2:
+        case 3:
             guard let friend = viewModel?.friends[indexPath.row] else { return }
             viewModel?.onCreateSessionTapped(with: friend)
         default: break
