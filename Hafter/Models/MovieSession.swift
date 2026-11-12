@@ -165,3 +165,49 @@ struct MovieSession {
         }
     }
 }
+
+extension MovieSession {
+    /// Invites that were never accepted stop being offered after a week.
+    /// The session document is left in place; the invitee leaves it so the
+    /// creator is not stuck waiting on someone who will not vote.
+    static let inviteLifetime: TimeInterval = 7 * 24 * 60 * 60
+
+    var isExpiredPendingInvite: Bool {
+        status == .pending && Date().timeIntervalSince(createdAt) > Self.inviteLifetime
+    }
+
+    var isStaleDoneInvite: Bool {
+        status == .done && Date().timeIntervalSince(createdAt) > Self.inviteLifetime
+    }
+
+    /// Swipe and vote can be closed once every remaining participant has voted.
+    /// Someone who declined is no longer in `participants`.
+    func isReadyToFinalise() -> Bool {
+        switch mode {
+        case .swipe:
+            return allParticipantsFinished()
+        case .vote:
+            return allParticipantsVotedOnce()
+        case .random:
+            return false
+        }
+    }
+
+    func pickedResultID() -> String? {
+        switch mode {
+        case .swipe:
+            return matchingMovies().randomElement()?.id
+        case .vote:
+            var tally: [String: Int] = [:]
+            for uid in participants {
+                for (movieID, _) in votes[uid] ?? [:] {
+                    tally[movieID, default: 0] += 1
+                }
+            }
+            guard let maxVotes = tally.values.max(), maxVotes > 0 else { return nil }
+            return tally.filter { $0.value == maxVotes }.map(\.key).randomElement()
+        case .random:
+            return result
+        }
+    }
+}

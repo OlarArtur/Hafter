@@ -136,19 +136,29 @@ private extension JoinSessionViewController {
         acceptButton.isEnabled = false
         firestoreService.acceptSession(sessionID: session.id, uid: uid) { [weak self] error in
             if let error {
-                DispatchQueue.main.async {
-                    self?.acceptButton.isEnabled = true
-                    let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .default))
-                    self?.present(alert, animated: true)
-                }
+                self?.acceptButton.isEnabled = true
+                self?.presentError(SocialErrorMessage.userVisible(
+                    error,
+                    offline: "Couldn't join the session. Check your connection and try again."
+                ))
                 return
             }
-            // Fetch the updated session (status = .active) before routing
-            self?.firestoreService.getSession(id: session.id) { [weak self] updated, _ in
-                DispatchQueue.main.async {
-                    self?.onJoined?(updated ?? session)
-                    self?.dismiss(animated: true)
+            self?.firestoreService.getSession(id: session.id) { [weak self] updated, error in
+                let resolved: MovieSession
+                if let updated {
+                    resolved = updated
+                } else if let error, SocialErrorMessage.isOffline(error) {
+                    var fallback = session
+                    fallback.status = .active
+                    resolved = fallback
+                } else {
+                    self?.acceptButton.isEnabled = true
+                    self?.presentError("This session is no longer available.")
+                    return
+                }
+                let callback = self?.onJoined
+                self?.dismiss(animated: true) {
+                    callback?(resolved)
                 }
             }
         }
@@ -159,8 +169,23 @@ private extension JoinSessionViewController {
             dismiss(animated: true)
             return
         }
-        firestoreService.declineSession(sessionID: session.id, uid: uid) { [weak self] _ in
-            DispatchQueue.main.async { self?.dismiss(animated: true) }
+        declineButton.isEnabled = false
+        firestoreService.declineSession(sessionID: session.id, uid: uid) { [weak self] error in
+            if let error {
+                self?.declineButton.isEnabled = true
+                self?.presentError(SocialErrorMessage.userVisible(
+                    error,
+                    offline: "Couldn't decline the invitation. Check your connection and try again."
+                ))
+                return
+            }
+            self?.dismiss(animated: true)
         }
+    }
+
+    func presentError(_ message: String) {
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
 }

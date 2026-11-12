@@ -13,23 +13,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private(set) var router: AppRouter?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        
-        FirebaseBootstrap.configure()
-        
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
             window.overrideUserInterfaceStyle = .light
             router = AppRouter(window: window)
             router?.run()
-            
+
             self.window = window
             self.window?.makeKeyAndVisible()
         }
     }
-
-//  MARK: Private
-    private func configureFirebase() {
-        // FirebaseApp.configure()
-    }
 }
-

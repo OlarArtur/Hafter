@@ -120,8 +120,12 @@ private extension AuthViewController {
         viewModel?.onSuccess = { [weak self] user in
             self?.activityIndicator.stopAnimating()
             self?.signInButton.isEnabled = true
-            self?.onSignedIn?(user)
-            self?.dismiss(animated: true)
+            // Dismiss first. Presenting Friends while this screen is still up
+            // is ignored by UIKit.
+            let callback = self?.onSignedIn
+            self?.dismiss(animated: true) {
+                callback?(user)
+            }
         }
         viewModel?.onError = { [weak self] message in
             self?.activityIndicator.stopAnimating()
@@ -147,6 +151,6 @@ private extension AuthViewController {
 
 extension AuthViewController: ASAuthorizationControllerPresentationContextProviding {
     func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
-        view.window!
+        view.window ?? ASPresentationAnchor()
     }
 }

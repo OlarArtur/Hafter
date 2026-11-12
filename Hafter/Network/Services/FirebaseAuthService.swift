@@ -68,20 +68,24 @@ extension FirebaseAuthService: FirebaseAuthServiceProtocol {
         }
 
         Auth.auth().revokeToken(withAuthorizationCode: authorizationCode) { error in
-            if let error {
-                completion(error)
-                return
-            }
-            user.delete { deleteError in
-                if let deleteError {
-                    if AuthError.isRequiresRecentLogin(deleteError) {
-                        completion(AuthError.requiresRecentLogin)
-                    } else {
-                        completion(deleteError)
-                    }
+            DispatchQueue.main.async {
+                if let error {
+                    completion(error)
                     return
                 }
-                completion(nil)
+                user.delete { deleteError in
+                    DispatchQueue.main.async {
+                        if let deleteError {
+                            if AuthError.isRequiresRecentLogin(deleteError) {
+                                completion(AuthError.requiresRecentLogin)
+                            } else {
+                                completion(deleteError)
+                            }
+                            return
+                        }
+                        completion(nil)
+                    }
+                }
             }
         }
     }
@@ -113,15 +117,17 @@ extension FirebaseAuthService: ASAuthorizationControllerDelegate {
         switch request {
         case .signIn(let completion):
             Auth.auth().signIn(with: credential) { result, error in
-                if let error {
-                    completion(.failure(error))
-                    return
+                DispatchQueue.main.async {
+                    if let error {
+                        completion(.failure(error))
+                        return
+                    }
+                    guard let uid = result?.user.uid else {
+                        completion(.failure(AuthError.missingUID))
+                        return
+                    }
+                    completion(.success(uid))
                 }
-                guard let uid = result?.user.uid else {
-                    completion(.failure(AuthError.missingUID))
-                    return
-                }
-                completion(.success(uid))
             }
 
         case .reauthenticate(let completion):
@@ -136,17 +142,19 @@ extension FirebaseAuthService: ASAuthorizationControllerDelegate {
                 return
             }
             user.reauthenticate(with: credential) { _, error in
-                if let error {
-                    if AuthError.isRequiresRecentLogin(error) {
-                        completion(.failure(AuthError.requiresRecentLogin))
-                    } else {
-                        completion(.failure(error))
+                DispatchQueue.main.async {
+                    if let error {
+                        if AuthError.isRequiresRecentLogin(error) {
+                            completion(.failure(AuthError.requiresRecentLogin))
+                        } else {
+                            completion(.failure(error))
+                        }
+                        return
                     }
-                    return
+                    // Identity token was used to reauthenticate. The authorization code
+                    // is still unused and is what revokeToken(withAuthorizationCode:) consumes.
+                    completion(.success(authorizationCode))
                 }
-                // Identity token was used to reauthenticate. The authorization code
-                // is still unused and is what revokeToken(withAuthorizationCode:) consumes.
-                completion(.success(authorizationCode))
             }
 
         case nil:
@@ -177,6 +185,7 @@ enum AuthError: LocalizedError {
     case missingWindow
     case cancelled
     case requiresRecentLogin
+    case nonceGenerationFailed
 
     var errorDescription: String? {
         switch self {
@@ -194,6 +203,8 @@ enum AuthError: LocalizedError {
             return "Account deletion was cancelled."
         case .requiresRecentLogin:
             return "For your security, confirm with Apple again to delete your account."
+        case .nonceGenerationFailed:
+            return "Couldn't start Sign in with Apple. Try again."
         }
     }
 
@@ -228,8 +239,11 @@ private extension FirebaseAuthService {
             return
         }
 
+        guard let nonce = randomNonceString() else {
+            finish(request, with: .failure(AuthError.nonceGenerationFailed))
+            return
+        }
         pendingRequest = request
-        let nonce = randomNonceString()
         currentNonce = nonce
 
         let provider = ASAuthorizationAppleIDProvider()
@@ -254,13 +268,11 @@ private extension FirebaseAuthService {
         }
     }
 
-    func randomNonceString(length: Int = 32) -> String {
-        precondition(length > 0)
+    func randomNonceString(length: Int = 32) -> String? {
+        guard length > 0 else { return nil }
         var randomBytes = [UInt8](repeating: 0, count: length)
         let errorCode = SecRandomCopyBytes(kSecRandomDefault, randomBytes.count, &randomBytes)
-        if errorCode != errSecSuccess {
-            fatalError("Unable to generate nonce. SecRandomCopyBytes failed with OSStatus \(errorCode)")
-        }
+        guard errorCode == errSecSuccess else { return nil }
         let charset: [Character] = Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
         return String(randomBytes.map { charset[Int($0) % charset.count] })
     }

@@ -15,6 +15,9 @@ final class VoteSessionViewController: UIViewController {
     private let firestoreService: FirestoreServiceProtocol = FirestoreService.shared
     private let imageLoader = ImageLoader()
     private var sessionListener: ListenerRegistration?
+    private var isFinalising = false
+    private var didEndSession = false
+    private var didShowOfflineAlert = false
 
     private var selectedMovieID: String?
 
@@ -79,6 +82,9 @@ final class VoteSessionViewController: UIViewController {
         )
         setupLayout()
         startListening()
+        if let session, let uid, session.hasUserVotedOnce(uid) {
+            showWaiting()
+        }
     }
 
     deinit { sessionListener?.remove() }
@@ -124,35 +130,32 @@ private extension VoteSessionViewController {
     @objc func submitTapped() {
         guard let session, let uid, let movieID = selectedMovieID else { return }
         submitButton.isEnabled = false
-        firestoreService.recordVote(sessionID: session.id, uid: uid, movieID: movieID, vote: "yes") { [weak self] _ in
-            DispatchQueue.main.async {
-                self?.waitingView.isHidden = false
-                self?.waitingSpinner.startAnimating()
-                self?.checkCompletion()
+        firestoreService.recordVote(sessionID: session.id, uid: uid, movieID: movieID, vote: "yes") { [weak self] error in
+            guard let self else { return }
+            if let error {
+                self.submitButton.isEnabled = true
+                if SocialErrorMessage.isStale(error) == false {
+                    self.showOfflineOnce(SocialErrorMessage.userVisible(
+                        error,
+                        offline: "Couldn't save your vote. Check your connection and try again."
+                    ))
+                }
+                return
             }
+            self.showWaiting()
         }
     }
 
-    func checkCompletion() {
-        guard let session else { return }
-        firestoreService.getSession(id: session.id) { [weak self] updated, _ in
-            guard let self, let updated else { return }
-            // Vote mode: each participant picks exactly one movie
-            guard updated.allParticipantsVotedOnce() else { return }
-            var tally: [String: Int] = [:]
-            updated.participants.forEach { uid in
-                updated.votes[uid]?.forEach { movieID, _ in
-                    tally[movieID, default: 0] += 1
-                }
-            }
-            let maxVotes = tally.values.max() ?? 0
-            let winners = tally.filter { $0.value == maxVotes }.map { $0.key }
-            let resultID = winners.randomElement()
-            self.firestoreService.finaliseSession(sessionID: session.id, result: resultID) { _ in }
-        }
+    func showWaiting() {
+        waitingView.isHidden = false
+        waitingSpinner.startAnimating()
+        submitButton.isEnabled = false
+        tableView.isUserInteractionEnabled = false
     }
 
     @objc func closeTapped() {
+        sessionListener?.remove()
+        sessionListener = nil
         dismiss(animated: true)
     }
 }
@@ -162,13 +165,84 @@ private extension VoteSessionViewController {
 private extension VoteSessionViewController {
     func startListening() {
         guard let session else { return }
-        sessionListener = firestoreService.observeSession(id: session.id) { [weak self] updated in
-            guard let self, let updated else { return }
+        sessionListener?.remove()
+        sessionListener = firestoreService.observeSession(id: session.id) { [weak self] result in
+            self?.handleSession(result)
+        }
+    }
+
+    func handleSession(_ result: Result<MovieSession?, Error>) {
+        switch result {
+        case .failure(let error):
+            if SocialErrorMessage.isStale(error) {
+                endSession("This session is no longer available.")
+            } else {
+                showOfflineOnce(SocialErrorMessage.userVisible(
+                    error,
+                    offline: "Couldn't update the session. Check your connection and try again."
+                ))
+            }
+        case .success(nil):
+            endSession("This session was deleted.")
+        case .success(let updated?):
+            session = updated
+            guard let uid else { return }
+            if updated.participants.contains(uid) == false {
+                endSession("You were removed from this session.")
+                return
+            }
             if updated.status == .done {
-                self.sessionListener?.remove()
-                DispatchQueue.main.async { self.onFinished?(updated) }
+                sessionListener?.remove()
+                sessionListener = nil
+                onFinished?(updated)
+                return
+            }
+            if updated.hasUserVotedOnce(uid) {
+                showWaiting()
+            }
+            finaliseIfNeeded(updated)
+        }
+    }
+
+    func finaliseIfNeeded(_ updated: MovieSession) {
+        guard updated.isReadyToFinalise(), isFinalising == false else { return }
+        isFinalising = true
+        firestoreService.finaliseSession(sessionID: updated.id, result: updated.pickedResultID()) { [weak self] error in
+            guard let self else { return }
+            self.isFinalising = false
+            if let error {
+                self.showOfflineOnce(
+                    SocialErrorMessage.userVisible(
+                        error,
+                        offline: "Couldn't finish the session. Check your connection and try again."
+                    ),
+                    retry: { self.finaliseIfNeeded(updated) }
+                )
             }
         }
+    }
+
+    func endSession(_ message: String) {
+        guard didEndSession == false else { return }
+        didEndSession = true
+        sessionListener?.remove()
+        sessionListener = nil
+        let alert = UIAlertController(title: "Session ended", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+            self?.dismiss(animated: true)
+        })
+        present(alert, animated: true)
+    }
+
+    func showOfflineOnce(_ message: String, retry: (() -> Void)? = nil) {
+        guard didShowOfflineAlert == false else { return }
+        didShowOfflineAlert = true
+        let alert = UIAlertController(title: "Connection problem", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+            self?.didShowOfflineAlert = false
+            retry?()
+        })
+        present(alert, animated: true)
     }
 }
 
