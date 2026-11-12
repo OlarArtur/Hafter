@@ -28,6 +28,10 @@ Posters still load from `image.tmdb.org` and do not use the key.
 
 `AppDelegate` calls `FirebaseBootstrap.configure()` once. That is the only startup path.
 
+## Free Apple team
+
+`HAFTER_FREE_SIGNING` defaults to `YES` so the project signs with a free Personal Team. That build leaves out iCloud, Sign in with Apple, and the App Group. Shelves, tags, ratings, dates, TMDb search, the random pick, and Siri keep working. Friends and sessions show "Requires full build". The widget shows a placeholder because a free team cannot share an App Group. Set `HAFTER_FREE_SIGNING = NO` in `Hafter/Config.xcconfig` after you enroll in the paid program.
+
 ## iCloud
 
 The personal shelves, tags, ratings, and watched dates sync through the private iCloud database (`iCloud.app.olar.Hafter`) when that container is enabled for the App ID. If iCloud is signed out or the container is missing, the list stays on the device and the widget keeps using the App Group snapshot. CloudKit private storage does not need the Blaze plan.

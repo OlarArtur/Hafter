@@ -8,9 +8,11 @@ import SwiftUI
 
 // MARK: - Shared data reader (mirrors WidgetDataBridge in the main app)
 
+#if !FREE_SIGNING
 private let appGroupId = "group.app.olar.Hafter"
 private let moviesKey  = "widget_foremost_movies"
 private let tonightKey = "widget_tonight_pick"
+#endif
 
 private struct SharedMovieEntry: Codable {
     let title: String
@@ -24,17 +26,25 @@ private struct SharedTonightEntry: Codable {
 }
 
 private func readSharedMovies() -> [SharedMovieEntry] {
+    #if FREE_SIGNING
+    return []
+    #else
     guard let data = UserDefaults(suiteName: appGroupId)?.data(forKey: moviesKey),
           let entries = try? JSONDecoder().decode([SharedMovieEntry].self, from: data)
     else { return [] }
     return entries
+    #endif
 }
 
 private func readTonight() -> SharedTonightEntry? {
+    #if FREE_SIGNING
+    return nil
+    #else
     guard let data = UserDefaults(suiteName: appGroupId)?.data(forKey: tonightKey),
           let entry = try? JSONDecoder().decode(SharedTonightEntry.self, from: data)
     else { return nil }
     return entry
+    #endif
 }
 
 // MARK: - Timeline
@@ -130,7 +140,11 @@ struct HafterSmallView: View {
             Image(systemName: "film")
                 .font(.system(size: 28))
                 .foregroundColor(WidgetColor.labelMuted)
+            #if FREE_SIGNING
+            Text("Movies stay\nin the app")
+            #else
             Text("Add movies\nto Foremost")
+            #endif
                 .font(.system(size: 12, weight: .medium))
                 .foregroundColor(WidgetColor.labelMuted)
                 .multilineTextAlignment(.center)

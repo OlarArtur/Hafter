@@ -15,3 +15,12 @@ TMDB_USE_PROXY = NO
 // Only read when TMDB_USE_PROXY = YES. Empty uses
 // https://us-central1-<firebase-project-id>.cloudfunctions.net/tmdb
 TMDB_PROXY_BASE_URL =
+
+// YES builds with a free Apple Personal Team: no iCloud, Sign in with Apple,
+// or App Group entitlements, and social sessions are disabled in the app.
+// Set NO after you enroll in the paid Apple Developer Program.
+HAFTER_FREE_SIGNING = YES
+
+// Change this if app.olar.Hafter is already registered to another team.
+// The widget id becomes this value plus .HafterWidget.
+// HAFTER_APP_BUNDLE_IDENTIFIER = app.olar.Hafter.dev
