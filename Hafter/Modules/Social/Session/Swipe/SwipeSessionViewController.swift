@@ -262,7 +262,10 @@ private extension SwipeSessionViewController {
         yearLabel.translatesAutoresizingMaskIntoConstraints = false
         yearLabel.font = DS.Typography.callout
         yearLabel.textColor = .secondaryLabel
-        yearLabel.text = movie.year ?? ""
+        yearLabel.text = [movie.year, movie.sharedLabel].compactMap { value in
+            guard let value, value.isEmpty == false else { return nil }
+            return value
+        }.joined(separator: " · ")
 
         card.addSubview(poster)
         card.addSubview(titleLabel)

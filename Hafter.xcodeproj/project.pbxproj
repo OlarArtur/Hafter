@@ -23,6 +23,8 @@
 		9E2079630FD99A92D2EC8A46 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 9057966917BB898A5955678E /* FirebaseFirestore */; };
 		A45D44D3CAD9B5B6421AE6B0 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10587A1F65A14EC85541BE22 /* WidgetKit.framework */; };
 		A8F5AB04EDBEFC277E73B558 /* MovieSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E71365C0EED751634C00755 /* MovieSession.swift */; };
+		B1C2D3E42F6A4D0E9B8C7401 /* SessionPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C2D3E42F6A4D0E9B8C7402 /* SessionPool.swift */; };
+		B1C2D3E42F6A4D0E9B8C7403 /* SessionLobbyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C2D3E42F6A4D0E9B8C7404 /* SessionLobbyViewController.swift */; };
 		B8C8FCA2BA3C9409C137E45B /* SocialCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D97CC908DFC4ADDDC7679987 /* SocialCoordinator.swift */; };
 		BA105804D1ECE13A6C85A346 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BAF3C5FDF9124E3B725A46D1 /* Foundation.framework */; };
 		BA287E612B0504BB000E1F83 /* VerticalLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA287E602B0504BB000E1F83 /* VerticalLabelView.swift */; };
@@ -149,6 +151,8 @@
 		A7C1E4B12F6A4D0E9B8C7103 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		A7C1E4B12F6A4D0E9B8C7105 /* AccountLocalState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountLocalState.swift; sourceTree = "<group>"; };
 		3E71365C0EED751634C00755 /* MovieSession.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MovieSession.swift; sourceTree = SOURCE_ROOT; };
+		B1C2D3E42F6A4D0E9B8C7402 /* SessionPool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPool.swift; sourceTree = "<group>"; };
+		B1C2D3E42F6A4D0E9B8C7404 /* SessionLobbyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionLobbyViewController.swift; sourceTree = "<group>"; };
 		7C31B9B3402A3B0B4F49DFF2 /* Config.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = SOURCE_ROOT; };
 		8018D38FA249D0A3B6148F0A /* SocialUser.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SocialUser.swift; sourceTree = SOURCE_ROOT; };
 		B9AD2175499FC1B212CCF271 /* VoteSessionViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = VoteSessionViewController.swift; sourceTree = SOURCE_ROOT; };
@@ -362,6 +366,7 @@
 			children = (
 				8018D38FA249D0A3B6148F0A /* SocialUser.swift */,
 				3E71365C0EED751634C00755 /* MovieSession.swift */,
+				B1C2D3E42F6A4D0E9B8C7402 /* SessionPool.swift */,
 			);
 			name = Models;
 			path = Models;
@@ -739,6 +744,7 @@
 		F855829ECB76E6C3EBB1E432 /* Session */ = {
 			isa = PBXGroup;
 			children = (
+				B1C2D3E42F6A4D0E9B8C7404 /* SessionLobbyViewController.swift */,
 				052E0E4FDAEFC42D2F62D177 /* Create */,
 				B5E5BE1F01C2276B669402A4 /* Join */,
 				69B29A2B4FF6C87FE1FD010C /* Result */,
@@ -953,6 +959,8 @@
 				BAC4283427F87B5B004EAB08 /* AddTableViewDelegate.swift in Sources */,
 				16FCD7F9EF75262A7EF156C0 /* SocialUser.swift in Sources */,
 				A8F5AB04EDBEFC277E73B558 /* MovieSession.swift in Sources */,
+				B1C2D3E42F6A4D0E9B8C7401 /* SessionPool.swift in Sources */,
+				B1C2D3E42F6A4D0E9B8C7403 /* SessionLobbyViewController.swift in Sources */,
 				B8C8FCA2BA3C9409C137E45B /* SocialCoordinator.swift in Sources */,
 				D8733A348A5E5CECEA0965C1 /* AuthViewController.swift in Sources */,
 				1E484F131F647CD2EB74F744 /* AuthViewModel.swift in Sources */,
