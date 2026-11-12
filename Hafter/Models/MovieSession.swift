@@ -93,12 +93,15 @@ struct MovieSession {
     /// votes[uid][movieId] = "yes" | "no"
     var votes: [String: [String: String]]
     var result: String?
+    /// Participants who have marked the winning movie as watched.
+    var watchedBy: [String]
     let createdAt: Date
 
     init(id: String, createdBy: String, participants: [String], status: SessionStatus,
          mode: SessionMode, sourceList: String, movies: [SessionMovie],
          contributions: [String: String] = [:],
-         votes: [String: [String: String]] = [:], result: String? = nil, createdAt: Date = Date()) {
+         votes: [String: [String: String]] = [:], result: String? = nil,
+         watchedBy: [String] = [], createdAt: Date = Date()) {
         self.id = id
         self.createdBy = createdBy
         self.participants = participants
@@ -109,6 +112,7 @@ struct MovieSession {
         self.contributions = contributions
         self.votes = votes
         self.result = result
+        self.watchedBy = watchedBy
         self.createdAt = createdAt
     }
 
@@ -132,6 +136,7 @@ struct MovieSession {
         self.contributions = data["contributions"] as? [String: String] ?? [:]
         self.votes = data["votes"] as? [String: [String: String]] ?? [:]
         self.result = data["result"] as? String
+        self.watchedBy = data["watchedBy"] as? [String] ?? []
         self.createdAt = (data["createdAt"] as? Double).map { Date(timeIntervalSince1970: $0) } ?? Date()
     }
 
@@ -148,6 +153,7 @@ struct MovieSession {
             "createdAt": createdAt.timeIntervalSince1970
         ]
         if let result { d["result"] = result }
+        if watchedBy.isEmpty == false { d["watchedBy"] = watchedBy }
         return d
     }
 

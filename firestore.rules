@@ -75,7 +75,7 @@ service cloud.firestore {
 
     function validSession(data) {
       return data.keys().hasAll(['createdBy', 'participants', 'status', 'mode', 'sourceList', 'movies', 'contributions', 'votes', 'createdAt'])
-        && data.keys().hasOnly(['createdBy', 'participants', 'status', 'mode', 'sourceList', 'movies', 'contributions', 'votes', 'createdAt', 'result'])
+        && data.keys().hasOnly(['createdBy', 'participants', 'status', 'mode', 'sourceList', 'movies', 'contributions', 'votes', 'createdAt', 'result', 'watchedBy'])
         && data.createdBy is string
         && data.participants is list
         && data.participants.size() <= 8
@@ -91,7 +91,8 @@ service cloud.firestore {
         && data.contributions.size() <= 8
         && data.votes is map
         && data.createdAt is number
-        && (!('result' in data) || data.result is string);
+        && (!('result' in data) || data.result is string)
+        && (!('watchedBy' in data) || (data.watchedBy is list && data.watchedBy.size() <= 8));
     }
 
     function isParticipant() {
@@ -159,6 +160,14 @@ service cloud.firestore {
         && resource.data.participants.toSet().difference(request.resource.data.participants.toSet()).hasOnly([request.auth.uid])
         && request.resource.data.participants.toSet().difference(resource.data.participants.toSet()).size() == 0
         && !request.resource.data.get('votes', {}).keys().hasAny([request.auth.uid]);
+    }
+
+    function markWatchedUpdate() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['watchedBy'])
+        && request.resource.data.watchedBy is list
+        && request.resource.data.watchedBy.size() <= 8
+        && request.resource.data.watchedBy.toSet().difference(resource.data.get('watchedBy', []).toSet()).hasOnly([request.auth.uid])
+        && resource.data.get('watchedBy', []).toSet().difference(request.resource.data.watchedBy.toSet()).size() == 0;
     }
 
     function sessionIdentityUnchanged() {
@@ -257,6 +266,7 @@ service cloud.firestore {
           || (finaliseUpdate() && catalogUnchanged())
           || (leaveUpdate() && catalogUnchanged())
           || contributeUpdate()
+          || markWatchedUpdate()
         );
 
       allow delete: if signedIn() && resource.data.createdBy == request.auth.uid;

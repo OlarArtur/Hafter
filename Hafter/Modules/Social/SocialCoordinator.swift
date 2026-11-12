@@ -195,6 +195,8 @@ final class SocialCoordinator {
     private func showResult(_ session: MovieSession, from presenter: UIViewController) {
         let vc = SessionResultViewController()
         vc.session = session
+        vc.localService = localService
+        vc.uid = authService.currentUID
         vc.modalPresentationStyle = .fullScreen
         presenter.present(vc, animated: true)
     }

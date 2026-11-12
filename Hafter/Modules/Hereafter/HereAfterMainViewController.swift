@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import FirebaseFirestore
+import FirebaseAuth
 
 protocol HereafterViewProtocol: AnyObject {
     func reloadData()
@@ -77,6 +79,8 @@ final class HereAfterMainViewController: BaseViewController<HereafterViewModelPr
     }()
 
     private let imageLoader = ImageLoader()
+    private var tonightListener: ListenerRegistration?
+    private var friendAlreadyWatched = false
 
     private lazy var searchController: UISearchController = {
         let sc = UISearchController(searchResultsController: nil)
@@ -105,6 +109,14 @@ final class HereAfterMainViewController: BaseViewController<HereafterViewModelPr
 
         foremostAction()
     }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        refreshTonightBanner()
+        watchTonightSession()
+    }
+
+    deinit { tonightListener?.remove() }
 
     @objc private func addAction() {
         viewModel?.add()
@@ -279,6 +291,61 @@ private extension HereAfterMainViewController {
         foremostView.isSelected = (type == .foremost)
         possiblyView.isSelected = (type == .possibly)
         ifNothingElseView.isSelected = (type == .ifNothingElse)
+    }
+
+    func refreshTonightBanner() {
+        guard let tonight = WidgetDataBridge.readTonight() else {
+            listTableView.tableHeaderView = nil
+            friendAlreadyWatched = false
+            return
+        }
+        let header = UIView(frame: CGRect(x: 0, y: 0, width: listTableView.bounds.width, height: 96))
+        header.backgroundColor = DS.Color.accentDim
+        let title = UILabel(frame: CGRect(x: 16, y: 10, width: header.bounds.width - 32, height: 22))
+        title.font = DS.Typography.caption
+        title.textColor = DS.Color.brandIndigo
+        title.text = friendAlreadyWatched ? "A friend marked tonight's movie as watched" : "Watching tonight"
+        let name = UILabel(frame: CGRect(x: 16, y: 32, width: header.bounds.width - 32, height: 22))
+        name.font = DS.Typography.title2
+        name.text = tonight.title
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 16, y: 58, width: 160, height: 30)
+        button.setTitle("Mark as watched", for: .normal)
+        button.titleLabel?.font = DS.Typography.caption
+        button.addTarget(self, action: #selector(markTonightWatched), for: .touchUpInside)
+        header.addSubview(title)
+        header.addSubview(name)
+        header.addSubview(button)
+        listTableView.tableHeaderView = header
+    }
+
+    func watchTonightSession() {
+        tonightListener?.remove()
+        tonightListener = nil
+        guard let tonight = WidgetDataBridge.readTonight(), Auth.auth().currentUser != nil else { return }
+        tonightListener = FirestoreService.shared.observeSession(id: tonight.sessionID) { [weak self] result in
+            guard let self, case .success(let session?) = result else { return }
+            let uid = Auth.auth().currentUser?.uid
+            let others = session.watchedBy.filter { $0 != uid }
+            let changed = others.isEmpty == false
+            if changed != self.friendAlreadyWatched {
+                self.friendAlreadyWatched = changed
+                self.refreshTonightBanner()
+            }
+        }
+    }
+
+    @objc func markTonightWatched() {
+        guard let tonight = WidgetDataBridge.readTonight(), let localService else { return }
+        localService.moveToViewed(id: tonight.movieID) { [weak self] _ in
+            WidgetDataBridge.writeTonight(nil)
+            if let uid = Auth.auth().currentUser?.uid {
+                FirestoreService.shared.markWatched(sessionID: tonight.sessionID, uid: uid) { _ in }
+            }
+            self?.friendAlreadyWatched = false
+            self?.refreshTonightBanner()
+            self?.viewModel?.reloadLists()
+        }
     }
 }
 

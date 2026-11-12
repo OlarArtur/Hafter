@@ -49,6 +49,7 @@ protocol FirestoreServiceProtocol {
     func removePendingInvite(sessionID: String, uid: String, completion: @escaping (Error?) -> Void)
     func recordVote(sessionID: String, uid: String, movieID: String, vote: String, completion: @escaping (Error?) -> Void)
     func finaliseSession(sessionID: String, result: String?, completion: @escaping (Error?) -> Void)
+    func markWatched(sessionID: String, uid: String, completion: @escaping (Error?) -> Void)
     func observeSession(id: String, handler: @escaping (Result<MovieSession?, Error>) -> Void) -> ListenerRegistration
 }
 
@@ -442,6 +443,13 @@ extension FirestoreService: FirestoreServiceProtocol {
         }, completion: { _, error in
             completion(error)
         })
+    }
+
+    func markWatched(sessionID: String, uid: String, completion: @escaping (Error?) -> Void) {
+        let completion = onMain(completion)
+        sessionsCollection.document(sessionID).updateData([
+            "watchedBy": FieldValue.arrayUnion([uid])
+        ]) { completion($0) }
     }
 
     func observeSession(id: String, handler: @escaping (Result<MovieSession?, Error>) -> Void) -> ListenerRegistration {

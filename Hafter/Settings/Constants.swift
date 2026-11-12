@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import WidgetKit
 
 // MARK: - Design System
 
@@ -74,11 +75,19 @@ enum DS {
 enum WidgetDataBridge {
     static let appGroupId = "group.app.olar.Hafter"
     static let moviesKey  = "widget_foremost_movies"
+    static let tonightKey = "widget_tonight_pick"
 
     struct MovieEntry: Codable {
         let title: String
         let year: String?
         let posterPath: String?
+    }
+
+    struct TonightEntry: Codable, Equatable {
+        var sessionID: String
+        var movieID: String
+        var title: String
+        var year: String?
     }
 
     static func write(movies: [HereafterMovie]) {
@@ -89,6 +98,7 @@ enum WidgetDataBridge {
         }
         guard let data = try? JSONEncoder().encode(entries) else { return }
         UserDefaults(suiteName: appGroupId)?.set(data, forKey: moviesKey)
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     static func readMovies() -> [MovieEntry] {
@@ -96,6 +106,23 @@ enum WidgetDataBridge {
               let entries = try? JSONDecoder().decode([MovieEntry].self, from: data)
         else { return [] }
         return entries
+    }
+
+    static func writeTonight(_ entry: TonightEntry?) {
+        let defaults = UserDefaults(suiteName: appGroupId)
+        if let entry, let data = try? JSONEncoder().encode(entry) {
+            defaults?.set(data, forKey: tonightKey)
+        } else {
+            defaults?.removeObject(forKey: tonightKey)
+        }
+        WidgetCenter.shared.reloadAllTimelines()
+    }
+
+    static func readTonight() -> TonightEntry? {
+        guard let data = UserDefaults(suiteName: appGroupId)?.data(forKey: tonightKey),
+              let entry = try? JSONDecoder().decode(TonightEntry.self, from: data)
+        else { return nil }
+        return entry
     }
 }
 

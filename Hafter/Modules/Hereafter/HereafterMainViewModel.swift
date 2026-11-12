@@ -49,6 +49,7 @@ protocol HereafterViewModelProtocol {
     func didSelect(index: Int)
     func applySearch(query: String)
     func applySort(order: MovieSortOrder)
+    func reloadLists()
 }
 
 final class HereafterMainViewModel<Router: HereafterRouterProtocol>: BaseViewModel<Router> {
@@ -191,5 +192,9 @@ extension HereafterMainViewModel: HereafterViewModelProtocol {
     func applySort(order: MovieSortOrder) {
         sortOrder = order
         recomputeFiltered()
+    }
+
+    func reloadLists() {
+        loadMovies()
     }
 }
