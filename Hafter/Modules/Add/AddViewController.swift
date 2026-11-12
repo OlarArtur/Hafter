@@ -21,43 +21,75 @@ final class AddViewController: BaseViewController<AddViewModelProtocol>, CustomA
         let b = UIButton(type: .system)
         b.translatesAutoresizingMaskIntoConstraints = false
         b.setImage(UIImage(named: "add_plus"), for: .normal)
-        b.tintColor = UIColor(red: 0.14, green: 0.13, blue: 0.21, alpha: 1)
-        b.layer.cornerRadius = 10
+        b.tintColor = DS.Color.accent
+        b.layer.cornerRadius = DS.Radius.chip
         return b
     }()
 
     private let tableView: UITableView = {
-        let t = UITableView(frame: .zero, style: .plain)
+        let t = UITableView(frame: .zero, style: .insetGrouped)
         t.translatesAutoresizingMaskIntoConstraints = false
-        t.backgroundColor = .systemBackground
+        t.backgroundColor = .systemGroupedBackground
         t.separatorStyle = .none
+        t.keyboardDismissMode = .onDrag
         return t
     }()
 
     private let separatorView: UIView = {
         let v = UIView()
         v.translatesAutoresizingMaskIntoConstraints = false
-        v.backgroundColor = UIColor(red: 0.235, green: 0.235, blue: 0.263, alpha: 0.29)
+        v.backgroundColor = UIColor.separator
         return v
     }()
 
     private let headerContainerView: UIView = {
         let v = UIView()
         v.translatesAutoresizingMaskIntoConstraints = false
-        v.backgroundColor = .systemBackground
+        v.backgroundColor = .secondarySystemGroupedBackground
+        v.layer.cornerRadius = 12
+        v.clipsToBounds = true
         return v
     }()
 
+    private let tmdbAttributionView: UIView = {
+        let v = UIView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.backgroundColor = .systemGroupedBackground
+        return v
+    }()
+
+    private let tmdbLogoView: UIImageView = {
+        let v = UIImageView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.contentMode = .scaleAspectFit
+        v.image = UIImage(named: "TMDb_logo")
+        return v
+    }()
+
+    private let tmdbLabel: UILabel = {
+        let l = UILabel()
+        l.translatesAutoresizingMaskIntoConstraints = false
+        l.text = "This product uses the TMDB API but is not endorsed or certified by TMDB"
+        l.font = .systemFont(ofSize: 14)
+        l.textColor = UIColor(red: 0.149, green: 0.196, blue: 0.220, alpha: 1)
+        l.textAlignment = .center
+        l.numberOfLines = 0
+        return l
+    }()
+
     private var bottomConstraint: NSLayoutConstraint!
+    private var tmdbAttributionBottomConstraint: NSLayoutConstraint!
 
     private lazy var customSearchBar: CustomSearchBar = CustomSearchBar()
+
+    private let imageLoader: ImageLoaderProtocol = ImageLoader()
 
     private var addDataSource: AddTableViewDataSource?
     private var addDelegate: AddTableViewDelegate?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .systemGroupedBackground
         setupLayout()
         bindViewModel()
         setupUI()
@@ -66,6 +98,12 @@ final class AddViewController: BaseViewController<AddViewModelProtocol>, CustomA
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        tmdbAttributionBottomConstraint.constant = -view.safeAreaInsets.bottom
     }
 
     @objc private func addAction() {
@@ -86,60 +124,72 @@ private extension AddViewController {
         headerContainerView.addSubview(addButton)
         view.addSubview(separatorView)
         view.addSubview(tableView)
-
-        let bottomSpacer = UIView()
-        bottomSpacer.translatesAutoresizingMaskIntoConstraints = false
-        bottomSpacer.backgroundColor = .clear
-        view.addSubview(bottomSpacer)
+        view.addSubview(tmdbAttributionView)
+        tmdbAttributionView.addSubview(tmdbLabel)
+        tmdbAttributionView.addSubview(tmdbLogoView)
 
         addButton.addTarget(self, action: #selector(addAction), for: .touchUpInside)
 
         NSLayoutConstraint.activate([
             headerContainerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            headerContainerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            headerContainerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            headerContainerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: DS.Spacing.m),
+            headerContainerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -DS.Spacing.m),
             headerContainerView.heightAnchor.constraint(equalToConstant: 40),
 
-            addLabel.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor, constant: 10),
+            addLabel.leadingAnchor.constraint(equalTo: headerContainerView.leadingAnchor, constant: DS.Spacing.xs),
             addLabel.centerYAnchor.constraint(equalTo: headerContainerView.centerYAnchor),
-            addLabel.trailingAnchor.constraint(lessThanOrEqualTo: addButton.leadingAnchor, constant: -10),
+            addLabel.trailingAnchor.constraint(lessThanOrEqualTo: addButton.leadingAnchor, constant: -DS.Spacing.xs),
 
-            addButton.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor, constant: -10),
+            addButton.trailingAnchor.constraint(equalTo: headerContainerView.trailingAnchor, constant: -DS.Spacing.xs),
             addButton.centerYAnchor.constraint(equalTo: headerContainerView.centerYAnchor),
             addButton.widthAnchor.constraint(equalTo: addButton.heightAnchor),
             addButton.widthAnchor.constraint(equalToConstant: 32),
 
             separatorView.topAnchor.constraint(equalTo: headerContainerView.bottomAnchor),
-            separatorView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10),
-            separatorView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10),
+            separatorView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: DS.Spacing.xs),
+            separatorView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -DS.Spacing.xs),
             separatorView.heightAnchor.constraint(equalToConstant: 1),
 
             tableView.topAnchor.constraint(equalTo: separatorView.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
 
-            bottomSpacer.widthAnchor.constraint(equalToConstant: 100),
-            bottomSpacer.heightAnchor.constraint(equalToConstant: 20),
-            bottomSpacer.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
-            bottomSpacer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            tmdbAttributionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tmdbAttributionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+
+            tmdbLabel.topAnchor.constraint(equalTo: tmdbAttributionView.topAnchor, constant: 8),
+            tmdbLabel.leadingAnchor.constraint(equalTo: tmdbAttributionView.leadingAnchor, constant: 10),
+            tmdbLabel.trailingAnchor.constraint(equalTo: tmdbAttributionView.trailingAnchor, constant: -10),
+
+            tmdbLogoView.topAnchor.constraint(equalTo: tmdbLabel.bottomAnchor, constant: 5),
+            tmdbLogoView.centerXAnchor.constraint(equalTo: tmdbAttributionView.centerXAnchor),
+            tmdbLogoView.widthAnchor.constraint(equalToConstant: 80),
+            tmdbLogoView.heightAnchor.constraint(equalToConstant: 20),
+            tmdbLogoView.bottomAnchor.constraint(equalTo: tmdbAttributionView.bottomAnchor, constant: -8)
         ])
 
-        bottomConstraint = tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        bottomConstraint = tableView.bottomAnchor.constraint(equalTo: tmdbAttributionView.topAnchor)
         bottomConstraint.isActive = true
+
+        tmdbAttributionBottomConstraint = tmdbAttributionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0)
+        tmdbAttributionBottomConstraint.isActive = true
     }
 
     func setupUI() {
+        navigationController?.navigationBar.tintColor = DS.Color.accent
         navigationItem.titleView = customSearchBar
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage.image(named: ImageConstants.back), style: .plain, target: self, action: #selector(backTapped))
-        navigationItem.leftBarButtonItem?.tintColor = #colorLiteral(red: 0.6588235294, green: 0.7215686275, blue: 0.7843137255, alpha: 1)
+        navigationItem.leftBarButtonItem?.tintColor = DS.Color.navIconLight
 
         customSearchBar.delegate = self
+        customSearchBar.placeholder = "Search movies"
         customSearchBar.becomeFirstResponder()
 
         addButton.isEnabled = false
         setupTableView()
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardNotification(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardNotification(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 
     func bindViewModel() {
@@ -159,8 +209,7 @@ private extension AddViewController {
     func setupTableView() {
         guard let viewModel = viewModel else { return }
         tableView.registerCell(AddTableViewCell.self)
-        tableView.rowHeight = 30
-        addDataSource = AddTableViewDataSource(viewModel: viewModel) { [weak self] in
+        addDataSource = AddTableViewDataSource(viewModel: viewModel, imageLoader: imageLoader) { [weak self] in
             self?.viewModel?.update(title: self?.customSearchBar.text ?? "")
             self?.addMovie()
         }
@@ -179,17 +228,19 @@ private extension AddViewController {
 
     @objc func keyboardNotification(notification: NSNotification) {
         guard let userInfo = (notification as Notification).userInfo,
-              let value = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else {
-            return
-        }
+              let value = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+
+        let duration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double ?? 0.25
+        let curveRaw = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? UInt ?? 0
+        let options = UIView.AnimationOptions(rawValue: curveRaw << 16)
 
         let isKeyboardShowing = notification.name == UIResponder.keyboardWillShowNotification
-        if isKeyboardShowing {
-            let newHeight = value.cgRectValue.height - view.safeAreaInsets.bottom
-            bottomConstraint.constant = -newHeight
-            UIView.animate(withDuration: 0.1) {
-                self.view.layoutIfNeeded()
-            }
+        let keyboardFrameHeight = value.cgRectValue.height
+
+        tmdbAttributionBottomConstraint.constant = isKeyboardShowing ? -keyboardFrameHeight : -view.safeAreaInsets.bottom
+
+        UIView.animate(withDuration: duration, delay: 0, options: options) {
+            self.view.layoutIfNeeded()
         }
     }
 }

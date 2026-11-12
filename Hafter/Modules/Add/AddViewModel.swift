@@ -16,6 +16,7 @@ protocol AddViewModelProtocol {
     
     func numberOfItems() -> Int
     func itemFor(index: Int) -> String
+    func movieAt(index: Int) -> Movie
     func select(index: Int)
     func detailsFor(index: Int)
     
@@ -88,6 +89,10 @@ extension AddViewModel: AddViewModelProtocol {
     
     func itemFor(index: Int) -> String {
         return createTitle(movie: movies[index])
+    }
+
+    func movieAt(index: Int) -> Movie {
+        movies[index]
     }
     
     func select(index: Int) {

@@ -10,14 +10,15 @@ import UIKit
 protocol ListViewModelProtocol {
     var showError: ((Error) -> Void)? { get set }
     var reloadData: (() -> Void)? { get set }
-    
+
     var backgrounColor: UIColor { get }
-    
+    var listTitle: String { get }
+
     func numberOfItems() -> Int
     func itemFor(index: Int) -> Movie
     func swipeLeftTypes() -> [HereafterMovieType]
     func swipeRightTypes() -> [HereafterMovieType]
-    
+
     func updateType(index: Int, type: HereafterMovieType)
     func start()
 }
@@ -43,9 +44,9 @@ final class ListViewModel<Router: ListRouterProtocol>: BaseViewModel<Router> {
 
 extension ListViewModel: ListViewModelProtocol {
     
-    var backgrounColor: UIColor {
-        return type.typeColor
-    }
+    var backgrounColor: UIColor { type.typeColor }
+
+    var listTitle: String { type.title }
     
     func start() {
         movies = localDataService.getMovies(type: type)

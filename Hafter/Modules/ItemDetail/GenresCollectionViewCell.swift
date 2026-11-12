@@ -12,8 +12,8 @@ final class GenresCollectionViewCell: UICollectionViewCell {
     private let titleLabel: UILabel = {
         let l = UILabel()
         l.translatesAutoresizingMaskIntoConstraints = false
-        l.font = .systemFont(ofSize: 14)
-        l.textColor = UIColor(red: 0.36, green: 0.33, blue: 0.54, alpha: 1)
+        l.font = DS.Typography.footnote
+        l.textColor = DS.Color.accent
         l.textAlignment = .center
         return l
     }()
@@ -38,16 +38,15 @@ final class GenresCollectionViewCell: UICollectionViewCell {
     }
 
     private func setupLayout() {
-        contentView.backgroundColor = .systemBackground
-        contentView.layer.cornerRadius = 4
-        contentView.layer.borderColor = UIColor(red: 0.36, green: 0.33, blue: 0.54, alpha: 1).cgColor
-        contentView.layer.borderWidth = 1
+        contentView.backgroundColor = DS.Color.accentDim
+        contentView.layer.cornerRadius = DS.Radius.small
+        contentView.clipsToBounds = true
         contentView.addSubview(titleLabel)
         NSLayoutConstraint.activate([
-            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 4),
-            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -4),
-            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 2),
-            titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -2)
+            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: DS.Spacing.xs),
+            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -DS.Spacing.xs),
+            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 3),
+            titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -3)
         ])
     }
 }

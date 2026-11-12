@@ -7,6 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1193A8FE2E8915610E34A570 /* FriendsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06425EB6E8E3B551BF178726 /* FriendsViewModel.swift */; };
+		16FCD7F9EF75262A7EF156C0 /* SocialUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8018D38FA249D0A3B6148F0A /* SocialUser.swift */; };
+		1854FEABE358C2561E0D88FA /* SessionResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F433D81AE5C79652FDB03F /* SessionResultViewController.swift */; };
+		1E484F131F647CD2EB74F744 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7EB1F3A35A74095852DD99F /* AuthViewModel.swift */; };
+		1F672CB2220D22C1715A088F /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1D987A4689E976ABEC04875D /* Info.plist */; };
+		2BB4324736D5E8CC972729F7 /* JoinSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA82726B400FFF6595932FB8 /* JoinSessionViewController.swift */; };
+		38F284960DB1212E40CEA7C0 /* HafterWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1AF1D32382371B07D2E3C30 /* HafterWidgetBundle.swift */; };
+		57D9DABE015FDE16F67746C4 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11164A9C7D20928B7777EFF0 /* SwiftUI.framework */; };
+		5E86B6160687A6C110BC7E5E /* SwipeSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB8547B844F007448931060D /* SwipeSessionViewController.swift */; };
+		60A8B9E9017CC0A9439EE596 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 69CEC9A9CD46C5B405FA04A8 /* FirebaseAuth */; };
+		8827923E281C9052A62D7C0A /* CreateSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C6246D11B47266654CDC9F /* CreateSessionViewController.swift */; };
+		9E2079630FD99A92D2EC8A46 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 9057966917BB898A5955678E /* FirebaseFirestore */; };
+		A45D44D3CAD9B5B6421AE6B0 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10587A1F65A14EC85541BE22 /* WidgetKit.framework */; };
+		A8F5AB04EDBEFC277E73B558 /* MovieSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E71365C0EED751634C00755 /* MovieSession.swift */; };
+		B8C8FCA2BA3C9409C137E45B /* SocialCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D97CC908DFC4ADDDC7679987 /* SocialCoordinator.swift */; };
+		BA105804D1ECE13A6C85A346 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BAF3C5FDF9124E3B725A46D1 /* Foundation.framework */; };
 		BA287E612B0504BB000E1F83 /* VerticalLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA287E602B0504BB000E1F83 /* VerticalLabelView.swift */; };
 		BA5B429B2B0649BC003896AA /* ItemDetailBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5B429A2B0649BC003896AA /* ItemDetailBuilder.swift */; };
 		BA5B429D2B064A27003896AA /* ItemDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5B429C2B064A27003896AA /* ItemDetailViewController.swift */; };
@@ -95,9 +111,40 @@
 		BAF8BBAD2801E01600375C02 /* RandomizeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BBAC2801E01600375C02 /* RandomizeRouter.swift */; };
 		BAF8BBAF2801E05900375C02 /* RandomizeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BBAE2801E05900375C02 /* RandomizeViewModel.swift */; };
 		BAF8BBB12801E14700375C02 /* RandomizeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF8BBB02801E14700375C02 /* RandomizeViewController.swift */; };
+		BB555637B41B6865C504715E /* CreateSessionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C34D52F39B27941D59E1DC6 /* CreateSessionViewModel.swift */; };
+		C70E2E2A453E23DE356192F1 /* VoteSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9AD2175499FC1B212CCF271 /* VoteSessionViewController.swift */; };
+		CA736AE5F4A55CCD565DCA83 /* HafterWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 139422B1946485BAA1BB61AB /* HafterWidget.swift */; };
+		D8275E0EAB41EDE1723A0AC2 /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BF085D056EA0B3C0F14DEFC /* FirestoreService.swift */; };
+		D8733A348A5E5CECEA0965C1 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C4B601D785BE23A22C88F1 /* AuthViewController.swift */; };
+		DED3F2CC64491BD002675EF2 /* FirebaseAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3C6E5DD368ADD5D16487DC /* FirebaseAuthService.swift */; };
+		F5C8EC59B964CFC19A8C123A /* FriendsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCDF48FB64487DDA7AFCE04 /* FriendsViewController.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		502EEC2A92C2CB818F0460C6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BAA02EC227F22AD800FDD198 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C6E2C7BE042FCD92CE7D7B39;
+			remoteInfo = HafterWidget;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		06425EB6E8E3B551BF178726 /* FriendsViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FriendsViewModel.swift; sourceTree = SOURCE_ROOT; };
+		10587A1F65A14EC85541BE22 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/WidgetKit.framework; sourceTree = DEVELOPER_DIR; };
+		11164A9C7D20928B7777EFF0 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/SwiftUI.framework; sourceTree = DEVELOPER_DIR; };
+		139422B1946485BAA1BB61AB /* HafterWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HafterWidget.swift; sourceTree = SOURCE_ROOT; };
+		1BF085D056EA0B3C0F14DEFC /* FirestoreService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = SOURCE_ROOT; };
+		1C34D52F39B27941D59E1DC6 /* CreateSessionViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CreateSessionViewModel.swift; sourceTree = SOURCE_ROOT; };
+		1D987A4689E976ABEC04875D /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
+		29F433D81AE5C79652FDB03F /* SessionResultViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SessionResultViewController.swift; sourceTree = SOURCE_ROOT; };
+		31C6246D11B47266654CDC9F /* CreateSessionViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CreateSessionViewController.swift; sourceTree = SOURCE_ROOT; };
+		3D3C6E5DD368ADD5D16487DC /* FirebaseAuthService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FirebaseAuthService.swift; sourceTree = SOURCE_ROOT; };
+		3E71365C0EED751634C00755 /* MovieSession.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MovieSession.swift; sourceTree = SOURCE_ROOT; };
+		7C31B9B3402A3B0B4F49DFF2 /* Config.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = SOURCE_ROOT; };
+		8018D38FA249D0A3B6148F0A /* SocialUser.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SocialUser.swift; sourceTree = SOURCE_ROOT; };
+		B9AD2175499FC1B212CCF271 /* VoteSessionViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = VoteSessionViewController.swift; sourceTree = SOURCE_ROOT; };
 		BA287E602B0504BB000E1F83 /* VerticalLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalLabelView.swift; sourceTree = "<group>"; };
 		BA5B429A2B0649BC003896AA /* ItemDetailBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailBuilder.swift; sourceTree = "<group>"; };
 		BA5B429C2B064A27003896AA /* ItemDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewController.swift; sourceTree = "<group>"; };
@@ -111,6 +158,7 @@
 		BA5E491B28C49B46006C22A2 /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		BA620DE02B04C64000F93B22 /* HereAfterMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HereAfterMainViewController.swift; sourceTree = "<group>"; };
 		BA620DE22B04D51900F93B22 /* HereafterMainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HereafterMainViewModel.swift; sourceTree = "<group>"; };
+		BA82726B400FFF6595932FB8 /* JoinSessionViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = JoinSessionViewController.swift; sourceTree = SOURCE_ROOT; };
 		BA95C77828EDF76E008BCE59 /* HereafterCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HereafterCollectionViewCell.swift; sourceTree = "<group>"; };
 		BAA02ECA27F22AD800FDD198 /* Hafter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hafter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BAA02ECD27F22AD800FDD198 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -161,6 +209,7 @@
 		BAC4283D27F9A61A004EAB08 /* DropListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropListView.swift; sourceTree = "<group>"; };
 		BAC4283F27F9EE24004EAB08 /* DropListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropListCell.swift; sourceTree = "<group>"; };
 		BAD51A672805700300AF5381 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		BAF3C5FDF9124E3B725A46D1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		BAF8BB7327FD860A00375C02 /* PresentAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentAnimator.swift; sourceTree = "<group>"; };
 		BAF8BB7527FD862300375C02 /* DismissAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DismissAnimator.swift; sourceTree = "<group>"; };
 		BAF8BB7727FD87CE00375C02 /* TypeChooserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeChooserView.swift; sourceTree = "<group>"; };
@@ -186,26 +235,165 @@
 		BAF8BBAC2801E01600375C02 /* RandomizeRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomizeRouter.swift; sourceTree = "<group>"; };
 		BAF8BBAE2801E05900375C02 /* RandomizeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomizeViewModel.swift; sourceTree = "<group>"; };
 		BAF8BBB02801E14700375C02 /* RandomizeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomizeViewController.swift; sourceTree = "<group>"; };
+		CB8547B844F007448931060D /* SwipeSessionViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SwipeSessionViewController.swift; sourceTree = SOURCE_ROOT; };
+		CFCDF48FB64487DDA7AFCE04 /* FriendsViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FriendsViewController.swift; sourceTree = SOURCE_ROOT; };
+		D1AF1D32382371B07D2E3C30 /* HafterWidgetBundle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HafterWidgetBundle.swift; sourceTree = SOURCE_ROOT; };
+		D97CC908DFC4ADDDC7679987 /* SocialCoordinator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SocialCoordinator.swift; sourceTree = SOURCE_ROOT; };
+		E5C4B601D785BE23A22C88F1 /* AuthViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = SOURCE_ROOT; };
+		EFBFE1215985F9461EB84D25 /* HafterWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = HafterWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		F7EB1F3A35A74095852DD99F /* AuthViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		7A56A563DAC4FD76DC48FD88 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BA105804D1ECE13A6C85A346 /* Foundation.framework in Frameworks */,
+				A45D44D3CAD9B5B6421AE6B0 /* WidgetKit.framework in Frameworks */,
+				57D9DABE015FDE16F67746C4 /* SwiftUI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BAA02EC727F22AD800FDD198 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				BAC8BD202F420AF100C37EE3 /* FirebaseCore in Frameworks */,
 				BAC8BD1F2F420AF100C37EE3 /* FirebaseAnalytics in Frameworks */,
+				60A8B9E9017CC0A9439EE596 /* FirebaseAuth in Frameworks */,
+				9E2079630FD99A92D2EC8A46 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		052E0E4FDAEFC42D2F62D177 /* Create */ = {
+			isa = PBXGroup;
+			children = (
+				31C6246D11B47266654CDC9F /* CreateSessionViewController.swift */,
+				1C34D52F39B27941D59E1DC6 /* CreateSessionViewModel.swift */,
+			);
+			name = Create;
+			path = Create;
+			sourceTree = "<group>";
+		};
+		0809C1B56474FBF1BDAAD197 /* Hafter */ = {
+			isa = PBXGroup;
+			children = (
+				6AE0AD97E5FE846BDEA986C3 /* Models */,
+				D1F73D66CCF58CB25F93237C /* Modules */,
+				4A3A48B47BD7F0888DF7EF7A /* Network */,
+				7C31B9B3402A3B0B4F49DFF2 /* Config.xcconfig */,
+			);
+			name = Hafter;
+			path = Hafter;
+			sourceTree = "<group>";
+		};
+		26E1C6F353CA78444FE8073A /* Social */ = {
+			isa = PBXGroup;
+			children = (
+				D97CC908DFC4ADDDC7679987 /* SocialCoordinator.swift */,
+				43355D1B103826A6F5087A03 /* Auth */,
+				2BB9BD017399CFC0BAA39866 /* Friends */,
+				F855829ECB76E6C3EBB1E432 /* Session */,
+			);
+			name = Social;
+			path = Social;
+			sourceTree = "<group>";
+		};
+		2BB9BD017399CFC0BAA39866 /* Friends */ = {
+			isa = PBXGroup;
+			children = (
+				CFCDF48FB64487DDA7AFCE04 /* FriendsViewController.swift */,
+				06425EB6E8E3B551BF178726 /* FriendsViewModel.swift */,
+			);
+			name = Friends;
+			path = Friends;
+			sourceTree = "<group>";
+		};
+		43355D1B103826A6F5087A03 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				E5C4B601D785BE23A22C88F1 /* AuthViewController.swift */,
+				F7EB1F3A35A74095852DD99F /* AuthViewModel.swift */,
+			);
+			name = Auth;
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		4A3A48B47BD7F0888DF7EF7A /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				F0963F792427029840A846A1 /* Services */,
+			);
+			name = Network;
+			path = Network;
+			sourceTree = "<group>";
+		};
 		60EFAF262103D81DFE865C1B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7C7B8253A0540B271BC9E06F /* iOS */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		69B29A2B4FF6C87FE1FD010C /* Result */ = {
+			isa = PBXGroup;
+			children = (
+				29F433D81AE5C79652FDB03F /* SessionResultViewController.swift */,
+			);
+			name = Result;
+			path = Result;
+			sourceTree = "<group>";
+		};
+		6AE0AD97E5FE846BDEA986C3 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				8018D38FA249D0A3B6148F0A /* SocialUser.swift */,
+				3E71365C0EED751634C00755 /* MovieSession.swift */,
+			);
+			name = Models;
+			path = Models;
+			sourceTree = "<group>";
+		};
+		7C7B8253A0540B271BC9E06F /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				BAF3C5FDF9124E3B725A46D1 /* Foundation.framework */,
+				10587A1F65A14EC85541BE22 /* WidgetKit.framework */,
+				11164A9C7D20928B7777EFF0 /* SwiftUI.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		892CAEE280998DB1B30FCD4E /* Vote */ = {
+			isa = PBXGroup;
+			children = (
+				B9AD2175499FC1B212CCF271 /* VoteSessionViewController.swift */,
+			);
+			name = Vote;
+			path = Vote;
+			sourceTree = "<group>";
+		};
+		A6F49933337057D708615B08 /* Swipe */ = {
+			isa = PBXGroup;
+			children = (
+				CB8547B844F007448931060D /* SwipeSessionViewController.swift */,
+			);
+			name = Swipe;
+			path = Swipe;
+			sourceTree = "<group>";
+		};
+		B5E5BE1F01C2276B669402A4 /* Join */ = {
+			isa = PBXGroup;
+			children = (
+				BA82726B400FFF6595932FB8 /* JoinSessionViewController.swift */,
+			);
+			name = Join;
+			path = Join;
 			sourceTree = "<group>";
 		};
 		BA5B42992B064988003896AA /* ItemDetail */ = {
@@ -237,6 +425,8 @@
 				BAA02ECC27F22AD800FDD198 /* Hafter */,
 				BAA02ECB27F22AD800FDD198 /* Products */,
 				60EFAF262103D81DFE865C1B /* Frameworks */,
+				0809C1B56474FBF1BDAAD197 /* Hafter */,
+				F718EB6077EB7BEAEB9B63F2 /* HafterWidget */,
 			);
 			sourceTree = "<group>";
 		};
@@ -244,6 +434,7 @@
 			isa = PBXGroup;
 			children = (
 				BAA02ECA27F22AD800FDD198 /* Hafter.app */,
+				EFBFE1215985F9461EB84D25 /* HafterWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -503,6 +694,49 @@
 			path = Randomize;
 			sourceTree = "<group>";
 		};
+		D1F73D66CCF58CB25F93237C /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				26E1C6F353CA78444FE8073A /* Social */,
+			);
+			name = Modules;
+			path = Modules;
+			sourceTree = "<group>";
+		};
+		F0963F792427029840A846A1 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				3D3C6E5DD368ADD5D16487DC /* FirebaseAuthService.swift */,
+				1BF085D056EA0B3C0F14DEFC /* FirestoreService.swift */,
+			);
+			name = Services;
+			path = Services;
+			sourceTree = "<group>";
+		};
+		F718EB6077EB7BEAEB9B63F2 /* HafterWidget */ = {
+			isa = PBXGroup;
+			children = (
+				139422B1946485BAA1BB61AB /* HafterWidget.swift */,
+				D1AF1D32382371B07D2E3C30 /* HafterWidgetBundle.swift */,
+				1D987A4689E976ABEC04875D /* Info.plist */,
+			);
+			name = HafterWidget;
+			path = HafterWidget;
+			sourceTree = "<group>";
+		};
+		F855829ECB76E6C3EBB1E432 /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				052E0E4FDAEFC42D2F62D177 /* Create */,
+				B5E5BE1F01C2276B669402A4 /* Join */,
+				69B29A2B4FF6C87FE1FD010C /* Result */,
+				A6F49933337057D708615B08 /* Swipe */,
+				892CAEE280998DB1B30FCD4E /* Vote */,
+			);
+			name = Session;
+			path = Session;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -517,15 +751,35 @@
 			buildRules = (
 			);
 			dependencies = (
+				BCC8B26A7A400856A02671B0 /* PBXTargetDependency */,
 			);
 			name = Hafter;
 			packageProductDependencies = (
 				B2C3D4E53F6A7890123456B2 /* FirebaseAnalytics */,
 				C3D4E5F64A7B8901234567C3 /* FirebaseCore */,
+				69CEC9A9CD46C5B405FA04A8 /* FirebaseAuth */,
+				9057966917BB898A5955678E /* FirebaseFirestore */,
 			);
 			productName = Hafter;
 			productReference = BAA02ECA27F22AD800FDD198 /* Hafter.app */;
 			productType = "com.apple.product-type.application";
+		};
+		C6E2C7BE042FCD92CE7D7B39 /* HafterWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6EB51F4FE0FE671422C2E133 /* Build configuration list for PBXNativeTarget "HafterWidget" */;
+			buildPhases = (
+				4E00DDC6957FE45FA11E6E8E /* Sources */,
+				7A56A563DAC4FD76DC48FD88 /* Frameworks */,
+				237C3DB0641FA5B894488758 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HafterWidget;
+			productName = HafterWidget;
+			productReference = EFBFE1215985F9461EB84D25 /* HafterWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -559,11 +813,20 @@
 			projectRoot = "";
 			targets = (
 				BAA02EC927F22AD800FDD198 /* Hafter */,
+				C6E2C7BE042FCD92CE7D7B39 /* HafterWidget */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		237C3DB0641FA5B894488758 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F672CB2220D22C1715A088F /* Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BAA02EC827F22AD800FDD198 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -577,6 +840,15 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		4E00DDC6957FE45FA11E6E8E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CA736AE5F4A55CCD565DCA83 /* HafterWidget.swift in Sources */,
+				38F284960DB1212E40CEA7C0 /* HafterWidgetBundle.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BAA02EC627F22AD800FDD198 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -664,10 +936,34 @@
 				BAA02F2E27F7271000FDD198 /* UIVIewController.swift in Sources */,
 				BAA02ED027F22AD800FDD198 /* SceneDelegate.swift in Sources */,
 				BAC4283427F87B5B004EAB08 /* AddTableViewDelegate.swift in Sources */,
+				16FCD7F9EF75262A7EF156C0 /* SocialUser.swift in Sources */,
+				A8F5AB04EDBEFC277E73B558 /* MovieSession.swift in Sources */,
+				B8C8FCA2BA3C9409C137E45B /* SocialCoordinator.swift in Sources */,
+				D8733A348A5E5CECEA0965C1 /* AuthViewController.swift in Sources */,
+				1E484F131F647CD2EB74F744 /* AuthViewModel.swift in Sources */,
+				F5C8EC59B964CFC19A8C123A /* FriendsViewController.swift in Sources */,
+				1193A8FE2E8915610E34A570 /* FriendsViewModel.swift in Sources */,
+				8827923E281C9052A62D7C0A /* CreateSessionViewController.swift in Sources */,
+				BB555637B41B6865C504715E /* CreateSessionViewModel.swift in Sources */,
+				2BB4324736D5E8CC972729F7 /* JoinSessionViewController.swift in Sources */,
+				1854FEABE358C2561E0D88FA /* SessionResultViewController.swift in Sources */,
+				5E86B6160687A6C110BC7E5E /* SwipeSessionViewController.swift in Sources */,
+				C70E2E2A453E23DE356192F1 /* VoteSessionViewController.swift in Sources */,
+				DED3F2CC64491BD002675EF2 /* FirebaseAuthService.swift in Sources */,
+				D8275E0EAB41EDE1723A0AC2 /* FirestoreService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		BCC8B26A7A400856A02671B0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = HafterWidget;
+			target = C6E2C7BE042FCD92CE7D7B39 /* HafterWidget */;
+			targetProxy = 502EEC2A92C2CB818F0460C6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		BAA02ED827F22AD900FDD198 /* LaunchScreen.storyboard */ = {
@@ -681,6 +977,23 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		0BFBBCCD7AEF08BF95436103 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = HafterWidget/HafterWidget.entitlements;
+				INFOPLIST_FILE = HafterWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				PRODUCT_BUNDLE_IDENTIFIER = app.olar.Hafter.HafterWidget;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		BAA02EDC27F22AD900FDD198 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -801,9 +1114,11 @@
 		};
 		BAA02EDF27F22AD900FDD198 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7C31B9B3402A3B0B4F49DFF2 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Hafter/Hafter.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -831,9 +1146,11 @@
 		};
 		BAA02EE027F22AD900FDD198 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7C31B9B3402A3B0B4F49DFF2 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Hafter/Hafter.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -859,9 +1176,34 @@
 			};
 			name = Release;
 		};
+		E9D95A72BBCDFA2C7006A57B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = HafterWidget/HafterWidget.entitlements;
+				INFOPLIST_FILE = HafterWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				PRODUCT_BUNDLE_IDENTIFIER = app.olar.Hafter.HafterWidget;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		6EB51F4FE0FE671422C2E133 /* Build configuration list for PBXNativeTarget "HafterWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0BFBBCCD7AEF08BF95436103 /* Release */,
+				E9D95A72BBCDFA2C7006A57B /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		BAA02EC527F22AD800FDD198 /* Build configuration list for PBXProject "Hafter" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -894,6 +1236,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		69CEC9A9CD46C5B405FA04A8 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1B2C3D42E5F6789012345A1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		9057966917BB898A5955678E /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1B2C3D42E5F6789012345A1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
 		B2C3D4E53F6A7890123456B2 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A1B2C3D42E5F6789012345A1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

@@ -15,6 +15,9 @@ protocol HereafterViewProtocol: AnyObject {
 
 final class HereAfterMainViewController: BaseViewController<HereafterViewModelProtocol> {
 
+    var localService: LocalServiceProtocol?
+    private var socialCoordinator: SocialCoordinator?
+
     private let backgroundImageView: UIImageView = {
         let v = UIImageView()
         v.translatesAutoresizingMaskIntoConstraints = false
@@ -27,7 +30,7 @@ final class HereAfterMainViewController: BaseViewController<HereafterViewModelPr
     private let sidebarView: UIView = {
         let v = UIView()
         v.translatesAutoresizingMaskIntoConstraints = false
-        v.backgroundColor = UIColor(red: 0.81, green: 1, blue: 1, alpha: 1)
+        v.backgroundColor = DS.Color.sidebarBackground
         return v
     }()
 
@@ -75,6 +78,15 @@ final class HereAfterMainViewController: BaseViewController<HereafterViewModelPr
 
     private let imageLoader = ImageLoader()
 
+    private lazy var searchController: UISearchController = {
+        let sc = UISearchController(searchResultsController: nil)
+        sc.searchResultsUpdater = self
+        sc.obscuresBackgroundDuringPresentation = false
+        sc.searchBar.placeholder = "Search saved movies"
+        sc.searchBar.tintColor = DS.Color.accent
+        return sc
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -104,6 +116,12 @@ final class HereAfterMainViewController: BaseViewController<HereafterViewModelPr
 
     @objc private func viewedTapped() {
         viewModel?.openViewed()
+    }
+
+    @objc private func friendsTapped() {
+        guard let localService else { return }
+        socialCoordinator = SocialCoordinator(presenter: self, localService: localService)
+        socialCoordinator?.start()
     }
 
     @objc private func foremostAction() {
@@ -208,14 +226,53 @@ private extension HereAfterMainViewController {
     func setupTableView() {
         listTableView.registerCell(ListTableViewCell.self)
         listTableView.separatorStyle = .none
-        listTableView.rowHeight = 140
+        listTableView.rowHeight = 160
         listTableView.dataSource = self
         listTableView.delegate = self
     }
 
     func setupNavigationController() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage.image(named: ImageConstants.viewed), style: .plain, target: self, action: #selector(viewedTapped))
-        navigationItem.rightBarButtonItem?.tintColor = #colorLiteral(red: 0.1490196078, green: 0.1960784314, blue: 0.2196078431, alpha: 1)
+        let viewedButton = UIBarButtonItem(
+            image: UIImage.image(named: ImageConstants.viewed),
+            style: .plain,
+            target: self,
+            action: #selector(viewedTapped)
+        )
+        viewedButton.tintColor = DS.Color.navIconDark
+
+        let friendsButton = UIBarButtonItem(
+            image: UIImage(systemName: "person.2"),
+            style: .plain,
+            target: self,
+            action: #selector(friendsTapped)
+        )
+        friendsButton.tintColor = DS.Color.navIconDark
+
+        navigationItem.rightBarButtonItems = [viewedButton, friendsButton]
+        navigationItem.leftBarButtonItem = makeSortBarButton()
+
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = true
+        definesPresentationContext = true
+    }
+
+    func makeSortBarButton() -> UIBarButtonItem {
+        let currentOrder = viewModel?.sortOrder ?? .alphabetical
+        let actions = MovieSortOrder.allCases.map { order in
+            UIAction(
+                title: order.title,
+                image: UIImage(systemName: order.systemImage),
+                state: order == currentOrder ? .on : .off
+            ) { [weak self] _ in
+                self?.viewModel?.applySort(order: order)
+                self?.navigationItem.leftBarButtonItem = self?.makeSortBarButton()
+            }
+        }
+        let menu = UIMenu(title: "Sort by", children: actions)
+        return UIBarButtonItem(
+            image: UIImage(systemName: "arrow.up.arrow.down"),
+            menu: menu
+        )
     }
 
     func select(type: HereafterMovieType) {
@@ -263,8 +320,16 @@ extension HereAfterMainViewController: UITableViewDataSource {
                 cell.posterImageView.transition(to: UIImage.image(named: ImageConstants.posterholder))
             }
         }
-        cell.setup(title: movie.title)
+        cell.setup(movie: movie)
         return cell
+    }
+}
+
+extension HereAfterMainViewController: UISearchResultsUpdating {
+
+    func updateSearchResults(for searchController: UISearchController) {
+        let query = searchController.searchBar.text ?? ""
+        viewModel?.applySearch(query: query)
     }
 }
 

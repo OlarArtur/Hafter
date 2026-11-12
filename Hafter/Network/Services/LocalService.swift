@@ -11,6 +11,8 @@ protocol LocalServiceProtocol {
     func update(movie: HereafterMovie, completion: @escaping (Bool) -> Void)
     func save(movie: HereafterMovie, completion: @escaping (Bool) -> Void)
     func getMovies(type: HereafterMovieType?) -> [HereafterMovie]
+    func getTags(movieId: String) -> [String]
+    func updateTags(movieId: String, tags: [String], completion: @escaping (Bool) -> Void)
 }
 
 final class LocalService {
@@ -23,16 +25,24 @@ final class LocalService {
 }
 
 extension LocalService: LocalServiceProtocol {
-    
+
     func save(movie: HereafterMovie, completion: @escaping (Bool) -> Void) {
-        return provider.save(movie: movie, completion: completion)
+        provider.save(movie: movie, completion: completion)
     }
-    
+
     func getMovies(type: HereafterMovieType?) -> [HereafterMovie] {
-        return provider.getMovies(type: type)
+        provider.getMovies(type: type)
     }
-    
+
     func update(movie: HereafterMovie, completion: @escaping (Bool) -> Void) {
         provider.update(movie: movie, completion: completion)
+    }
+
+    func getTags(movieId: String) -> [String] {
+        provider.getTags(movieId: movieId)
+    }
+
+    func updateTags(movieId: String, tags: [String], completion: @escaping (Bool) -> Void) {
+        provider.updateTags(movieId: movieId, tags: tags, completion: completion)
     }
 }

@@ -16,10 +16,31 @@ final class ListViewController: BaseViewController<ListViewModelProtocol>, Custo
         return v
     }()
 
+    private let listTitleLabel: UILabel = {
+        let l = UILabel()
+        l.translatesAutoresizingMaskIntoConstraints = false
+        l.font = DS.Typography.display
+        l.textColor = DS.Color.navIconDark
+        l.adjustsFontSizeToFitWidth = true
+        l.minimumScaleFactor = 0.7
+        return l
+    }()
+
+    private let countLabel: UILabel = {
+        let l = UILabel()
+        l.translatesAutoresizingMaskIntoConstraints = false
+        l.font = DS.Typography.callout
+        l.textColor = DS.Color.navIconDark.withAlphaComponent(0.55)
+        return l
+    }()
+
     private let closeButton: UIButton = {
         let b = UIButton(type: .system)
         b.translatesAutoresizingMaskIntoConstraints = false
-        b.setImage(UIImage(named: "close"), for: .normal)
+        b.setImage(UIImage(systemName: "xmark"), for: .normal)
+        b.tintColor = DS.Color.navIconDark
+        b.backgroundColor = UIColor.black.withAlphaComponent(0.10)
+        b.layer.cornerRadius = 16
         return b
     }()
 
@@ -41,8 +62,9 @@ final class ListViewController: BaseViewController<ListViewModelProtocol>, Custo
     private let emptyLabel: UILabel = {
         let l = UILabel()
         l.translatesAutoresizingMaskIntoConstraints = false
-        l.text = "Empty"
-        l.font = .systemFont(ofSize: 17)
+        l.text = "Nothing here yet"
+        l.font = DS.Typography.title2
+        l.textColor = DS.Color.labelMuted
         return l
     }()
 
@@ -62,6 +84,8 @@ final class ListViewController: BaseViewController<ListViewModelProtocol>, Custo
         view.backgroundColor = viewModel?.backgrounColor
         tableView.backgroundColor = viewModel?.backgrounColor
         emptyView.backgroundColor = viewModel?.backgrounColor
+        listTitleLabel.text = viewModel?.listTitle
+        updateCountLabel()
     }
 
     @objc private func closeAction() {
@@ -73,6 +97,8 @@ private extension ListViewController {
 
     func setupLayout() {
         view.addSubview(headerView)
+        headerView.addSubview(listTitleLabel)
+        headerView.addSubview(countLabel)
         headerView.addSubview(closeButton)
         view.addSubview(tableView)
         view.addSubview(emptyView)
@@ -82,10 +108,19 @@ private extension ListViewController {
             headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             headerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             headerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            headerView.heightAnchor.constraint(equalToConstant: 40),
 
-            closeButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -20),
-            closeButton.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
+            closeButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -DS.Spacing.m),
+            closeButton.topAnchor.constraint(equalTo: headerView.topAnchor, constant: DS.Spacing.s),
+            closeButton.widthAnchor.constraint(equalToConstant: 32),
+            closeButton.heightAnchor.constraint(equalToConstant: 32),
+
+            listTitleLabel.topAnchor.constraint(equalTo: headerView.topAnchor, constant: DS.Spacing.s),
+            listTitleLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: DS.Spacing.m),
+            listTitleLabel.trailingAnchor.constraint(lessThanOrEqualTo: closeButton.leadingAnchor, constant: -DS.Spacing.s),
+
+            countLabel.topAnchor.constraint(equalTo: listTitleLabel.bottomAnchor, constant: 2),
+            countLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: DS.Spacing.m),
+            countLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -DS.Spacing.s),
 
             tableView.topAnchor.constraint(equalTo: headerView.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
@@ -102,10 +137,16 @@ private extension ListViewController {
         ])
     }
 
+    func updateCountLabel() {
+        let count = viewModel?.numberOfItems() ?? 0
+        countLabel.text = count == 1 ? "1 movie" : "\(count) movies"
+    }
+
     func bindViewModel() {
         viewModel?.reloadData = { [weak self] in
             self?.tableView.reloadData()
             self?.emptyView.isHidden = (self?.viewModel?.numberOfItems() ?? 0) > 0
+            self?.updateCountLabel()
         }
 
         viewModel?.showError = { [weak self] error in
@@ -118,7 +159,7 @@ private extension ListViewController {
     func setupTableView() {
         guard let viewModel = viewModel else { return }
         tableView.registerCell(ListTableViewCell.self)
-        tableView.rowHeight = 100
+        tableView.rowHeight = 120
         tableView.separatorStyle = .none
         dataSource = ListTableViewDataSource(viewModel: viewModel, imageLoader: imageLoader)
         listDelegate = ListTableViewDelegate(viewModel: viewModel)

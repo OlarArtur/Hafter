@@ -94,6 +94,13 @@ class Movie: Codable {
         return dateFormatter.string(from: releaseDate)
     }
     
+    public func posterThumbnailURL() -> URL? {
+        guard let posterPath = posterPath else { return nil }
+        let path = "https://image.tmdb.org/t/p/w185" + posterPath
+        guard let url = path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return nil }
+        return URL(string: url)
+    }
+
     public func posterImageURL() -> URL? {
         guard let posterPath = posterPath else { return nil }
         let path = "https://image.tmdb.org/t/p/w500" + posterPath

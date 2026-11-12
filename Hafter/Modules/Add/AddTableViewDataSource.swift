@@ -11,9 +11,11 @@ class AddTableViewDataSource: NSObject {
     
     private var viewModel: AddViewModelProtocol
     private var addAction: (() -> Void)
-    
-    init(viewModel: AddViewModelProtocol, addAction: @escaping (() -> Void)) {
+    private let imageLoader: ImageLoaderProtocol
+
+    init(viewModel: AddViewModelProtocol, imageLoader: ImageLoaderProtocol, addAction: @escaping (() -> Void)) {
         self.viewModel = viewModel
+        self.imageLoader = imageLoader
         self.addAction = addAction
     }
 }
@@ -28,7 +30,8 @@ extension AddTableViewDataSource: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "AddTableViewCell", for: indexPath) as? AddTableViewCell else {
             return UITableViewCell()
         }
-        cell.setup(title: viewModel.itemFor(index: indexPath.row)) { [weak self] in
+        let movie = viewModel.movieAt(index: indexPath.row)
+        cell.setup(movie: movie, imageLoader: imageLoader) { [weak self] in
             self?.viewModel.detailsFor(index: indexPath.row)
         }
         cell.addAction = { [weak self] in

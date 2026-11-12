@@ -8,53 +8,73 @@
 import UIKit
 
 class CustomSearchBar: UISearchBar {
-    
+
     private struct Constants {
-        static let cornerRadius: CGFloat = 5.0
-        static let borderWidth: CGFloat = 1.0
+        static let cornerRadius: CGFloat = 10
     }
-    
+
     let placeholderWidth: CGFloat = 53
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         setupAppearance()
     }
-    
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupAppearance()
+    }
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        setupAppearance()
+    }
+
     // MARK: Private
-    
+
     private func setupAppearance() {
-        UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [.foregroundColor: UIColor(red: 119 / 255.0, green: 128 / 255.0, blue: 135 / 255.0, alpha: 1.0)]
+        searchBarStyle = .minimal
         backgroundImage = UIImage()
-        backgroundColor = .white
-        borderColor = UIColor(red: 211 / 255.0, green: 211 / 255.0, blue: 211 / 255.0, alpha: 1.0)
-        
-        for subView in subviews {
-            subView.backgroundColor = .white
-            for subView1 in subView.subviews {
-                if let textField = subView1 as? UITextField {
-                    textField.backgroundColor = UIColor.white
-                    textField.layer.borderWidth = Constants.borderWidth
-                    textField.layer.cornerRadius = Constants.cornerRadius
-                    textField.layer.borderColor = UIColor(red: 211 / 255.0, green: 211 / 255.0, blue: 211 / 255.0, alpha: 1.0).cgColor
-                    
-                    // customize placeholder color
-                    let textFieldInsideUISearchBarLabel = textField.value(forKey: "placeholderLabel") as? UILabel
-                    textFieldInsideUISearchBarLabel?.textColor = UIColor(red: 142 / 255.0, green: 142 / 255.0, blue: 147 / 255.0, alpha: 1.0)
-                }
-            }
+        backgroundColor = .clear
+        tintColor = DS.Color.accent
+        showsBookmarkButton = false
+        showsCancelButton = false
+
+        if #available(iOS 13.0, *) {
+            styleSearchTextField(searchTextField)
         }
     }
-    
+
+    private func styleSearchTextField(_ textField: UITextField) {
+        textField.backgroundColor = UIColor.secondarySystemGroupedBackground
+        textField.layer.cornerRadius = Constants.cornerRadius
+        textField.layer.borderWidth = 0
+        textField.clipsToBounds = true
+        textField.font = .systemFont(ofSize: 17)
+        textField.defaultTextAttributes = [.foregroundColor: UIColor.label]
+
+        let placeholderColor = UIColor.placeholderText
+        textField.attributedPlaceholder = NSAttributedString(
+            string: textField.placeholder ?? "",
+            attributes: [.foregroundColor: placeholderColor]
+        )
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if #available(iOS 13.0, *) {
+            styleSearchTextField(searchTextField)
+        }
+    }
+
     // MARK: Public
     func centerText() {
         layoutIfNeeded()
         let offset = UIOffset(horizontal: (bounds.size.width / 2) - placeholderWidth, vertical: 0)
         setPositionAdjustment(offset, for: .search)
     }
-    
+
     var queryIsEmpty: Bool {
-        return text == nil || text == ""
+        text == nil || text == ""
     }
 }

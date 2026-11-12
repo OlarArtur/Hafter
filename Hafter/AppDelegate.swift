@@ -6,26 +6,62 @@
 //
 
 import UIKit
+import AppIntents
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        if #available(iOS 16, *) {
+            HafterShortcuts.updateAppShortcutParameters()
+        }
         return true
     }
 
     // MARK: UISceneSession Lifecycle
 
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-        // Called when a new scene session is being created.
-        // Use this method to select a configuration to create the new scene with.
         return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
     }
 
     func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
-        // Called when the user discards a scene session.
-        // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
-        // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
+    }
+}
+
+// MARK: - Siri / Shortcuts
+
+@available(iOS 16, *)
+struct GetRandomMovieIntent: AppIntent {
+    static var title: LocalizedStringResource = "What to watch tonight?"
+    static var description = IntentDescription(
+        "Picks a random movie from your Foremost list in Hafter"
+    )
+
+    func perform() async throws -> some IntentResult & ProvidesDialog {
+        let movies = WidgetDataBridge.readMovies()
+        guard !movies.isEmpty else {
+            return .result(dialog: "Your Foremost list is empty — add some movies first!")
+        }
+        let pick = movies.randomElement()!
+        if let year = pick.year {
+            return .result(dialog: "How about \(pick.title) (\(year))?")
+        }
+        return .result(dialog: "How about \(pick.title)?")
+    }
+}
+
+@available(iOS 16, *)
+struct HafterShortcuts: AppShortcutsProvider {
+    static var appShortcuts: [AppShortcut] {
+        AppShortcut(
+            intent: GetRandomMovieIntent(),
+            phrases: [
+                "What should I watch in \(.applicationName)?",
+                "Pick a movie from \(.applicationName)",
+                "\(.applicationName), what to watch?"
+            ],
+            shortTitle: "Random movie",
+            systemImageName: "film"
+        )
     }
 }

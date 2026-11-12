@@ -2,21 +2,22 @@
 //  TMDbSettings.swift
 //  Hafter
 //
-//  Created by Artur Olar on 01.04.2022.
+//  API keys are stored in Config.xcconfig → Info.plist.
+//  Add Config.xcconfig to .gitignore before pushing to a public repository.
 //
 
 import Foundation
 
 final class TMDbSettings {
-    
+
     private init() {}
     static let shared = TMDbSettings()
-    
+
     var apiKeyV3: String {
-        return "2ce627ffcd028d0e05d065c475d82831"
+        Bundle.main.infoDictionary?["TMDbAPIKeyV3"] as? String ?? ""
     }
-    
+
     var apiKeyV4: String {
-        return "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyY2U2MjdmZmNkMDI4ZDBlMDVkMDY1YzQ3NWQ4MjgzMSIsInN1YiI6IjYyNDZjOTMyYTNlNGJhMDA5ZjcxYmJkZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.02pSyZJLusICrXwwN3Gj8f7jImrJm2rOeBrR21MHM5A"
+        Bundle.main.infoDictionary?["TMDbAPIKeyV4"] as? String ?? ""
     }
 }

@@ -17,7 +17,7 @@ final class IntroductionViewController: BaseViewController<IntroductionViewModel
         let v = UIView()
         v.translatesAutoresizingMaskIntoConstraints = false
         v.backgroundColor = .white
-        v.layer.borderColor = UIColor(red: 0.26, green: 0.32, blue: 0.72, alpha: 0.3).cgColor
+        v.layer.borderColor = DS.Color.brandIndigo.withAlphaComponent(0.3).cgColor
         v.layer.borderWidth = 1
         v.layer.cornerRadius = 18
         return v
@@ -41,7 +41,7 @@ final class IntroductionViewController: BaseViewController<IntroductionViewModel
         var config = UIButton.Configuration.plain()
         config.baseForegroundColor = .white
         config.attributedTitle = AttributedString("Let's Go", attributes: AttributeContainer([.font: UIFont.boldSystemFont(ofSize: 24)]))
-        config.background.backgroundColor = UIColor(red: 0.51, green: 0.58, blue: 0.99, alpha: 1)
+        config.background.backgroundColor = DS.Color.accent
         config.background.cornerRadius = 18
         b.configuration = config
         return b
@@ -69,8 +69,8 @@ final class IntroductionViewController: BaseViewController<IntroductionViewModel
         let l = UILabel()
         l.translatesAutoresizingMaskIntoConstraints = false
         l.text = "Too Many Movies."
-        l.font = .systemFont(ofSize: 38, weight: .semibold)
-        l.textColor = UIColor(red: 0.26, green: 0.32, blue: 0.72, alpha: 1)
+        l.font = DS.Typography.display
+        l.textColor = DS.Color.brandIndigo
         l.textAlignment = .center
         l.numberOfLines = 0
         return l
@@ -81,7 +81,7 @@ final class IntroductionViewController: BaseViewController<IntroductionViewModel
         l.translatesAutoresizingMaskIntoConstraints = false
         l.text = "Zero Decisions."
         l.font = .systemFont(ofSize: 36, weight: .semibold)
-        l.textColor = UIColor(red: 0.51, green: 0.58, blue: 0.99, alpha: 1)
+        l.textColor = DS.Color.accent
         l.textAlignment = .center
         l.numberOfLines = 0
         return l
@@ -153,8 +153,8 @@ private extension IntroductionViewController {
         setup(shadowView: lightShadowButtonView, backgroundColor: .white, shadowColor: .white)
         view.addSubview(lightShadowButtonView)
         setup(shadowView: darkShadowButtonView,
-              backgroundColor: UIColor(red: 0.26, green: 0.32, blue: 0.72, alpha: 1),
-              shadowColor: UIColor(red: 0.26, green: 0.32, blue: 0.72, alpha: 1))
+              backgroundColor: DS.Color.brandIndigo,
+              shadowColor: DS.Color.brandIndigo)
         view.addSubview(darkShadowButtonView)
         view.addSubview(underlayButtonView)
         underlayButtonView.addSubview(startButton)

@@ -36,8 +36,8 @@ final class VerticalLabelView: UIView {
     
     private lazy var label: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
-        label.textColor = #colorLiteral(red: 0.3568627451, green: 0.3254901961, blue: 0.5411764706, alpha: 1)
+        label.font = DS.Typography.title2
+        label.textColor = DS.Color.labelMuted
         return label
     }()
     

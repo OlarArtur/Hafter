@@ -41,7 +41,7 @@ extension ListTableViewDataSource: UITableViewDataSource {
                 cell.posterImageView.transition(to: UIImage.image(named: ImageConstants.posterholder))
             }
         }
-        cell.setup(title: movie.title)
+        cell.setup(movie: movie)
         return cell
     }
 }

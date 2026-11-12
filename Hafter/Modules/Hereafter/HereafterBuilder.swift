@@ -21,6 +21,7 @@ final class HereafterBuilder {
         let viewModel = HereafterMainViewModel(router: router, localDataService: localDataService, networkService: networkService)
         viewModel.viewProtocol = hereafterVC
         hereafterVC.viewModel = viewModel
+        hereafterVC.localService = localDataService
         return hereafterVC
     }
 }
