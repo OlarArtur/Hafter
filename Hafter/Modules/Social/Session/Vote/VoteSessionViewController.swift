@@ -135,7 +135,7 @@ private extension VoteSessionViewController {
 
     func checkCompletion() {
         guard let session else { return }
-        firestoreService.getSession(id: session.id) { [weak self] updated in
+        firestoreService.getSession(id: session.id) { [weak self] updated, _ in
             guard let self, let updated else { return }
             // Vote mode: each participant picks exactly one movie
             guard updated.allParticipantsVotedOnce() else { return }

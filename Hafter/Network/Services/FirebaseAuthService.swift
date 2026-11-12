@@ -2,9 +2,9 @@
 //  FirebaseAuthService.swift
 //  Hafter
 //
-//  Requires firebase-ios-sdk (FirebaseAuth) via SPM:
+//  Requires firebase-ios-sdk via SPM:
 //  File → Add Package Dependencies → https://github.com/firebase/firebase-ios-sdk
-//  Select: FirebaseAuth, FirebaseFirestore
+//  Select: FirebaseAuth, FirebaseFirestore, FirebaseCore
 //
 
 import UIKit
@@ -19,6 +19,12 @@ protocol FirebaseAuthServiceProtocol {
     var isSignedIn: Bool { get }
     func signInWithApple(from viewController: UIViewController, completion: @escaping (Result<String, Error>) -> Void)
     func signOut() throws
+    /// Presents Sign in with Apple, reauthenticates the current user, and returns
+    /// the one-time Apple authorization code needed to revoke the token.
+    func reauthenticateWithApple(from viewController: UIViewController, completion: @escaping (Result<String, Error>) -> Void)
+    /// Revokes the Sign in with Apple token, then deletes the Firebase Auth user.
+    /// Call this only after Firestore data has been removed, while still signed in.
+    func revokeAppleTokenAndDeleteUser(authorizationCode: String, completion: @escaping (Error?) -> Void)
 }
 
 // MARK: - Implementation
@@ -28,7 +34,8 @@ final class FirebaseAuthService: NSObject {
     static let shared = FirebaseAuthService()
 
     private var currentNonce: String?
-    private var signInCompletion: ((Result<String, Error>) -> Void)?
+    private var pendingRequest: AppleRequest?
+    private var authorizationController: ASAuthorizationController?
 
     private override init() {}
 }
@@ -39,24 +46,44 @@ extension FirebaseAuthService: FirebaseAuthServiceProtocol {
     var isSignedIn: Bool { Auth.auth().currentUser != nil }
 
     func signInWithApple(from viewController: UIViewController, completion: @escaping (Result<String, Error>) -> Void) {
-        self.signInCompletion = completion
-        let nonce = randomNonceString()
-        currentNonce = nonce
-
-        let provider = ASAuthorizationAppleIDProvider()
-        let request = provider.createRequest()
-        request.requestedScopes = [.fullName, .email]
-        request.nonce = sha256(nonce)
-
-        let controller = ASAuthorizationController(authorizationRequests: [request])
-        controller.delegate = self
-        controller.presentationContextProvider = viewController as? ASAuthorizationControllerPresentationContextProviding
-            ?? PresentationContextProvider(window: viewController.view.window!)
-        controller.performRequests()
+        startAppleRequest(.signIn(completion), from: viewController)
     }
 
     func signOut() throws {
         try Auth.auth().signOut()
+    }
+
+    func reauthenticateWithApple(from viewController: UIViewController, completion: @escaping (Result<String, Error>) -> Void) {
+        guard Auth.auth().currentUser != nil else {
+            completion(.failure(AuthError.notSignedIn))
+            return
+        }
+        startAppleRequest(.reauthenticate(completion), from: viewController)
+    }
+
+    func revokeAppleTokenAndDeleteUser(authorizationCode: String, completion: @escaping (Error?) -> Void) {
+        guard let user = Auth.auth().currentUser else {
+            completion(AuthError.notSignedIn)
+            return
+        }
+
+        Auth.auth().revokeToken(withAuthorizationCode: authorizationCode) { error in
+            if let error {
+                completion(error)
+                return
+            }
+            user.delete { deleteError in
+                if let deleteError {
+                    if AuthError.isRequiresRecentLogin(deleteError) {
+                        completion(AuthError.requiresRecentLogin)
+                    } else {
+                        completion(deleteError)
+                    }
+                    return
+                }
+                completion(nil)
+            }
+        }
     }
 }
 
@@ -65,11 +92,15 @@ extension FirebaseAuthService: FirebaseAuthServiceProtocol {
 extension FirebaseAuthService: ASAuthorizationControllerDelegate {
 
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        let request = pendingRequest
+        pendingRequest = nil
+        authorizationController = nil
+
         guard let appleCredential = authorization.credential as? ASAuthorizationAppleIDCredential,
               let nonce = currentNonce,
               let idTokenData = appleCredential.identityToken,
               let idToken = String(data: idTokenData, encoding: .utf8) else {
-            signInCompletion?(.failure(AuthError.invalidCredential))
+            finish(request, with: .failure(AuthError.invalidCredential))
             return
         }
 
@@ -79,21 +110,60 @@ extension FirebaseAuthService: ASAuthorizationControllerDelegate {
             fullName: appleCredential.fullName
         )
 
-        Auth.auth().signIn(with: credential) { [weak self] result, error in
-            if let error {
-                self?.signInCompletion?(.failure(error))
+        switch request {
+        case .signIn(let completion):
+            Auth.auth().signIn(with: credential) { result, error in
+                if let error {
+                    completion(.failure(error))
+                    return
+                }
+                guard let uid = result?.user.uid else {
+                    completion(.failure(AuthError.missingUID))
+                    return
+                }
+                completion(.success(uid))
+            }
+
+        case .reauthenticate(let completion):
+            guard let user = Auth.auth().currentUser else {
+                completion(.failure(AuthError.notSignedIn))
                 return
             }
-            guard let uid = result?.user.uid else {
-                self?.signInCompletion?(.failure(AuthError.missingUID))
+            guard let authorizationCodeData = appleCredential.authorizationCode,
+                  let authorizationCode = String(data: authorizationCodeData, encoding: .utf8),
+                  !authorizationCode.isEmpty else {
+                completion(.failure(AuthError.missingAuthorizationCode))
                 return
             }
-            self?.signInCompletion?(.success(uid))
+            user.reauthenticate(with: credential) { _, error in
+                if let error {
+                    if AuthError.isRequiresRecentLogin(error) {
+                        completion(.failure(AuthError.requiresRecentLogin))
+                    } else {
+                        completion(.failure(error))
+                    }
+                    return
+                }
+                // Identity token was used to reauthenticate. The authorization code
+                // is still unused and is what revokeToken(withAuthorizationCode:) consumes.
+                completion(.success(authorizationCode))
+            }
+
+        case nil:
+            break
         }
     }
 
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
-        signInCompletion?(.failure(error))
+        let request = pendingRequest
+        pendingRequest = nil
+        authorizationController = nil
+        // Sign-in keeps Apple's own error. Account deletion treats a dismissed sheet as a cancel.
+        if case .reauthenticate = request, AuthError.isCancellation(error) {
+            finish(request, with: .failure(AuthError.cancelled))
+        } else {
+            finish(request, with: .failure(error))
+        }
     }
 }
 
@@ -102,18 +172,87 @@ extension FirebaseAuthService: ASAuthorizationControllerDelegate {
 enum AuthError: LocalizedError {
     case invalidCredential
     case missingUID
+    case notSignedIn
+    case missingAuthorizationCode
+    case missingWindow
+    case cancelled
+    case requiresRecentLogin
 
     var errorDescription: String? {
         switch self {
-        case .invalidCredential: return "Invalid Apple credential."
-        case .missingUID: return "Could not retrieve user ID."
+        case .invalidCredential:
+            return "Invalid Apple credential."
+        case .missingUID:
+            return "Could not retrieve user ID."
+        case .notSignedIn:
+            return "You need to be signed in to delete your account."
+        case .missingAuthorizationCode:
+            return "Apple did not return a code to revoke Sign in with Apple. Nothing was deleted."
+        case .missingWindow:
+            return "Could not present the Apple confirmation."
+        case .cancelled:
+            return "Account deletion was cancelled."
+        case .requiresRecentLogin:
+            return "For your security, confirm with Apple again to delete your account."
         }
+    }
+
+    static func isCancellation(_ error: Error) -> Bool {
+        if let authError = error as? AuthError, case .cancelled = authError {
+            return true
+        }
+        let nsError = error as NSError
+        return nsError.domain == ASAuthorizationError.errorDomain
+            && nsError.code == ASAuthorizationError.canceled.rawValue
+    }
+
+    static func isRequiresRecentLogin(_ error: Error) -> Bool {
+        let nsError = error as NSError
+        return nsError.domain == AuthErrorDomain
+            && nsError.code == AuthErrorCode.requiresRecentLogin.rawValue
     }
 }
 
 // MARK: - Nonce helpers
 
 private extension FirebaseAuthService {
+
+    enum AppleRequest {
+        case signIn((Result<String, Error>) -> Void)
+        case reauthenticate((Result<String, Error>) -> Void)
+    }
+
+    func startAppleRequest(_ request: AppleRequest, from viewController: UIViewController) {
+        guard let window = viewController.view.window else {
+            finish(request, with: .failure(AuthError.missingWindow))
+            return
+        }
+
+        pendingRequest = request
+        let nonce = randomNonceString()
+        currentNonce = nonce
+
+        let provider = ASAuthorizationAppleIDProvider()
+        let appleRequest = provider.createRequest()
+        appleRequest.requestedScopes = [.fullName, .email]
+        appleRequest.nonce = sha256(nonce)
+
+        let controller = ASAuthorizationController(authorizationRequests: [appleRequest])
+        controller.delegate = self
+        controller.presentationContextProvider = viewController as? ASAuthorizationControllerPresentationContextProviding
+            ?? PresentationContextProvider(window: window)
+        authorizationController = controller
+        controller.performRequests()
+    }
+
+    func finish(_ request: AppleRequest?, with result: Result<String, Error>) {
+        switch request {
+        case .signIn(let completion), .reauthenticate(let completion):
+            completion(result)
+        case nil:
+            break
+        }
+    }
 
     func randomNonceString(length: Int = 32) -> String {
         precondition(length > 0)

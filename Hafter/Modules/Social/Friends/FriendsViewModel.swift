@@ -3,7 +3,7 @@
 //  Hafter
 //
 
-import Foundation
+import UIKit
 import FirebaseFirestore
 
 protocol FriendsViewModelProtocol: AnyObject {
@@ -12,8 +12,11 @@ protocol FriendsViewModelProtocol: AnyObject {
     var pendingSessions: [MovieSession] { get }
     var onUpdate: (() -> Void)? { get set }
     var onError: ((String) -> Void)? { get set }
+    var onAccountDeleted: (() -> Void)? { get set }
+    var onDeletingChanged: ((Bool) -> Void)? { get set }
     func load()
     func addFriend(shareCode: String)
+    func deleteAccount(from presenter: UIViewController)
     func onCreateSessionTapped(with friend: SocialUser)
     func onSessionTapped(_ session: MovieSession)
     var onPresentCreateSession: ((SocialUser) -> Void)? { get set }
@@ -24,6 +27,8 @@ final class FriendsViewModel {
 
     var onUpdate: (() -> Void)?
     var onError: ((String) -> Void)?
+    var onAccountDeleted: (() -> Void)?
+    var onDeletingChanged: ((Bool) -> Void)?
     var onPresentCreateSession: ((SocialUser) -> Void)?
     var onPresentSession: ((MovieSession) -> Void)?
 
@@ -31,12 +36,17 @@ final class FriendsViewModel {
     private(set) var friends: [SocialUser] = []
     private(set) var pendingSessions: [MovieSession] = []
 
+    private let authService: FirebaseAuthServiceProtocol
     private let firestoreService: FirestoreServiceProtocol
     private let uid: String
     private var pendingListener: ListenerRegistration?
+    private var isDeleting = false
 
-    init(uid: String, firestoreService: FirestoreServiceProtocol = FirestoreService.shared) {
+    init(uid: String,
+         authService: FirebaseAuthServiceProtocol = FirebaseAuthService.shared,
+         firestoreService: FirestoreServiceProtocol = FirestoreService.shared) {
         self.uid = uid
+        self.authService = authService
         self.firestoreService = firestoreService
     }
 
@@ -79,6 +89,41 @@ extension FriendsViewModel: FriendsViewModelProtocol {
         }
     }
 
+    func deleteAccount(from presenter: UIViewController) {
+        guard !isDeleting else { return }
+        isDeleting = true
+        onDeletingChanged?(true)
+        pendingListener?.remove()
+        pendingListener = nil
+
+        authService.reauthenticateWithApple(from: presenter) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .failure(let error):
+                self.finishDeletion(error: error)
+            case .success(let authorizationCode):
+                self.firestoreService.deleteAccountData(uid: self.uid) { error in
+                    if let error {
+                        self.finishDeletion(error: error)
+                        return
+                    }
+                    self.authService.revokeAppleTokenAndDeleteUser(authorizationCode: authorizationCode) { error in
+                        if let error {
+                            self.finishDeletion(error: error)
+                            return
+                        }
+                        AccountLocalState.clearAfterAccountDeletion()
+                        DispatchQueue.main.async {
+                            self.isDeleting = false
+                            self.onDeletingChanged?(false)
+                            self.onAccountDeleted?()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     func onCreateSessionTapped(with friend: SocialUser) {
         onPresentCreateSession?(friend)
     }
@@ -106,6 +151,27 @@ extension FriendsViewModel: FriendsViewModelProtocol {
         }
     }
 
+    private func finishDeletion(error: Error) {
+        DispatchQueue.main.async {
+            self.isDeleting = false
+            self.onDeletingChanged?(false)
+            if self.authService.isSignedIn {
+                self.observePending()
+            }
+            if AuthError.isCancellation(error) { return }
+            self.onError?(error.localizedDescription)
+        }
+    }
+
+    /// Missing sessions and permission-denied reads are stale invites.
+    /// Transient network failures keep the invite so it can be retried.
+    private func shouldDropPendingSession(_ error: Error?) -> Bool {
+        guard let error = error as NSError? else { return true }
+        guard error.domain == FirestoreErrorDomain else { return false }
+        return error.code == FirestoreErrorCode.notFound.rawValue
+            || error.code == FirestoreErrorCode.permissionDenied.rawValue
+    }
+
     private func observePending() {
         pendingListener = firestoreService.observePendingSessions(uid: uid) { [weak self] ids in
             guard let self, !ids.isEmpty else {
@@ -116,8 +182,13 @@ extension FriendsViewModel: FriendsViewModelProtocol {
             let group = DispatchGroup()
             for id in ids {
                 group.enter()
-                self.firestoreService.getSession(id: id) { session in
-                    if let session { sessions.append(session) }
+                self.firestoreService.getSession(id: id) { session, error in
+                    if let session {
+                        sessions.append(session)
+                    } else if self.shouldDropPendingSession(error) {
+                        // Owner deleted the session, or this user can no longer read it.
+                        self.firestoreService.declineSession(sessionID: id, uid: self.uid) { _ in }
+                    }
                     group.leave()
                 }
             }
