@@ -27,11 +27,21 @@ final class SocialCoordinator {
 
     /// Call this to launch the Social flow
     func start() {
+        #if FREE_SIGNING
+        let alert = UIAlertController(
+            title: "Requires full build",
+            message: "Sign in with Apple and shared sessions need a paid Apple Developer Program membership. Set HAFTER_FREE_SIGNING = NO in Config.xcconfig after you enroll.",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        presenter?.present(alert, animated: true)
+        #else
         if authService.isSignedIn, let uid = authService.currentUID {
             showFriends(uid: uid)
         } else {
             showAuth()
         }
+        #endif
     }
 
     // MARK: - Auth

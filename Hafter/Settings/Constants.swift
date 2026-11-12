@@ -97,32 +97,41 @@ enum WidgetDataBridge {
                        posterPath: $0.movie.posterPath)
         }
         guard let data = try? JSONEncoder().encode(entries) else { return }
-        UserDefaults(suiteName: appGroupId)?.set(data, forKey: moviesKey)
+        defaults.set(data, forKey: moviesKey)
         WidgetCenter.shared.reloadAllTimelines()
     }
 
     static func readMovies() -> [MovieEntry] {
-        guard let data = UserDefaults(suiteName: appGroupId)?.data(forKey: moviesKey),
+        guard let data = defaults.data(forKey: moviesKey),
               let entries = try? JSONDecoder().decode([MovieEntry].self, from: data)
         else { return [] }
         return entries
     }
 
     static func writeTonight(_ entry: TonightEntry?) {
-        let defaults = UserDefaults(suiteName: appGroupId)
         if let entry, let data = try? JSONEncoder().encode(entry) {
-            defaults?.set(data, forKey: tonightKey)
+            defaults.set(data, forKey: tonightKey)
         } else {
-            defaults?.removeObject(forKey: tonightKey)
+            defaults.removeObject(forKey: tonightKey)
         }
         WidgetCenter.shared.reloadAllTimelines()
     }
 
     static func readTonight() -> TonightEntry? {
-        guard let data = UserDefaults(suiteName: appGroupId)?.data(forKey: tonightKey),
+        guard let data = defaults.data(forKey: tonightKey),
               let entry = try? JSONDecoder().decode(TonightEntry.self, from: data)
         else { return nil }
         return entry
+    }
+
+    /// Free Personal Teams cannot sign an App Group, so the list stays in the
+    /// app process. Siri still reads it. The widget cannot see it and shows a placeholder.
+    private static var defaults: UserDefaults {
+        #if FREE_SIGNING
+        return .standard
+        #else
+        return UserDefaults(suiteName: appGroupId) ?? .standard
+        #endif
     }
 }
 

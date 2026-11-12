@@ -135,9 +135,19 @@ final class HereAfterMainViewController: BaseViewController<HereafterViewModelPr
     }
 
     @objc private func friendsTapped() {
+        #if FREE_SIGNING
+        let alert = UIAlertController(
+            title: "Requires full build",
+            message: "Sign in with Apple and shared sessions need a paid Apple Developer Program membership. Set HAFTER_FREE_SIGNING = NO in Config.xcconfig after you enroll.",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+        #else
         guard let localService else { return }
         socialCoordinator = SocialCoordinator(presenter: self, localService: localService)
         socialCoordinator?.start()
+        #endif
     }
 
     @objc private func foremostAction() {

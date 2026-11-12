@@ -22,6 +22,16 @@ final class LocalDataProvider {
     private lazy var persistentContainer: NSPersistentContainer? = {
         guard let modelURL = Bundle.main.url(forResource: "Model", withExtension: "momd") else { return nil }
         guard let managedObjectModel = NSManagedObjectModel(contentsOf: modelURL) else { return nil }
+        #if FREE_SIGNING
+        let container = makeLocalContainer(model: managedObjectModel)
+        container.loadPersistentStores { _, error in
+            if let error {
+                Swift.print("[DBDataProvider] Failed to load the local store: \(error.localizedDescription)")
+            }
+        }
+        container.viewContext.automaticallyMergesChangesFromParent = true
+        return container
+        #else
         let container = makeCloudContainer(model: managedObjectModel)
         container.loadPersistentStores { [weak self] _, error in
             if let error {
@@ -31,8 +41,20 @@ final class LocalDataProvider {
         }
         container.viewContext.automaticallyMergesChangesFromParent = true
         return container
+        #endif
     }()
 
+    private func makeLocalContainer(model: NSManagedObjectModel) -> NSPersistentContainer {
+        let local = NSPersistentContainer(name: "Model", managedObjectModel: model)
+        if let description = local.persistentStoreDescriptions.first {
+            description.cloudKitContainerOptions = nil
+            description.shouldMigrateStoreAutomatically = true
+            description.shouldInferMappingModelAutomatically = true
+        }
+        return local
+    }
+
+    #if !FREE_SIGNING
     /// Private CloudKit database. No Blaze plan. If the iCloud account or the
     /// container is missing, the caller swaps in a local store.
     private func makeCloudContainer(model: NSManagedObjectModel) -> NSPersistentCloudKitContainer {
@@ -49,12 +71,7 @@ final class LocalDataProvider {
         for store in cloud.persistentStoreCoordinator.persistentStores {
             try? cloud.persistentStoreCoordinator.remove(store)
         }
-        let local = NSPersistentContainer(name: "Model", managedObjectModel: model)
-        if let description = local.persistentStoreDescriptions.first {
-            description.cloudKitContainerOptions = nil
-            description.shouldMigrateStoreAutomatically = true
-            description.shouldInferMappingModelAutomatically = true
-        }
+        let local = makeLocalContainer(model: model)
         local.loadPersistentStores { _, error in
             if let error {
                 Swift.print("[DBDataProvider] Failed to load the local store: \(error.localizedDescription)")
@@ -63,6 +80,7 @@ final class LocalDataProvider {
         local.viewContext.automaticallyMergesChangesFromParent = true
         persistentContainer = local
     }
+    #endif
     
     // MARK: Private
 
