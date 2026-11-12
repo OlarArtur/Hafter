@@ -15,7 +15,7 @@ protocol LocalServiceProtocol {
     func updateTags(movieId: String, tags: [String], completion: @escaping (Bool) -> Void)
     func hasMovie(id: String) -> Bool
     func ensureOnShelf(_ movie: SessionMovie, type: HereafterMovieType)
-    func moveToViewed(id: String, completion: @escaping (Bool) -> Void)
+    func moveToViewed(id: String, rating: Int, watchedDate: Date, completion: @escaping (Bool) -> Void)
 }
 
 final class LocalService {
@@ -70,13 +70,16 @@ extension LocalService: LocalServiceProtocol {
         save(movie: HereafterMovie(type: type, movie: item), completion: { _ in })
     }
 
-    func moveToViewed(id: String, completion: @escaping (Bool) -> Void) {
-        guard let existing = getMovies(type: nil).first(where: { $0.movie.id == id }) else {
-            completion(false)
+    func moveToViewed(id: String, rating: Int, watchedDate: Date, completion: @escaping (Bool) -> Void) {
+        let rating = ViewedShelf.clampRating(rating)
+        if let existing = getMovies(type: nil).first(where: { $0.movie.id == id }) {
+            existing.type = .viewed
+            existing.rating = rating
+            existing.watchedDate = watchedDate
+            update(movie: existing, completion: completion)
             return
         }
-        existing.type = .viewed
-        update(movie: existing, completion: completion)
+        completion(false)
     }
 }
 
@@ -96,11 +99,13 @@ enum TonightSync {
         ))
     }
 
-    static func markWatched(session: MovieSession, uid: String?, local: LocalServiceProtocol) {
+    static func markWatched(session: MovieSession, uid: String?, rating: Int, watchedDate: Date, local: LocalServiceProtocol) {
         guard let resultID = session.result else { return }
-        local.moveToViewed(id: resultID) { saved in
+        local.moveToViewed(id: resultID, rating: rating, watchedDate: watchedDate) { saved in
             if saved == false, let movie = session.movies.first(where: { $0.id == resultID }) {
-                local.ensureOnShelf(movie, type: .viewed)
+                var shelf = movie
+                local.ensureOnShelf(shelf, type: .viewed)
+                local.moveToViewed(id: resultID, rating: rating, watchedDate: watchedDate) { _ in }
             }
         }
         WidgetDataBridge.writeTonight(nil)

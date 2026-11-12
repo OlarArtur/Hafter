@@ -193,11 +193,13 @@ private extension SessionResultViewController {
 
     @objc func watchedTapped() {
         guard let session, let localService else { return }
-        TonightSync.markWatched(session: session, uid: uid, local: localService)
-        watchedButton.isEnabled = false
-        var config = watchedButton.configuration
-        config?.title = "Moved to Viewed"
-        watchedButton.configuration = config
+        ViewedDetailsEditor.present(on: self) { [weak self] rating, date in
+            TonightSync.markWatched(session: session, uid: self?.uid, rating: rating, watchedDate: date, local: localService)
+            self?.watchedButton.isEnabled = false
+            var config = self?.watchedButton.configuration
+            config?.title = "Moved to Viewed"
+            self?.watchedButton.configuration = config
+        }
     }
 
     @objc func doneTapped() {

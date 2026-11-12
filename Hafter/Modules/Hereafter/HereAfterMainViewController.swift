@@ -108,6 +108,10 @@ final class HereAfterMainViewController: BaseViewController<HereafterViewModelPr
         setupTableView()
 
         foremostAction()
+        viewModel?.onNeedsViewedDetails = { [weak self] finish in
+            guard let self else { return }
+            ViewedDetailsEditor.present(on: self, completion: finish)
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -337,14 +341,16 @@ private extension HereAfterMainViewController {
 
     @objc func markTonightWatched() {
         guard let tonight = WidgetDataBridge.readTonight(), let localService else { return }
-        localService.moveToViewed(id: tonight.movieID) { [weak self] _ in
-            WidgetDataBridge.writeTonight(nil)
-            if let uid = Auth.auth().currentUser?.uid {
-                FirestoreService.shared.markWatched(sessionID: tonight.sessionID, uid: uid) { _ in }
+        ViewedDetailsEditor.present(on: self) { [weak self] rating, date in
+            localService.moveToViewed(id: tonight.movieID, rating: rating, watchedDate: date) { _ in
+                WidgetDataBridge.writeTonight(nil)
+                if let uid = Auth.auth().currentUser?.uid {
+                    FirestoreService.shared.markWatched(sessionID: tonight.sessionID, uid: uid) { _ in }
+                }
+                self?.friendAlreadyWatched = false
+                self?.refreshTonightBanner()
+                self?.viewModel?.reloadLists()
             }
-            self?.friendAlreadyWatched = false
-            self?.refreshTonightBanner()
-            self?.viewModel?.reloadLists()
         }
     }
 }
@@ -387,7 +393,7 @@ extension HereAfterMainViewController: UITableViewDataSource {
                 cell.posterImageView.transition(to: UIImage.image(named: ImageConstants.posterholder))
             }
         }
-        cell.setup(movie: movie)
+        cell.setup(movie: movie, caption: viewModel.viewedCaption(index: indexPath.row))
         return cell
     }
 }

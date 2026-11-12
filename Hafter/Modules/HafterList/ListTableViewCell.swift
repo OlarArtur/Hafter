@@ -55,14 +55,16 @@ final class ListTableViewCell: UITableViewCell {
         setupLayout()
     }
 
-    func setup(movie: Movie) {
+    func setup(movie: Movie, caption: String? = nil) {
         titleLabel.text = movie.title
-        if let year = movie.year() {
-            yearLabel.text = year
-            yearLabel.isHidden = false
-        } else {
+        let year = movie.year()
+        let text = [year, caption].compactMap { $0 }.filter { $0.isEmpty == false }.joined(separator: " · ")
+        if text.isEmpty {
             yearLabel.text = nil
             yearLabel.isHidden = true
+        } else {
+            yearLabel.text = text
+            yearLabel.isHidden = false
         }
     }
 

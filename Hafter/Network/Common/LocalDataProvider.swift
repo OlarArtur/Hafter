@@ -23,6 +23,10 @@ final class LocalDataProvider {
         guard let modelURL = Bundle.main.url(forResource: "Model", withExtension: "momd") else { return nil }
         guard let managedObjectModel = NSManagedObjectModel(contentsOf: modelURL) else { return nil }
         let container = NSPersistentContainer(name: "Model", managedObjectModel: managedObjectModel)
+        if let description = container.persistentStoreDescriptions.first {
+            description.shouldMigrateStoreAutomatically = true
+            description.shouldInferMappingModelAutomatically = true
+        }
         container.loadPersistentStores { (storeDescription, error) in
             if let error = error {
                 Swift.print("[DBDataProvider] Failed to load persistent store: \(error.localizedDescription)")
@@ -35,13 +39,15 @@ final class LocalDataProvider {
 
     /// Returns true only when the compiled Core Data model already contains the `tags` attribute.
     /// Guards against crashes when running with the old schema before a proper model migration.
-    private var modelHasTags: Bool {
+    private var modelHasTags: Bool { modelHas("tags") }
+
+    private func modelHas(_ name: String) -> Bool {
         persistentContainer?
             .viewContext
             .persistentStoreCoordinator?
             .managedObjectModel
             .entitiesByName["DBHereafterMovie"]?
-            .attributesByName["tags"] != nil
+            .attributesByName[name] != nil
     }
 
     private func saveContext(completion: ((Bool) -> Void)?) {
@@ -111,6 +117,12 @@ extension LocalDataProvider: LocalDataProviderProtocol {
         if modelHasTags {
             hereafterMovieItem.setValue(movie.tags.joined(separator: ","), forKey: "tags")
         }
+        if modelHas("rating") {
+            hereafterMovieItem.setValue(movie.rating, forKey: "rating")
+        }
+        if modelHas("watchedDate") {
+            hereafterMovieItem.setValue(movie.watchedDate, forKey: "watchedDate")
+        }
         saveContext(completion: completion)
     }
 
@@ -137,7 +149,10 @@ extension LocalDataProvider: LocalDataProviderProtocol {
                     let releaseDate = managedData.value(forKey: "releaseDate") as? Date
                     let backdropPath = managedData.value(forKey: "backdropPath") as? String
                     let posterPath = managedData.value(forKey: "posterPath") as? String
-                    let tagsString = modelHasTags ? (managedData.value(forKey: "tags") as? String ?? "") : ""
+                    let tagsString = modelHas("tags") ? (managedData.value(forKey: "tags") as? String ?? "") : ""
+                    let ratingNumber = modelHas("rating") ? (managedData.value(forKey: "rating") as? NSNumber) : nil
+                    let rating = (ratingNumber?.intValue ?? 0) > 0 ? ratingNumber?.intValue : nil
+                    let watchedDate = modelHas("watchedDate") ? (managedData.value(forKey: "watchedDate") as? Date) : nil
                     let movie = Movie(id: id,
                                       adult: adult,
                                       backdropPath: backdropPath,
@@ -148,7 +163,7 @@ extension LocalDataProvider: LocalDataProviderProtocol {
                                       popularity: popularity,
                                       posterPath: posterPath,
                                       releaseDate: releaseDate)
-                    let hereafterMovieItem = HereafterMovie(type: type, movie: movie)
+                    let hereafterMovieItem = HereafterMovie(type: type, movie: movie, rating: rating, watchedDate: watchedDate)
                     hereafterMovieItem.tags = Self.parseTags(tagsString)
                     resultData.append(hereafterMovieItem)
                 }
@@ -216,6 +231,8 @@ extension LocalDataProvider: LocalDataProviderProtocol {
             } else {
                 let managedObject = movieObjects[0]
                 managedObject.setValue(movie.type.rawValue, forKey: "type")
+                if modelHas("rating") { managedObject.setValue(movie.rating, forKey: "rating") }
+                if modelHas("watchedDate") { managedObject.setValue(movie.watchedDate, forKey: "watchedDate") }
                 saveContext(completion: completion)
             }
         } catch {

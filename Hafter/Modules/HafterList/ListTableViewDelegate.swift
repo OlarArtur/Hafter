@@ -46,3 +46,33 @@ extension ListTableViewDelegate: UITableViewDelegate {
         return UISwipeActionsConfiguration(actions: actions)
     }
 }
+
+enum ViewedDetailsEditor {
+    static func present(on controller: UIViewController, completion: @escaping (Int, Date) -> Void) {
+        let alert = UIAlertController(
+            title: "Watched",
+            message: "Rate it from 1 to 5. The date is today unless you type YYYY-MM-DD.",
+            preferredStyle: .alert
+        )
+        alert.addTextField { field in
+            field.placeholder = "Rating"
+            field.keyboardType = .numberPad
+            field.text = "5"
+        }
+        alert.addTextField { field in
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd"
+            field.placeholder = "YYYY-MM-DD"
+            field.text = formatter.string(from: Date())
+        }
+        alert.addAction(UIAlertAction(title: "Save", style: .default) { _ in
+            let rating = ViewedShelf.clampRating(Int(alert.textFields?.first?.text ?? "") ?? 5)
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd"
+            let date = formatter.date(from: alert.textFields?.last?.text ?? "") ?? Date()
+            completion(rating, date)
+        })
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        controller.present(alert, animated: true)
+    }
+}

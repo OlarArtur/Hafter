@@ -20,6 +20,8 @@ protocol ListViewModelProtocol {
     func swipeRightTypes() -> [HereafterMovieType]
 
     func updateType(index: Int, type: HereafterMovieType)
+    func viewedCaption(index: Int) -> String?
+    var onNeedsViewedDetails: ((@escaping (Int, Date) -> Void) -> Void)? { get set }
     func start()
 }
 
@@ -33,6 +35,7 @@ final class ListViewModel<Router: ListRouterProtocol>: BaseViewModel<Router> {
     private let type: HereafterMovieType
     private var movies: [HereafterMovie] = []
     private let admissibleTypes: [HereafterMovieType]
+    var onNeedsViewedDetails: ((@escaping (Int, Date) -> Void) -> Void)?
     
     init(router: Router, localDataService: LocalServiceProtocol, type: HereafterMovieType, admissibleTypes: [HereafterMovieType]) {
         self.localDataService = localDataService
@@ -50,19 +53,52 @@ extension ListViewModel: ListViewModelProtocol {
     
     func start() {
         movies = localDataService.getMovies(type: type)
+        if type == .viewed {
+            let ranked = ViewedShelf.sorted(movies.map {
+                ViewedShelf.Item(id: $0.movie.id, watchedDate: $0.watchedDate, rating: $0.rating)
+            })
+            let index = Dictionary(uniqueKeysWithValues: ranked.enumerated().map { ($1.id, $0) })
+            movies.sort { (index[$0.movie.id] ?? 0) < (index[$1.movie.id] ?? 0) }
+        }
     }
-    
+
     func updateType(index: Int, type: HereafterMovieType) {
-        let viewedMoview = movies[index]
-        viewedMoview.type = type
-        router?.update(movie: viewedMoview) { [weak self] success in
-            if success {
-                self?.movies.remove(at: index)
-                self?.reloadData?()
-            } else {
-                self?.showError?(ServiceError.localDataError)
+        let movie = movies[index]
+        let save = { [weak self] in
+            guard let self else { return }
+            self.router?.update(movie: movie) { success in
+                if success {
+                    self.movies.remove(at: index)
+                    self.reloadData?()
+                } else {
+                    self.showError?(ServiceError.localDataError)
+                }
             }
         }
+        guard type == .viewed else {
+            movie.type = type
+            movie.rating = nil
+            movie.watchedDate = nil
+            save()
+            return
+        }
+        let finish: (Int, Date) -> Void = { rating, date in
+            movie.type = .viewed
+            movie.rating = ViewedShelf.clampRating(rating)
+            movie.watchedDate = date
+            save()
+        }
+        if let ask = onNeedsViewedDetails {
+            ask(finish)
+        } else {
+            finish(5, Date())
+        }
+    }
+
+    func viewedCaption(index: Int) -> String? {
+        let movie = movies[index]
+        guard movie.type == .viewed else { return nil }
+        return ViewedShelf.caption(rating: movie.rating, date: movie.watchedDate)
     }
     
     func numberOfItems() -> Int {

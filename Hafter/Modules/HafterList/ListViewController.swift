@@ -154,6 +154,10 @@ private extension ListViewController {
         }
 
         viewModel?.start()
+        viewModel?.onNeedsViewedDetails = { [weak self] finish in
+            guard let self else { return }
+            ViewedDetailsEditor.present(on: self, completion: finish)
+        }
     }
 
     func setupTableView() {

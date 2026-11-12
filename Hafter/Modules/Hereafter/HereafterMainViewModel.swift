@@ -50,6 +50,8 @@ protocol HereafterViewModelProtocol {
     func applySearch(query: String)
     func applySort(order: MovieSortOrder)
     func reloadLists()
+    var onNeedsViewedDetails: ((@escaping (Int, Date) -> Void) -> Void)? { get set }
+    func viewedCaption(index: Int) -> String?
 }
 
 final class HereafterMainViewModel<Router: HereafterRouterProtocol>: BaseViewModel<Router> {
@@ -73,6 +75,7 @@ final class HereafterMainViewModel<Router: HereafterRouterProtocol>: BaseViewMod
     }
 
     private(set) var sortOrder: MovieSortOrder = .alphabetical
+    var onNeedsViewedDetails: ((@escaping (Int, Date) -> Void) -> Void)?
 
     init(router: Router, localDataService: LocalServiceProtocol, networkService: MediaServiceProtocol) {
         self.networkService = networkService
@@ -105,6 +108,13 @@ final class HereafterMainViewModel<Router: HereafterRouterProtocol>: BaseViewMod
             result.sort { ($0.movie.releaseDate ?? .distantPast) > ($1.movie.releaseDate ?? .distantPast) }
         case .popularity:
             result.sort { $0.movie.popularity > $1.movie.popularity }
+        }
+        if selectedType == .viewed {
+            let ranked = ViewedShelf.sorted(result.map {
+                ViewedShelf.Item(id: $0.movie.id, watchedDate: $0.watchedDate, rating: $0.rating)
+            })
+            let index = Dictionary(uniqueKeysWithValues: ranked.enumerated().map { ($1.id, $0) })
+            result.sort { (index[$0.movie.id] ?? 0) < (index[$1.movie.id] ?? 0) }
         }
         filteredMovies = result
         viewProtocol?.reloadData()
@@ -174,14 +184,40 @@ extension HereafterMainViewModel: HereafterViewModelProtocol {
 
     func updateType(index: Int, type: HereafterMovieType) {
         let movie = filteredMovies[index]
-        movie.type = type
-        router?.update(movie: movie) { [weak self] success in
-            if success {
-                self?.loadMovies()
-            } else {
-                self?.viewProtocol?.showError(error: ServiceError.localDataError)
+        let save = { [weak self] in
+            guard let self else { return }
+            self.router?.update(movie: movie) { success in
+                if success {
+                    self.loadMovies()
+                } else {
+                    self.viewProtocol?.showError(error: ServiceError.localDataError)
+                }
             }
         }
+        guard type == .viewed else {
+            movie.type = type
+            movie.rating = nil
+            movie.watchedDate = nil
+            save()
+            return
+        }
+        let finish: (Int, Date) -> Void = { rating, date in
+            movie.type = .viewed
+            movie.rating = ViewedShelf.clampRating(rating)
+            movie.watchedDate = date
+            save()
+        }
+        if let ask = onNeedsViewedDetails {
+            ask(finish)
+        } else {
+            finish(5, Date())
+        }
+    }
+
+    func viewedCaption(index: Int) -> String? {
+        let movie = filteredMovies[index]
+        guard movie.type == .viewed else { return nil }
+        return ViewedShelf.caption(rating: movie.rating, date: movie.watchedDate)
     }
 
     func applySearch(query: String) {

@@ -14,10 +14,13 @@ protocol ItemDetailViewModelProtocol {
     var genres: [String] { get }
     var color: UIColor { get }
     var tags: [String] { get }
+    var watchedCaption: String? { get }
+    var canEditViewed: Bool { get }
     var onTagsUpdated: (() -> Void)? { get set }
     func getPoster(completion: @escaping (UIImage?) -> Void)
     func addTag(_ name: String)
     func removeTag(at index: Int)
+    func updateViewedDetails(rating: Int, date: Date)
 }
 
 final class ItemDetailViewModel<Router: ItemDetailRouterProtocol>: BaseViewModel<Router> {
@@ -54,7 +57,12 @@ extension ItemDetailViewModel: ItemDetailViewModelProtocol {
         return movie.originalTitle + " (\(year))"
     }
 
-    var overview: String { movie.overview }
+    var overview: String {
+        if let caption = watchedCaption {
+            return caption + "\n\n" + movie.overview
+        }
+        return movie.overview
+    }
 
     var budget: String {
         NumberFormatter.localizedString(from: NSNumber(value: movie.budget), number: .decimal)
@@ -63,6 +71,21 @@ extension ItemDetailViewModel: ItemDetailViewModelProtocol {
     var genres: [String] { movie.genres.map { $0.name } }
 
     var tags: [String] { _tags }
+
+    var canEditViewed: Bool { type == .viewed }
+
+    var watchedCaption: String? {
+        guard type == .viewed,
+              let stored = localDataService.getMovies(type: .viewed).first(where: { $0.movie.id == movie.id })
+        else { return nil }
+        return ViewedShelf.caption(rating: stored.rating, date: stored.watchedDate)
+    }
+
+    func updateViewedDetails(rating: Int, date: Date) {
+        localDataService.moveToViewed(id: movie.id, rating: rating, watchedDate: date) { [weak self] _ in
+            DispatchQueue.main.async { self?.onTagsUpdated?() }
+        }
+    }
 
     func getPoster(completion: @escaping (UIImage?) -> Void) {
         if let posterURL = movie.posterOriginalImageURL() {
